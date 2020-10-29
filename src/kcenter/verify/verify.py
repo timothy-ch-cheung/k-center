@@ -1,14 +1,14 @@
 import networkx as nx
-from typing import Dict, List
+from typing import Dict, Set
 
 from src.kcenter.constant.colour import Colour
 
 
-def verify_solution(graph: nx.Graph, constraints: Dict[Colour, int], k: int, radius: float, centers: List[int]) -> bool:
+def verify_solution(graph: nx.Graph, constraints: Dict[Colour, int], k: int, radius: float, centers: Set[int]) -> bool:
     if len(centers) > k:
         return False
 
-    clusters = {x: [] for x in centers}
+    clusters = {x: set() for x in centers}
 
     # Calculate which center the node is clustered with
     for node in graph.nodes():
@@ -24,7 +24,7 @@ def verify_solution(graph: nx.Graph, constraints: Dict[Colour, int], k: int, rad
                 nearest_center = center
 
         if min_dist <= radius:
-            clusters[nearest_center].append(node)
+            clusters[nearest_center].add(node)
 
     coverage = {k: 0 for (k, v) in constraints.items()}
 

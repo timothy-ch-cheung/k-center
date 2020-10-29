@@ -28,7 +28,7 @@ def create_graph():
 graph = create_graph()
 constraints = {Colour.BLUE: 3, Colour.RED: 2}
 k = 2
-centers = [0, 3]
+centers = {0, 3}
 radius = 0.86
 
 valid_radii = [0.86, 1.0, 6.37]
@@ -51,7 +51,7 @@ def test_valid_center_set_invalid_radius(r):
 
 
 def test_invalid_center_set():
-    assert verify_solution(graph, constraints, k, radius, [0, 1]) is False
+    assert verify_solution(graph, constraints, k, radius, {0, 1}) is False
 
 
 def test_invalid_k():
