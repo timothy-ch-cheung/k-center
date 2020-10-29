@@ -1,0 +1,4 @@
+numpy==1.14.5
+pytest==5.3.5
+networkx==2.5
+Pyomo==5.7.1
