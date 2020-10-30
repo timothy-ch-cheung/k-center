@@ -2,6 +2,8 @@
 
 ## Packages
 - NetworkX
+- Numpy
+- Pyomo
 
 ## requirements
 - Two operation modes
@@ -11,8 +13,12 @@
 ### Step mode
 either:
 - step through the algorithm
-- solve algorithm and keep a log of each step
+- solve algorithm and keep a log of each step - not such a good idea as each step could take a long time and user would have to wait
 
 ## parameters
-- cost function
-- 
+- constraints
+- k
+- graph (NetworkX)
+
+## return
+set of centers
