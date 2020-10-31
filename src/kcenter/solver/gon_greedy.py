@@ -13,11 +13,11 @@ class GonGreedy(AbstractSolver):
         super().__init__(graph, k, constraints)
 
     @staticmethod
-    def max_dist(graph: nx.Graph, centers: List[int], clusters: List[Set[int]]):
+    def max_dist(graph: nx.Graph, clusters: Dict[int, Set[int]]):
         max_dist = -float("inf")
         max_node = None
         owning_center = None
-        for center, cluster in zip(centers, clusters):
+        for center, cluster in zip(clusters.keys(), clusters.values()):
             for node in cluster:
                 if node == center:
                     continue
@@ -28,32 +28,29 @@ class GonGreedy(AbstractSolver):
                     owning_center = center
         return max_node, max_dist, owning_center
 
-    def solve(self) -> Tuple[List[int], List[Set[int]], int]:
-        centers = [0]
-        clusters = [set(list(self.graph.nodes))]
+    def solve(self) -> Tuple[Dict[int, Set[int]], int]:
+        INITIAL_HEAD = 0
+        clusters = {INITIAL_HEAD: set(self.graph.nodes)}
 
         for i in range(1, self.k):
-            max_node, max_dist, owning_center = GonGreedy.max_dist(self.graph, centers, clusters)
+            max_node, max_dist, owning_center = GonGreedy.max_dist(self.graph, clusters)
 
-            centers.append(max_node)
-            new_cluster = {max_node}
+            clusters[max_node] = {max_node}
             clusters[owning_center].remove(max_node)
 
-            for center, cluster in zip(centers, clusters):
+            for center, cluster in zip(clusters.keys(), clusters.values()):
                 nodes_moved = []
                 for node in cluster:
                     if node != max_node and node != center \
                             and self.graph[node][max_node]["weight"] < self.graph[node][center]["weight"]:
-                        new_cluster.add(node)
+                        clusters[max_node].add(node)
                         nodes_moved.append(node)
 
                 for node in nodes_moved:
                     cluster.remove(node)
 
-            clusters.append(new_cluster)
-
-        radius = GonGreedy.max_dist(self.graph, centers, clusters)[1]
-        return centers, clusters, radius
+        radius = GonGreedy.max_dist(self.graph, clusters)[1]
+        return clusters, radius
 
         # weights = nx.get_edge_attributes(self.graph, 'weight').values()
         # weights = list(set(weights))
