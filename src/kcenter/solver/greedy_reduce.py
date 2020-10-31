@@ -1,6 +1,6 @@
 from typing import Dict
 
-from kcenter.solver.greedy import GreedySolver, Colour
+from src.kcenter.solver.greedy import GreedySolver, Colour
 import networkx as nx
 
 from kcenter.verify.verify import verify_solution
