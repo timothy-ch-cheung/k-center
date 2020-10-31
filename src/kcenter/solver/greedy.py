@@ -1,14 +1,15 @@
-from typing import Dict, Tuple, Set, List
+from typing import Dict, Tuple, Set
 
 import networkx as nx
 
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
-from src.kcenter.verify.verify import verify_solution
 from tests.kcenter.util.create_test_graph import basic_graph
 
 
-class GonGreedy(AbstractSolver):
+class GreedySolver(AbstractSolver):
+    INITIAL_HEAD = 0
+
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
@@ -29,11 +30,10 @@ class GonGreedy(AbstractSolver):
         return max_node, max_dist, owning_center
 
     def solve(self) -> Tuple[Dict[int, Set[int]], int]:
-        INITIAL_HEAD = 0
-        clusters = {INITIAL_HEAD: set(self.graph.nodes)}
+        clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
 
         for i in range(1, self.k):
-            max_node, max_dist, owning_center = GonGreedy.max_dist(self.graph, clusters)
+            max_node, max_dist, owning_center = GreedySolver.max_dist(self.graph, clusters)
 
             clusters[max_node] = {max_node}
             clusters[owning_center].remove(max_node)
@@ -49,7 +49,7 @@ class GonGreedy(AbstractSolver):
                 for node in nodes_moved:
                     cluster.remove(node)
 
-        radius = GonGreedy.max_dist(self.graph, clusters)[1]
+        radius = GreedySolver.max_dist(self.graph, clusters)[1]
         return clusters, radius
 
         # weights = nx.get_edge_attributes(self.graph, 'weight').values()
@@ -61,5 +61,5 @@ class GonGreedy(AbstractSolver):
         #         return centers, set(), weight
 
 
-instance = GonGreedy(basic_graph(), 2, {Colour.BLUE: 2, Colour.RED: 2})
+instance = GreedySolver(basic_graph(), 2, {Colour.BLUE: 2, Colour.RED: 2})
 print(instance.solve())
