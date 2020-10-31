@@ -8,6 +8,11 @@ from tests.kcenter.util.create_test_graph import basic_graph
 
 
 class GreedySolver(AbstractSolver):
+    """K-Center solver that uses a greedy heuristic.
+
+        Based on the algorithm shown in "Clustering to minimize
+        the maximum inter-cluster distance (Gonzalez 1985)".
+        """
     INITIAL_HEAD = 0
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
@@ -51,14 +56,6 @@ class GreedySolver(AbstractSolver):
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
         return clusters, radius
-
-        # weights = nx.get_edge_attributes(self.graph, 'weight').values()
-        # weights = list(set(weights))
-        # weights = sorted(weights)
-        #
-        # for weight in weights:
-        #     if verify_solution(self.graph, self.constraints, self.k, weight, centers):
-        #         return centers, set(), weight
 
 
 instance = GreedySolver(basic_graph(), 2, {Colour.BLUE: 2, Colour.RED: 2})
