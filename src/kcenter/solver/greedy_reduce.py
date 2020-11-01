@@ -17,17 +17,21 @@ class GreedyReduceSolver(GreedySolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
+    @staticmethod
+    def get_weights(graph: nx.Graph, radius: int):
+        weights = sorted(list(nx.get_edge_attributes(graph, "weight").values()), reverse=True)
+        return [x for x in weights if x < radius]
+
     def solve(self):
         clusters, radius = super().solve()
-        weights = sorted(list(nx.get_edge_attributes(self.graph, "weight").values()), reverse=True)
+        weights = GreedyReduceSolver.get_weights(self.graph, radius)
 
         new_weight = None
         centers = set(clusters.keys())
         for weight in weights:
-            valid_solution = verify_solution(self.graph, self.constraints, self.k, weight, centers)
-            if weight < radius and valid_solution:
+            if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-            if not valid_solution:
+            else:
                 break
 
         radius = new_weight if new_weight is not None else radius
@@ -40,18 +44,16 @@ class GreedyReduceSolver(GreedySolver):
             clusters, radius, label = step
             yield clusters, radius, label
 
-        weights = sorted(list(nx.get_edge_attributes(self.graph, "weight").values()), reverse=True)
+        weights = GreedyReduceSolver.get_weights(self.graph, radius)
 
         new_weight = None
         centers = set(clusters.keys())
         for weight in weights:
-            valid_solution = verify_solution(self.graph, self.constraints, self.k, weight, centers)
-            if weight < radius and valid_solution:
+            if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
                 yield clusters, new_weight, f"decrease weight to {round(new_weight, 3)}"
-            if not valid_solution:
+            else:
                 break
 
         radius = new_weight if new_weight is not None else radius
-        yield clusters, radius, f"completed reduced solution to radius of {round(radius,3)}"
-
+        yield clusters, radius, f"completed reduced solution to radius of {round(radius, 3)}"
