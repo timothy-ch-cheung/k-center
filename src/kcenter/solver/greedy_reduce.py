@@ -1,9 +1,9 @@
 from typing import Dict
 
-from src.kcenter.solver.greedy import GreedySolver, Colour
 import networkx as nx
 
-from kcenter.verify.verify import verify_solution
+from src.kcenter.solver.greedy import GreedySolver, Colour
+from src.kcenter.verify.verify import verify_solution
 
 
 class GreedyReduceSolver(GreedySolver):

@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Set
+from typing import Dict, Tuple, Set, Generator
 
 import networkx as nx
 
@@ -34,29 +34,51 @@ class GreedySolver(AbstractSolver):
                     owning_center = center
         return max_node, max_dist, owning_center
 
+    @staticmethod
+    def move_nodes_to_new_cluster(graph: nx.Graph, clusters: Dict[int, Set[int]], new_center: int):
+        for center, cluster in zip(clusters.keys(), clusters.values()):
+            nodes_moved = []
+            for node in cluster:
+                if node != new_center and node != center \
+                        and graph[node][new_center]["weight"] < graph[node][center]["weight"]:
+                    clusters[new_center].add(node)
+                    nodes_moved.append(node)
+
+            for node in nodes_moved:
+                cluster.remove(node)
+
     def solve(self) -> Tuple[Dict[int, Set[int]], int]:
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
 
         for i in range(1, self.k):
             max_node, max_dist, owning_center = GreedySolver.max_dist(self.graph, clusters)
-
             clusters[max_node] = {max_node}
             clusters[owning_center].remove(max_node)
 
-            for center, cluster in zip(clusters.keys(), clusters.values()):
-                nodes_moved = []
-                for node in cluster:
-                    if node != max_node and node != center \
-                            and self.graph[node][max_node]["weight"] < self.graph[node][center]["weight"]:
-                        clusters[max_node].add(node)
-                        nodes_moved.append(node)
-
-                for node in nodes_moved:
-                    cluster.remove(node)
+            GreedySolver.move_nodes_to_new_cluster(self.graph, clusters, max_node)
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
         return clusters, radius
 
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+        clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
+        yield clusters, max(list(nx.get_edge_attributes(self.graph, "weight").values())), "initial center"
+
+        for i in range(1, self.k):
+            max_node, max_dist, owning_center = GreedySolver.max_dist(self.graph, clusters)
+            clusters[max_node] = {max_node}
+            clusters[owning_center].remove(max_node)
+
+            GreedySolver.move_nodes_to_new_cluster(self.graph, clusters, max_node)
+            yield clusters, max_dist, f"center {i + 1} added"
+
+        radius = GreedySolver.max_dist(self.graph, clusters)[1]
+        yield clusters, radius, "completed solution"
+
 
 instance = GreedySolver(basic_graph(), 2, {Colour.BLUE: 2, Colour.RED: 2})
-print(instance.solve())
+gen = instance.generator()
+print(gen)
+print(next(gen))
+print(next(gen))
+print(next(gen))
