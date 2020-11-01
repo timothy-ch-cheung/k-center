@@ -72,4 +72,4 @@ class GreedySolver(AbstractSolver):
             yield clusters, max_dist, f"center {i + 1} added"
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
-        yield clusters, radius, "completed solution"
+        yield clusters, radius, f"completed solution with radius of {round(radius, 3)}"

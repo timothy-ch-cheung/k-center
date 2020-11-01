@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Generator, Tuple, Set
 
 import networkx as nx
 
@@ -24,8 +24,34 @@ class GreedyReduceSolver(GreedySolver):
         new_weight = None
         centers = set(clusters.keys())
         for weight in weights:
-            if weight < radius and verify_solution(self.graph, self.constraints, self.k, weight, centers) is True:
+            valid_solution = verify_solution(self.graph, self.constraints, self.k, weight, centers)
+            if weight < radius and valid_solution:
                 new_weight = weight
+            if not valid_solution:
+                break
 
         radius = new_weight if new_weight is not None else radius
         return clusters, radius
+
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+        solution = super().generator()
+        clusters, radius = {}, float("inf")
+        for step in solution:
+            clusters, radius, label = step
+            yield clusters, radius, label
+
+        weights = sorted(list(nx.get_edge_attributes(self.graph, "weight").values()), reverse=True)
+
+        new_weight = None
+        centers = set(clusters.keys())
+        for weight in weights:
+            valid_solution = verify_solution(self.graph, self.constraints, self.k, weight, centers)
+            if weight < radius and valid_solution:
+                new_weight = weight
+                yield clusters, new_weight, f"decrease weight to {round(new_weight, 3)}"
+            if not valid_solution:
+                break
+
+        radius = new_weight if new_weight is not None else radius
+        yield clusters, radius, f"completed reduced solution to radius of {round(radius,3)}"
+
