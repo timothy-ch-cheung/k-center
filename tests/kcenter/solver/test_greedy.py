@@ -69,4 +69,4 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
 
     assert next(solution) == ({0: {0, 1, 2, 3, 4}}, pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(5.515, FLOAT_ERROR_MARGIN), 'center 2 added')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(3.275, FLOAT_ERROR_MARGIN), 'completed solution')
+    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(3.275, FLOAT_ERROR_MARGIN), 'completed solution with radius of 3.276')
