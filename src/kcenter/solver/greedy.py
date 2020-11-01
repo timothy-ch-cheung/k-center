@@ -4,7 +4,6 @@ import networkx as nx
 
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
-from tests.kcenter.util.create_test_graph import basic_graph
 
 
 class GreedySolver(AbstractSolver):
@@ -74,11 +73,3 @@ class GreedySolver(AbstractSolver):
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
         yield clusters, radius, "completed solution"
-
-
-instance = GreedySolver(basic_graph(), 2, {Colour.BLUE: 2, Colour.RED: 2})
-gen = instance.generator()
-print(gen)
-print(next(gen))
-print(next(gen))
-print(next(gen))
