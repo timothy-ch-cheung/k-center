@@ -11,10 +11,15 @@ Started putting requirements in writing on the gitlab repo.
 - Implemented the Gonzalez algorithm (Greedy heuristic) - since it covers all nodes, it will always satisfy the Colour constraints
     - Found an example where the Gonzalez algorithm produces a sub optimal cost due to covering all nodes where there is an outlier it can exclude
 - Extended the Gonzalez algorithm to incrementally reduce the radius it attempts to cover until the constraints aren't covered.
+- Created generator function equivalents of the above two algorithms. This will be useful when I do step by step visualisations, to lazily compute the clustering on demand
 
 ## Testing
 - 19 tests, 98% coverage
 - example of outlier scenario mentioned above, in the test case ```test_greedy_basic_graph_outlier_colourful_clustering``` in ```test_greedy.py```
+
+## Difficulties
+- still getting used to programming in python again
+- generator functions were new to me
 
 ## Next Week
 - implement prototype for visualisation, work out whether to use:
