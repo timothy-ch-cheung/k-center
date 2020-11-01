@@ -26,6 +26,15 @@ def test_max_dist_double_cluster():
     assert owning_center == 0
 
 
+def test_move_nodes_to_new_cluster():
+    graph = basic_graph()
+    clusters = {0: {0, 1, 2, 3}, 4: {4}}
+    GreedySolver.move_nodes_to_new_cluster(graph, clusters=clusters, new_center=4)
+
+    assert clusters[0] == {0, 1, 2}
+    assert clusters[4] == {3, 4}
+
+
 def test_greedy_basic_graph_colourful_clustering():
     graph = basic_graph()
     instance = GreedySolver(graph, K, STRICT_CONSTRAINTS)
@@ -59,7 +68,8 @@ def test_generator_greedy_basic_graph_colourful_clustering():
 
     assert next(solution) == ({0: {0, 1, 2, 3, 4}}, pytest.approx(6.369, FLOAT_ERROR_MARGIN), 'initial center')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(5.515, FLOAT_ERROR_MARGIN), 'center 2 added')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(0.854, FLOAT_ERROR_MARGIN), 'completed solution with radius of 0.854')
+    assert next(solution) == (
+        {0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(0.854, FLOAT_ERROR_MARGIN), 'completed solution with radius of 0.854')
 
 
 def test_generator_greedy_basic_graph_outlier_colourful_clustering():
@@ -69,4 +79,5 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
 
     assert next(solution) == ({0: {0, 1, 2, 3, 4}}, pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(5.515, FLOAT_ERROR_MARGIN), 'center 2 added')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(3.275, FLOAT_ERROR_MARGIN), 'completed solution with radius of 3.276')
+    assert next(solution) == (
+        {0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(3.275, FLOAT_ERROR_MARGIN), 'completed solution with radius of 3.276')
