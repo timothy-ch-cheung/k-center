@@ -8,16 +8,20 @@ const ChartFrame = styled("div")`
     padding-right: 30px; 
     border-radius: 25px;
     border: 2px solid green;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 `
 
 const ChartSvg = styled("svg")`
     color: black;
-    font-family: "Times New Roman", Times, serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
 `
 
 const ToolTip = styled("div")`
-    background-color: rgba(105,105,105, 0.8);
+    background-color: rgba(105,105,105, 0.85);
     border-radius: 5px;
     height: 18px;
     opacity: 0;

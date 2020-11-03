@@ -4,12 +4,13 @@ const D3Chart = {}
 let chart
 
 const margin = {top: 40, right: 20, bottom: 60, left: 60};
+const legendWidth = 100;
 
 const radiusToPixels = (chartSize, maxDomain, radius) => (chartSize / maxDomain) * radius
 
 D3Chart.create = function (props) {
     chart = d3.select(".chart")
-        .attr('width', props.width + margin.left + margin.right)
+        .attr('width', props.width + margin.left + margin.right + legendWidth)
         .attr('height', props.height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
@@ -29,7 +30,6 @@ D3Chart.update = function (props) {
 
     chart.append('g')
         .attr('transform', `translate(0,${props.height})`)
-        .style("stroke", "black")
         .call(d3.axisBottom(x).tickValues([1].concat(x.ticks())));
 
     chart.append('text')
@@ -38,7 +38,6 @@ D3Chart.update = function (props) {
         .text('X');
 
     chart.append('g')
-        .attr("class", "axis")
         .call(d3.axisLeft(y).tickValues([1].concat(y.ticks())));
 
     chart.append('text')
@@ -67,6 +66,7 @@ D3Chart.update = function (props) {
         .style('fill', (d) => d.colour === "RED" ? '#C13522' : '#225FC1');
 
     drawTooltips(props.chart.data);
+    drawLegend(props)
 }
 
 function drawTooltips(data) {
@@ -87,6 +87,27 @@ function drawTooltips(data) {
                 .duration(400)
                 .style('opacity', 0);
         });
+}
+
+function drawLegend(props) {
+    chart.append("rect")
+        .attr('x', props.width + 20)
+        .attr('y', 20)
+        .attr('width', '20')
+        .attr('height', '10')
+        .style('fill', "LightSlateGray")
+        .style('outline', "solid 1px Black")
+        .on("click", () => {
+                let currentOpacity = d3.selectAll(".radii").style("opacity")
+                d3.selectAll(".radii").transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+            }
+        );
+
+    chart.append("text")
+        .attr('x', props.width + 45)
+        .attr('y', 28)
+        .style('font-size', "10px")
+        .text('Toggle Centers')
 }
 
 export default D3Chart;
