@@ -57,8 +57,6 @@ D3Chart.update = function (props) {
         .style("stroke", (d) => d.center ? "black" : "none")
         .style('fill', 'none');
 
-    const tooltip = d3.select('.tooltip');
-
     chart.selectAll('.circle')
         .data(props.chart.data)
         .enter().append('circle')
@@ -66,7 +64,16 @@ D3Chart.update = function (props) {
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
         .attr('r', 5)
-        .style('fill', (d) => d.colour === "RED" ? '#C13522' : '#225FC1')
+        .style('fill', (d) => d.colour === "RED" ? '#C13522' : '#225FC1');
+
+    drawTooltips(props.chart.data);
+}
+
+function drawTooltips(data) {
+    const tooltip = d3.select('.tooltip');
+
+    chart.selectAll('.circle')
+        .data(data)
         .on('mouseover', (event, d) => {
             tooltip.transition()
                 .duration(100)

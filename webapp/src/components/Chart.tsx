@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import d3Chart from './D3Chart'
 import styled from '@emotion/styled'
 
