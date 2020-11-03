@@ -6,28 +6,28 @@ const chart =
     {
         data: [
             {
-                colour: "BLUE",
+                colour: "blue",
                 y: 2.6,
                 x: 1.3,
                 center: true
             },
             {
-                colour: "BLUE",
+                colour: "blue",
                 y: 2.1,
                 x: 1.2
             },
             {
-                colour: "BLUE",
+                colour: "blue",
                 y: 2.3,
                 x: 0.5
             },
             {
-                colour: "RED",
+                colour: "red",
                 y: 5.2,
                 x: 5.9
             },
             {
-                colour: "RED",
+                colour: "red",
                 y: 4.7,
                 x: 6.4,
                 center: true

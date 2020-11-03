@@ -59,11 +59,11 @@ D3Chart.update = function (props) {
     chart.selectAll('.circle')
         .data(props.chart.data)
         .enter().append('circle')
-        .attr('class', 'circle')
+        .attr('class', (d) => `circle ${d.colour}`)
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
         .attr('r', 5)
-        .style('fill', (d) => d.colour === "RED" ? '#C13522' : '#225FC1');
+        .style('fill', (d) => d.colour);
 
     drawTooltips(props.chart.data);
     drawLegend(props)
@@ -90,8 +90,14 @@ function drawTooltips(data) {
 }
 
 function drawLegend(props) {
+    drawCentersToggle(props.width);
+    drawClassToggles(props.chart.data, props.width);
+}
+
+function drawCentersToggle(chartWidth) {
     chart.append("rect")
-        .attr('x', props.width + 20)
+        .attr('class', 'center-toggle')
+        .attr('x', chartWidth + 20)
         .attr('y', 20)
         .attr('width', '20')
         .attr('height', '10')
@@ -100,14 +106,52 @@ function drawLegend(props) {
         .on("click", () => {
                 let currentOpacity = d3.selectAll(".radii").style("opacity")
                 d3.selectAll(".radii").transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+                d3.select('.center-toggle').transition().style("opacity", currentOpacity == 1 ? 0.2 : 1)
             }
         );
 
     chart.append("text")
-        .attr('x', props.width + 45)
+        .attr('x', chartWidth + 45)
         .attr('y', 28)
         .style('font-size', "10px")
         .text('Toggle Centers')
+}
+
+function drawClassToggles(chartData, chartWidth) {
+    let colours = Array.from(new Set(chartData.map(x => x.colour)));
+
+    chart.selectAll(".legend")
+        .data(colours)
+        .enter()
+        .append("g")
+        .append("rect")
+        .attr('class', (d) => `${d}-toggle`)
+        .attr('x', chartWidth + 20)
+        .attr('y', (d, i) => {
+            return 40 + (i * 20)
+        })
+        .attr('width', '20')
+        .attr('height', '10')
+        .style('fill', (d) => d)
+        .style('outline', "solid 1px Black")
+        .on("click", (event, d) => {
+                let currentOpacity = d3.selectAll("." + d).style("opacity")
+                d3.selectAll("." + d).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+                d3.select(`.${d}-toggle`).transition().style("opacity", currentOpacity == 1 ? 0.2 : 1)
+            }
+        );
+
+    chart.selectAll(".legend")
+        .data(colours)
+        .enter()
+        .append("text")
+        .attr('x', chartWidth + 45)
+        .attr('y', (d, i) => {
+            return 48 + (i * 20)
+        })
+        .style('font-size', "10px")
+        .text((d) => d);
+
 }
 
 export default D3Chart;
