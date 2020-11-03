@@ -1,6 +1,32 @@
 import React, {useEffect, useRef} from 'react';
 import d3Chart from './D3Chart'
+import styled from '@emotion/styled'
 
+const ChartFrame = styled("div")`
+    background-color: white; 
+    padding: 10px; 
+    padding-right: 30px; 
+    border-radius: 25px;
+    border: 2px solid green;
+`
+
+const ChartSvg = styled("svg")`
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+`
+
+const ToolTip = styled("div")`
+    background-color: rgba(105,105,105, 0.8);
+    border-radius: 5px;
+    height: 18px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    font-size: 16px;
+    padding: 5px;
+`
 
 interface ChartItem {
     colour: string,
@@ -10,22 +36,35 @@ interface ChartItem {
 }
 
 interface ChartData {
-    chart: ChartItem[]
-    width: number,
+    data: ChartItem[]
+    centerRadius: number
+}
+
+interface Props {
+    chart: ChartData
+    width: number
     height: number
 }
 
-export default function Chart(props: ChartData): JSX.Element {
+export default function Chart(props: Props): JSX.Element {
     useEffect(() => {
         d3Chart.create({
-            width: props.width || 0,
-            height: props.height || 0,
-            chart: props.chart || []
+            width: props.width,
+            height: props.height,
+            chart: props.chart
+        });
+    }, [])
+
+    useEffect(() => {
+        d3Chart.update({
+            width: props.width,
+            height: props.height,
+            chart: props.chart
         });
     }, [props])
 
-    return <div style={{backgroundColor: "white", padding: "10px", paddingRight: "30px", borderRadius: "25px",
-        border: "2px solid #73AD21"}}>
-        <svg className="chart"/>
-    </div>
+    return <ChartFrame>
+        <ChartSvg className="chart"/>
+        <ToolTip className="tooltip"/>
+    </ChartFrame>
 }

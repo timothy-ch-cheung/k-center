@@ -37,9 +37,9 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <p>
-                    Colorful K-Center Clustering.
+                    Colorful K-Center Clustering
                 </p>
-                <Chart chart={data} width={400} height={400}/>
+                <Chart chart={{data: data, centerRadius:0.854}} width={350} height={350}/>
             </header>
         </div>
     );
