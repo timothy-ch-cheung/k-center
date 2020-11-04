@@ -59,7 +59,7 @@ D3Chart.update = function (props) {
     chart.selectAll('.circle')
         .data(props.chart.data)
         .enter().append('circle')
-        .attr('class', (d) => `circle ${d.colour}`)
+        .attr('class', (d) => `circle ${d.colour} ${d.center ? 'center' : ''}`)
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
         .attr('r', 5)
@@ -90,11 +90,12 @@ function drawTooltips(data) {
 }
 
 function drawLegend(props) {
-    drawCentersToggle(props.width);
+    drawCentersBoundaryToggle(props.width);
+    drawHighlightCenterButton(props.width);
     drawClassToggles(props.chart.data, props.width);
 }
 
-function drawCentersToggle(chartWidth) {
+function drawCentersBoundaryToggle(chartWidth) {
     chart.append("rect")
         .attr('class', 'center-toggle')
         .attr('x', chartWidth + 20)
@@ -117,6 +118,30 @@ function drawCentersToggle(chartWidth) {
         .text('Toggle Centers')
 }
 
+function drawHighlightCenterButton(chartWidth) {
+    chart.append("rect")
+        .attr('class', 'center-toggle')
+        .attr('x', chartWidth + 20)
+        .attr('y', 40)
+        .attr('width', '20')
+        .attr('height', '10')
+        .style('fill', "Purple")
+        .style('outline', "solid 1px Black")
+        .on("click", () => {
+            d3.selectAll(".center")
+                .transition().style("opacity", 0).duration(150)
+                .transition().style("opacity", 1).duration(150)
+                .transition().style("opacity", 0).duration(150)
+                .transition().style("opacity", 1).duration(150);
+        });
+
+    chart.append("text")
+        .attr('x', chartWidth + 45)
+        .attr('y', 48)
+        .style('font-size', "10px")
+        .text('Highlight Centers')
+}
+
 function drawClassToggles(chartData, chartWidth) {
     let colours = Array.from(new Set(chartData.map(x => x.colour)));
 
@@ -128,7 +153,7 @@ function drawClassToggles(chartData, chartWidth) {
         .attr('class', (d) => `${d}-toggle`)
         .attr('x', chartWidth + 20)
         .attr('y', (d, i) => {
-            return 40 + (i * 20)
+            return 80 + (i * 20)
         })
         .attr('width', '20')
         .attr('height', '10')
@@ -147,7 +172,7 @@ function drawClassToggles(chartData, chartWidth) {
         .append("text")
         .attr('x', chartWidth + 45)
         .attr('y', (d, i) => {
-            return 48 + (i * 20)
+            return 88 + (i * 20)
         })
         .style('font-size', "10px")
         .text((d) => d);
