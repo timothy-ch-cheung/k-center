@@ -1,8 +1,11 @@
 import pyomo.environ as pyo
 from math import sqrt
 
+# Quote from Sayan Bandyapadhyay et al. from "A Constant Approximation for Colorful k-Center"
+# It is easy to see that an optimal solution satisfies all the constraints when the guess ρ is correct (i.e., when ρ ≥ OP T).
+# Therefore, henceforth, we assume that ρ = OPT
 
-# Implementation of LP1 from "A Constant Approximation for Colorful k-Center" by  Bandyapadhyay et al.
+# We use this LP to determine a valid "guess" of the OPT
 
 points = [
     [1.3, 2.6],
@@ -19,10 +22,12 @@ colours = [
     "R",
     "R"
 ]
+
 n = len(points)
-b = 1
-r = 1
+b = 3
+r = 2
 k = 2
+opt_guess = 1
 
 
 def euclidean_distance(p1, p2):
@@ -44,55 +49,47 @@ model = pyo.ConcreteModel()
 
 print("cost_matrix:")
 for row in cost_matrix:
-    print([round(x,2) for x in row])
+    print([round(x, 2) for x in row])
 print()
 # data point cost indexes
 model.N = pyo.RangeSet(n)
 model.M = pyo.RangeSet(n)
 model.U = pyo.RangeSet(1)
 
-# Blue and Red coverage
-
-
 # Decision variable (should the point be a center?)
 model.x = pyo.Var(model.N, within=pyo.Reals, bounds=(0, 1))
+model.z = pyo.Var(model.N, within=pyo.Reals, bounds=(0, 1))
 
-model.cost = pyo.Param(model.N, model.M, initialize=lambda model, i, j: cost_matrix[i - 1][j - 1])
-model.colours = pyo.Param(model.N, initialize=lambda model, i: colours[i - 1])
-model.red_coverage = pyo.Param(model.U, initialize={1: r})
-model.blue_coverage = pyo.Param(model.U, initialize={1: b})
+model.cost = pyo.Param(model.N, model.M, initialize=lambda model, i, j: cost_matrix[i - 1][j - 1], within=pyo.Reals)
+model.colours = pyo.Param(model.N, initialize=lambda model, i: colours[i - 1], within=pyo.Any)
+model.red_coverage = pyo.Param(model.U, initialize={1: r}, within=pyo.PositiveIntegers)
+model.blue_coverage = pyo.Param(model.U, initialize={1: b}, within=pyo.PositiveIntegers)
+model.opt_guess = pyo.Param(model.U, initialize={1: opt_guess}, within=pyo.PositiveReals)
 
 
+def get_surrounding_points(i, n_points, cost, opt):
+    surr_points = []
+    for j in n_points:
+        if cost[i, j] <= opt:
+            surr_points.append(j)
+    return surr_points
+
+
+# We use a constant objective function as the algorithm only requires a feasible solution
 def objective_func(mdl):
-    cost = 0
-    for i in mdl.N:
-        maxi = 0
-        for j in mdl.N:
-            if i != j:
-                dist = model.cost[i, j]
-                maxi = dist if dist > maxi else maxi
-        cost += maxi
-    return cost
+    return 0
 
 
 model.objective = pyo.Objective(rule=objective_func, sense=pyo.minimize)
 
 
-def get_surrounding_points(i, n_points, cost):
-    surr_points = []
-    for j in n_points:
-        if cost[i, j] <= 1:
-            surr_points.append(j)
-    return surr_points
-
-
 def rule_surrounding_points(mdl, N):
-    surr_points = get_surrounding_points(N, mdl.N, model.cost)
+    surr_points = get_surrounding_points(N, mdl.N, model.cost, mdl.opt_guess[1])
 
-    zj = sum(mdl.cost[N, j] for j in mdl.N if N != j)
-    xi = sum(mdl.x[j] for j in surr_points)
+    xi_sum = sum(mdl.x[j] for j in surr_points)
+    zj = mdl.z[N]
 
-    return zj >= xi
+    return zj <= xi_sum
 
 
 model.const1 = pyo.Constraint(model.N, rule=rule_surrounding_points)
@@ -108,8 +105,7 @@ model.const2 = pyo.Constraint(rule=rule_less_than_k)
 def rule_sufficient_red(mdl, N):
     if (mdl.colours[N] != "R"):
         return pyo.Constraint.Skip
-    surr_points = get_surrounding_points(N, mdl.N, mdl.cost)
-    zj = sum(mdl.x[j] for j in surr_points)
+    zj = sum(mdl.z[j] for j in mdl.N if mdl.colours[j] == "R")
     return zj >= mdl.red_coverage[1]
 
 
@@ -119,8 +115,7 @@ model.const3 = pyo.Constraint(model.N, rule=rule_sufficient_red)
 def rule_sufficient_blue(mdl, N):
     if (mdl.colours[N] != "B"):
         return pyo.Constraint.Skip
-    surr_points = get_surrounding_points(N, mdl.N, mdl.cost)
-    zj = sum(mdl.x[j] for j in surr_points)
+    zj = sum(mdl.z[j] for j in mdl.N if mdl.colours[j] == "B")
     return zj >= mdl.blue_coverage[1]
 
 
@@ -128,7 +123,8 @@ model.const4 = pyo.Constraint(model.N, rule=rule_sufficient_blue)
 
 solver = pyo.SolverFactory('glpk')
 result = solver.solve(model, tee=False)
-print(result)
+print("Number of solutions:", len(model.solutions))
+
 List = list(model.x.keys())
 for i in List:
-    print(i, '--', model.x[i]())
+    print(i, 'x:', model.x[i](), 'z:', model.z[i]())
