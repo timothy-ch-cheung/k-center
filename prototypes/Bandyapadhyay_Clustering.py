@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Dict
 
 import networkx as nx
 import numpy
@@ -50,14 +50,13 @@ def ball(graph: nx.graph, j, p) -> Set[int]:
     return nodes
 
 
-def cluster(graph: nx.Graph, p):
-    cluster_centers = set()
+def cluster(graph: nx.Graph, p) -> Dict[int, Set[int]]:
+    clusters = {}
     unclustered_points = set(graph.nodes())
 
     # len() is O(1) since a variable keeps track of size
     while len(unclustered_points) > 0:
         j = get_max_zj(graph, unclustered_points)
-        cluster_centers.add(j)
 
         xj = sum_xi(graph, j, p)
         graph.nodes()[j]["x"] = sum_xi(graph, j, p)
@@ -70,8 +69,9 @@ def cluster(graph: nx.Graph, p):
             graph.nodes()[i]["x"] = 0
             graph.nodes()[i]["z"] = graph.nodes()[j]["z"]
 
+        clusters[j] = Cj
         unclustered_points = unclustered_points.difference(Cj)
-    return cluster_centers
+    return clusters
 
 
 solution = cluster(basic_graph(), 0.854)
