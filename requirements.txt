@@ -1,4 +1,5 @@
-numpy==1.14.5
-pytest==5.3.5
-networkx==2.5
+numpy==1.19.3
 Pyomo==5.7.1
+networkx==2.5
+Flask==1.1.2
+pytest==5.3.5
