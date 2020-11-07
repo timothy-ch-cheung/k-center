@@ -1,12 +1,16 @@
 import pyomo.environ as pyo
-from tests.kcenter.util.create_test_graph import basic_graph, Colour
+from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier, Colour
 
-graph = basic_graph()
+graph = basic_graph_with_outlier()
 
-potential_clusters = {4: {3, 4}, 2: {0, 1, 2}}
+# clusters (no outliers)
+#potential_clusters = {4: {3, 4}, 2: {0, 1, 2}}
+
+# clusters (outliers)
+potential_clusters = {4: {3, 4}, 2: {2}, 1: {0, 1}}
 potential_cluster_centers = potential_clusters.keys()
 n = len(potential_cluster_centers)
-b = 3
+b = 2
 r = 2
 k = 2
 
