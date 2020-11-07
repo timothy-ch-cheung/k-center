@@ -1,3 +1,2 @@
 yarn --cwd webapp build
-cd src/server || exit
-gunicorn app:app
+nohup python3 src/serverapp.py &
