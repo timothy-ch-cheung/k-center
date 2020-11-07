@@ -2,7 +2,7 @@ from typing import Dict, Generator, Tuple, Set
 
 import networkx as nx
 
-from src.kcenter.solver.greedy import GreedySolver, Colour
+from src.kcenter.greedy.greedy import GreedySolver, Colour
 from src.kcenter.verify.verify import verify_solution
 
 

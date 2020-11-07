@@ -1,6 +1,6 @@
 import pytest
 
-from src.kcenter.solver.greedy import GreedySolver
+from src.kcenter.greedy.greedy import GreedySolver
 from src.kcenter.verify.verify import verify_solution, Colour
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
