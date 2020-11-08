@@ -1,7 +1,8 @@
 import pytest
 
+from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy import GreedySolver
-from src.kcenter.verify.verify import verify_solution, Colour
+from src.kcenter.verify.verify import verify_solution
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
 FLOAT_ERROR_MARGIN = 0.001
