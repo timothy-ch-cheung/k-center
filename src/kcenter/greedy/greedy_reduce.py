@@ -10,9 +10,9 @@ class GreedyReduceSolver(GreedySolver):
     """Colorful K-Center solver that uses a greedy heuristic and minimizes the cost based on
     the colour constraints.
 
-            Calls GreedySolver to get an initial solution. Then attempts to reduce the radius
-            by trying  lower radii and checking if the constraints are still satisfied".
-            """
+    Calls GreedySolver to get an initial solution. Then attempts to reduce the radius
+    by trying  lower radii and checking if the constraints are still satisfied".
+    """
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)

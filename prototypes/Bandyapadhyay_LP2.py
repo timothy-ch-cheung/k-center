@@ -20,10 +20,6 @@ model.N = pyo.Set(initialize=potential_cluster_centers)
 
 # Decision variable (should the point be a center?)
 model.x = pyo.Var(model.N, within=pyo.Reals, bounds=(0, 1))
-# Decision variable (number of red points the potential center covers)
-model.r = pyo.Var(model.N, within=pyo.PositiveIntegers)
-# Decision variable (number of blue points the potential center covers)
-model.b = pyo.Var(model.N, within=pyo.PositiveIntegers)
 
 model.red_coverage = pyo.Param(initialize=r, within=pyo.PositiveIntegers)
 model.blue_coverage = pyo.Param(initialize=b, within=pyo.PositiveIntegers)

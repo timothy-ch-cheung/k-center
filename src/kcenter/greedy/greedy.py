@@ -9,9 +9,9 @@ from src.kcenter.solver.abstract_solver import AbstractSolver
 class GreedySolver(AbstractSolver):
     """K-Center solver that uses a greedy heuristic.
 
-        Based on the algorithm shown in "Clustering to minimize
-        the maximum inter-cluster distance (Gonzalez 1985)".
-        """
+    Based on the algorithm shown in "Clustering to minimize
+    the maximum inter-cluster distance (Gonzalez 1985)".
+    """
     INITIAL_HEAD = 0
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
