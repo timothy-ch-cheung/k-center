@@ -1,8 +1,10 @@
 from functools import partial
 from typing import List
 
-import pyomo.environ as pyo
 import networkx as nx
+import pyomo.environ as pyo
+
+from src.kcenter.constant.colour import Colour
 
 
 class RadiusChecker:
@@ -26,7 +28,7 @@ class RadiusChecker:
 
         Calculates B(j, ρ) described in LP1 Bandyapadhyay et al. (2019)
         """
-        surr_points = []
+        surr_points = [point]
         for j in mdl.N:
             if point != j and graph[point][j]["weight"] <= mdl.opt.value:
                 surr_points.append(j)
@@ -102,12 +104,10 @@ class RadiusChecker:
 
         self.model.objective = pyo.Objective(rule=RadiusChecker.objective_func, sense=pyo.minimize)
 
-    def solve(self, radius_guess: float) -> bool:
+    def verify(self, radius_guess: float, solver="glpk") -> bool:
         self.initialise_model(radius_guess)
 
-        solver = pyo.SolverFactory('glpk')
+        solver = pyo.SolverFactory(solver)
         solver.solve(self.model, tee=False)
 
-        List = list(self.model.x.keys())
-        for i in List:
-            print(i, 'x:', self.model.x[i](), 'z:', self.model.z[i]())
+        return len(self.model.solutions) > 0
