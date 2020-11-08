@@ -1,6 +1,7 @@
-import networkx as nx
-from typing import Dict, Tuple, Set, Generator
 from abc import ABC, abstractmethod
+from typing import Dict, Tuple, Set, Generator
+
+import networkx as nx
 
 from src.kcenter.constant.colour import Colour
 
@@ -12,7 +13,7 @@ class AbstractSolver(ABC):
         self.constraints = constraints
 
     @abstractmethod
-    def solve(self) -> Tuple[Set[int], Set[Set[int]], int]:
+    def solve(self) -> Tuple[Dict[int, Set[int]], int]:
         pass
 
     @abstractmethod

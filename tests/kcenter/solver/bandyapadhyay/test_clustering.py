@@ -1,13 +1,14 @@
+import networkx as nx
+
 from src.kcenter.bandyapadhyay.clustering import cluster
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
-import networkx as nx
 
 
 def basic_graph_post_lp1():
     graph = basic_graph()
     nx.set_node_attributes(graph, {
-        0: 1.0,
-        1: 0.0,
+        0: 0.0,
+        1: 1.0,
         2: 0.0,
         3: 0.0,
         4: 1.0

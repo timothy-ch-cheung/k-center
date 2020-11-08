@@ -1,5 +1,5 @@
 from functools import partial
-from typing import List
+from typing import List, Optional, Dict
 
 import networkx as nx
 import pyomo.environ as pyo
@@ -105,13 +105,24 @@ class RadiusChecker:
 
         self.model.objective = pyo.Objective(rule=RadiusChecker.objective_func, sense=pyo.minimize)
 
-    def verify(self, radius_guess: float, solver="glpk") -> bool:
+    def verify(self, radius_guess: float, solver="glpk") -> Optional[Dict[int, Dict[str, float]]]:
         """Verifies whether a given guess at the length of the optimal radius can solve the Colourful K-Center problem
         for this graph.
+
+        :param radius_guess: Guess of the optimal radius for the graph
+        :param solver: LP solver to use
+        :return: If there is a solution, a dictionary of points and their corresponding x and z values. If there isn't
+        a solution None is returned.
         """
         self.initialise_model(radius_guess)
 
         solver = pyo.SolverFactory(solver)
         solver.solve(self.model, tee=False)
 
-        return len(self.model.solutions) > 0
+        if len(self.model.solutions) > 0:
+            solution = {}
+            for point in self.model.x.keys():
+                solution[point] = {"x": self.model.x[point](), "z": self.model.z[point]()}
+            return solution
+        else:
+            return None

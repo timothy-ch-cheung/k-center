@@ -24,6 +24,10 @@ def test_valid_center_set_valid_radius(r):
     assert verify_solution(graph, constraints, k, r, centers) is True
 
 
+def test_valid_center_set_valid_optimal_radius():
+    assert verify_solution(graph, constraints, k, 0.7281, {1, 3}) is True
+
+
 @pytest.mark.parametrize("r", invalid_radii)
 def test_valid_center_set_invalid_radius(r):
     assert verify_solution(graph, constraints, k, r, centers) is False

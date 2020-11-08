@@ -20,6 +20,8 @@ class GreedyReduceSolver(GreedySolver):
 
     @staticmethod
     def get_weights(graph: nx.Graph, radius: int):
+        """Gets all weights on the graph less than a given length in reverse order
+        """
         weights = sorted(list(nx.get_edge_attributes(graph, "weight").values()), reverse=True)
         return [x for x in weights if x < radius]
 
