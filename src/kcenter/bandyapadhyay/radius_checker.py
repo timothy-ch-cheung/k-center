@@ -80,6 +80,7 @@ class RadiusChecker:
 
         # Decision variable: how much this point is fractionally opened as a center
         self.model.x = pyo.Var(self.model.N, within=pyo.Reals, bounds=(0, 1))
+        # Decision variable: how much this point is covered by its surrounding centers
         self.model.z = pyo.Var(self.model.N, within=pyo.Reals, bounds=(0, 1))
 
         # constraint constants
@@ -105,6 +106,9 @@ class RadiusChecker:
         self.model.objective = pyo.Objective(rule=RadiusChecker.objective_func, sense=pyo.minimize)
 
     def verify(self, radius_guess: float, solver="glpk") -> bool:
+        """Verifies whether a given guess at the length of the optimal radius can solve the Colourful K-Center problem
+        for this graph.
+        """
         self.initialise_model(radius_guess)
 
         solver = pyo.SolverFactory(solver)
