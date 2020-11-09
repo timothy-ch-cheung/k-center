@@ -1,4 +1,4 @@
-# Week 4
+# Week 5
 Summary: Setting up the repo and implementing the Gonzalez algorithm
 
 Started putting requirements in writing on the gitlab repo.

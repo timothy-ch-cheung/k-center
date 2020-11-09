@@ -1,4 +1,4 @@
-# Week 4
+# Week 6
 Summary: Implementing the Colourful K-Center algorithm by Bandyapadhyay
 
 Decided not to use mpld3 as it was too inflexible, I used D3 directly instead.
