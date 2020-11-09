@@ -46,7 +46,7 @@ class GreedySolver(AbstractSolver):
             for node in nodes_moved:
                 cluster.remove(node)
 
-    def solve(self) -> Tuple[Dict[int, Set[int]], int]:
+    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
 
         for i in range(1, self.k):
@@ -57,7 +57,7 @@ class GreedySolver(AbstractSolver):
             GreedySolver.move_nodes_to_new_cluster(self.graph, clusters, max_node)
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
-        return clusters, radius
+        return clusters, set(), radius
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}

@@ -39,11 +39,14 @@ def test_move_nodes_to_new_cluster():
 def test_greedy_basic_graph_colourful_clustering():
     graph = basic_graph()
     instance = GreedySolver(graph, K, STRICT_CONSTRAINTS)
-    clusters, radius = instance.solve()
+    clusters, outliers, radius = instance.solve()
 
     assert radius == pytest.approx(0.854, FLOAT_ERROR_MARGIN)
-    assert list(clusters.keys()) == [0, 4]
-    assert list(clusters.values()) == [{0, 1, 2}, {3, 4}]
+    assert clusters == {
+        0: {0, 1, 2},
+        4: {3, 4}
+    }
+    assert outliers == set()
     assert verify_solution(graph, STRICT_CONSTRAINTS, K, radius, set(clusters.keys())) is True
 
 
@@ -54,11 +57,14 @@ def test_greedy_basic_graph_outlier_colourful_clustering():
     with a much lower cost of 0.707"""
     graph = basic_graph_with_outlier()
     instance = GreedySolver(graph, K, RELAXED_CONSTRAINTS)
-    clusters, radius = instance.solve()
+    clusters, outliers, radius = instance.solve()
 
     assert radius == pytest.approx(3.275, FLOAT_ERROR_MARGIN)
-    assert list(clusters.keys()) == [0, 4]
-    assert list(clusters.values()) == [{0, 1, 2}, {3, 4}]
+    assert clusters == {
+        0: {0, 1, 2},
+        4: {3, 4}
+    }
+    assert outliers == set()
     assert verify_solution(graph, RELAXED_CONSTRAINTS, K, radius, set(clusters.keys())) is True
 
 

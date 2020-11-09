@@ -27,11 +27,14 @@ def test_get_weights_returns_sorted_list():
 def test_greedy_basic_graph_outlier_colourful_clustering():
     graph = basic_graph_with_outlier()
     instance = GreedyReduceSolver(graph, K, RELAXED_CONSTRAINTS)
-    clusters, radius = instance.solve()
+    clusters, outliers, radius = instance.solve()
 
     assert radius == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
-    assert list(clusters.keys()) == [0, 4]
-    assert list(clusters.values()) == [{0, 1, 2}, {3, 4}]
+    assert clusters == {
+        0: {0, 1, 2},
+        4: {3, 4}
+    }
+    assert outliers == set()
     assert verify_solution(graph, RELAXED_CONSTRAINTS, K, radius, set(clusters.keys())) is True
 
 

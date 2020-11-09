@@ -22,7 +22,7 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
 
-    def solve(self) -> Tuple[Dict[int, Set[int]], int]:
+    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         weights = ConstantColourfulKCenterSolver.get_weights(self.graph)
 
         radius_checker = RadiusChecker(self.graph, self.k, self.constraints[Colour.RED], self.constraints[Colour.BLUE])
@@ -47,11 +47,9 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         centers = set(sorted(solution, key=solution.get)[-self.k:])
         unused_centers = set(clusters.keys()).difference(centers)
 
-        unclustered_points = set()
+        outliers = set()
         for center in unused_centers:
-            unclustered_points = unclustered_points.union(clusters[center])
+            outliers = outliers.union(clusters[center])
             del clusters[center]
 
-        clusters[-1] = unclustered_points
-
-        return clusters, 2 * opt
+        return clusters, outliers, 2 * opt

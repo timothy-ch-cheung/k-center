@@ -25,8 +25,8 @@ class GreedyReduceSolver(GreedySolver):
         weights = sorted(list(nx.get_edge_attributes(graph, "weight").values()), reverse=True)
         return [x for x in weights if x < radius]
 
-    def solve(self):
-        clusters, radius = super().solve()
+    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
+        clusters, outliers, radius = super().solve()
         weights = GreedyReduceSolver.get_weights(self.graph, radius)
 
         new_weight = None
@@ -38,7 +38,7 @@ class GreedyReduceSolver(GreedySolver):
                 break
 
         radius = new_weight if new_weight is not None else radius
-        return clusters, radius
+        return clusters, outliers, radius
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         solution = super().generator()

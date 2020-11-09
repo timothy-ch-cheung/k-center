@@ -13,7 +13,7 @@ class AbstractSolver(ABC):
         self.constraints = constraints
 
     @abstractmethod
-    def solve(self) -> Tuple[Dict[int, Set[int]], int]:
+    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         pass
 
     @abstractmethod
