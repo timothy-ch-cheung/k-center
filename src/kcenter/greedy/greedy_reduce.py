@@ -44,8 +44,8 @@ class GreedyReduceSolver(GreedySolver):
         solution = super().generator()
         clusters, radius = {}, float("inf")
         for step in solution:
-            clusters, radius, label = step
-            yield clusters, radius, label
+            clusters, outliers, radius, label = step
+            yield clusters, outliers, radius, label
 
         weights = GreedyReduceSolver.get_weights(self.graph, radius)
 
@@ -54,9 +54,9 @@ class GreedyReduceSolver(GreedySolver):
         for weight in weights:
             if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-                yield clusters, new_weight, f"decrease weight to {round(new_weight, 3)}"
+                yield clusters, set(), new_weight, f"decrease weight to {round(new_weight, 3)}"
             else:
                 break
 
         radius = new_weight if new_weight is not None else radius
-        yield clusters, radius, f"completed reduced solution to radius of {round(radius, 3)}"
+        yield clusters, set(), radius, f"completed reduced solution to radius of {round(radius, 3)}"

@@ -61,7 +61,7 @@ class GreedySolver(AbstractSolver):
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
-        yield clusters, max(list(nx.get_edge_attributes(self.graph, "weight").values())), "initial center"
+        yield clusters, set(), max(list(nx.get_edge_attributes(self.graph, "weight").values())), "initial center"
 
         for i in range(1, self.k):
             max_node, max_dist, owning_center = GreedySolver.max_dist(self.graph, clusters)
@@ -69,7 +69,7 @@ class GreedySolver(AbstractSolver):
             clusters[owning_center].remove(max_node)
 
             GreedySolver.move_nodes_to_new_cluster(self.graph, clusters, max_node)
-            yield clusters, max_dist, f"center {i + 1} added"
+            yield clusters, set(), max_dist, f"center {i + 1} added"
 
         radius = GreedySolver.max_dist(self.graph, clusters)[1]
-        yield clusters, radius, f"completed solution with radius of {round(radius, 3)}"
+        yield clusters, set(), radius, f"completed solution with radius of {round(radius, 3)}"

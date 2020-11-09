@@ -73,10 +73,11 @@ def test_generator_greedy_basic_graph_colourful_clustering():
     instance = GreedySolver(graph, K, STRICT_CONSTRAINTS)
     solution = instance.generator()
 
-    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, pytest.approx(6.369, FLOAT_ERROR_MARGIN), 'initial center')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(5.515, FLOAT_ERROR_MARGIN), 'center 2 added')
-    assert next(solution) == (
-        {0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(0.854, FLOAT_ERROR_MARGIN), 'completed solution with radius of 0.854')
+    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(6.369, FLOAT_ERROR_MARGIN), 'initial center')
+    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(5.515, FLOAT_ERROR_MARGIN),
+                              'center 2 added')
+    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(0.854, FLOAT_ERROR_MARGIN),
+                              'completed solution with radius of 0.854')
 
 
 def test_generator_greedy_basic_graph_outlier_colourful_clustering():
@@ -84,7 +85,9 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
     instance = GreedySolver(graph, K, RELAXED_CONSTRAINTS)
     solution = instance.generator()
 
-    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(5.515, FLOAT_ERROR_MARGIN), 'center 2 added')
+    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
+    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(5.515, FLOAT_ERROR_MARGIN),
+                              'center 2 added')
     assert next(solution) == (
-        {0: {0, 1, 2}, 4: {3, 4}}, pytest.approx(3.275, FLOAT_ERROR_MARGIN), 'completed solution with radius of 3.276')
+        {0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(3.275, FLOAT_ERROR_MARGIN),
+        'completed solution with radius of 3.276')
