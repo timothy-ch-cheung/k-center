@@ -1,10 +1,11 @@
 import React from "react";
-import Chart from "../../components/Chart";
+import Chart from "../../components/chart/Chart";
 import {Container} from "../index/App";
 import styled from '@emotion/styled';
 import Home from '@material-ui/icons/Home';
 import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
+import Configurator from "../../components/configuration/Configurator";
 
 const HomeIcon = styled(Home)`
     color: white;
@@ -63,6 +64,7 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
+            <Configurator width={350} height={455}/>
             <Chart chart={chart} width={350} height={350}/>
         </ChartContainer>
     </Container>

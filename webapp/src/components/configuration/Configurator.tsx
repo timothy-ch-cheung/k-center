@@ -1,0 +1,72 @@
+import React, {useState} from "react";
+import {ChartFrame} from "../chart/Chart";
+import {Button, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import styled from "@emotion/styled";
+import NumberSlider from "../number_slider/NumberSlider";
+import PaletteIcon from '@material-ui/icons/Palette';
+
+interface Props {
+    width: number
+    height: number
+}
+
+const H3 = styled("h3")`
+    margin: 5px 10px;
+`
+
+const SectionDivider = styled(Divider)`
+    margin-bottom: 10px;
+`
+
+const FormControlNoWrap = styled(FormControl)`
+    display: flex;
+    wrap: nowrap;
+    margin-bottom: 10px;
+`
+
+const Spacer = styled("div")`
+    height: 15px;
+`
+
+const BluePaletteIcon = styled(PaletteIcon)`
+    color: blue
+`
+
+const RedPaletteIcon = styled(PaletteIcon)`
+    color: red
+`
+
+function Configurator(props: Props) {
+    const [k, setK] = useState<number>(1)
+    const [blue, setBlue] = useState<number>(1)
+    const [red, setRed] = useState<number>(1)
+
+    return <ChartFrame width={props.width} height={props.height}>
+        <H3>Configuration</H3>
+        <SectionDivider/>
+        <FormControlNoWrap>
+            <InputLabel>Problem instance</InputLabel>
+            <Select>
+                <MenuItem value={"basic"}>basic</MenuItem>
+                <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
+            </Select>
+        </FormControlNoWrap>
+        <FormControlNoWrap>
+            <InputLabel>Algorithm</InputLabel>
+            <Select>
+                <MenuItem value={"greedy"}>greedy</MenuItem>
+                <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
+                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
+            </Select>
+        </FormControlNoWrap>
+        <Spacer/>
+        <NumberSlider label="Number of centers" min={1} max={10} value={k} setValue={setK}/>
+        <NumberSlider label="Min blue coverage" min={1} max={10} value={blue} setValue={setBlue} icon={<BluePaletteIcon/>}/>
+        <NumberSlider label="Min red coverage" min={1} max={10} value={red} setValue={setRed} icon={<RedPaletteIcon/>}/>
+        <Spacer></Spacer>
+        <SectionDivider/>
+        <Button variant="contained" color="primary">Solve</Button>
+    </ChartFrame>
+}
+
+export default Configurator;

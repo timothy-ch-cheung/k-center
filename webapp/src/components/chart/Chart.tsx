@@ -7,12 +7,12 @@ interface FrameProps {
     height: number
 }
 
-const ChartFrame = styled("div")`
+export const ChartFrame = styled("div")`
     background-color: white; 
-    margin: 10px;
-    padding: 10px; 
+    margin: 5px;
+    padding: 15px; 
     padding-right: 30px; 
-    border-radius: 25px;
+    border-radius: 15px;
     border: 2px solid green;
     -webkit-user-select: none;
     -moz-user-select: none;
