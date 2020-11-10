@@ -2,8 +2,14 @@ import React, {useEffect} from 'react';
 import d3Chart from './D3Chart'
 import styled from '@emotion/styled'
 
+interface FrameProps {
+    width: number,
+    height: number
+}
+
 const ChartFrame = styled("div")`
     background-color: white; 
+    margin: 10px;
     padding: 10px; 
     padding-right: 30px; 
     border-radius: 25px;
@@ -12,6 +18,9 @@ const ChartFrame = styled("div")`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    width: ${(props: FrameProps) => props.width}px;
+    height: ${(props: FrameProps) => props.height}px;
+    overflow: hidden;
 `
 
 const ChartSvg = styled("svg")`
@@ -67,7 +76,7 @@ export default function Chart(props: Props): JSX.Element {
         });
     }, [props])
 
-    return <ChartFrame>
+    return <ChartFrame width={props.width * 1.5} height={props.height * 1.3}>
         <ChartSvg className="chart"/>
         <ToolTip className="tooltip"/>
     </ChartFrame>
