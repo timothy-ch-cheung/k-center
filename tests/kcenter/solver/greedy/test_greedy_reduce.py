@@ -43,11 +43,11 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
     instance = GreedyReduceSolver(graph, K, RELAXED_CONSTRAINTS)
     solution = instance.generator()
 
-    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
+    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(6.113, FLOAT_ERROR_MARGIN), 'initial center')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(5.515, FLOAT_ERROR_MARGIN),
                               'center 2 added')
-    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(3.275, FLOAT_ERROR_MARGIN),
-                              'completed solution with radius of 3.276')
+    assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(3.785, FLOAT_ERROR_MARGIN),
+                              'completed solution with radius of 3.785')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(0.707, FLOAT_ERROR_MARGIN),
                               'decrease weight to 0.707')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(0.707, FLOAT_ERROR_MARGIN),
