@@ -1,13 +1,15 @@
 import React, {useState} from "react";
-import {ChartFrame} from "../chart/Chart";
+import {ChartData, ChartFrame} from "../chart/Chart";
 import {Button, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import styled from "@emotion/styled";
 import NumberSlider from "../number_slider/NumberSlider";
 import PaletteIcon from '@material-ui/icons/Palette';
+import API from "../../API";
 
 interface Props {
     width: number
     height: number
+    setChartData: (chart: any) => void
 }
 
 const H3 = styled("h3")`
@@ -40,32 +42,67 @@ function Configurator(props: Props) {
     const [k, setK] = useState<number>(1)
     const [blue, setBlue] = useState<number>(1)
     const [red, setRed] = useState<number>(1)
+    const [problemInstance, setProblemInstance] = useState<string>('')
+    const [algorithm, setAlgorithm] = useState<string>('')
+
+    const handleProblemInstanceSelectChange = (event: any) => {
+        const problemInstance = event.target.value
+        setProblemInstance(problemInstance)
+        API.get(`/graph/${problemInstance}`).then(function (response) {
+                props.setChartData(response.data)
+            }
+        )
+    }
+
+    const handleAlgorthmSelectChange = (event: any) => {
+        setAlgorithm(event.target.value)
+    }
+
+    const handleSolveSubmit = (event: any) => {
+        event.preventDefault()
+        const requestBody = {
+            k: k,
+            blue: blue,
+            red: red,
+            graph: problemInstance,
+            algorithm: algorithm
+        }
+        API.post("/solve", requestBody).then(function (response) {
+            console.log(response.data)
+            props.setChartData(response.data)
+            }
+        )
+    }
 
     return <ChartFrame width={props.width} height={props.height}>
         <H3>Configuration</H3>
         <SectionDivider/>
-        <FormControlNoWrap>
-            <InputLabel>Problem instance</InputLabel>
-            <Select>
-                <MenuItem value={"basic"}>basic</MenuItem>
-                <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
-            </Select>
-        </FormControlNoWrap>
-        <FormControlNoWrap>
-            <InputLabel>Algorithm</InputLabel>
-            <Select>
-                <MenuItem value={"greedy"}>greedy</MenuItem>
-                <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
-            </Select>
-        </FormControlNoWrap>
-        <Spacer/>
-        <NumberSlider label="Number of centers" min={1} max={10} value={k} setValue={setK}/>
-        <NumberSlider label="Min blue coverage" min={1} max={10} value={blue} setValue={setBlue} icon={<BluePaletteIcon/>}/>
-        <NumberSlider label="Min red coverage" min={1} max={10} value={red} setValue={setRed} icon={<RedPaletteIcon/>}/>
-        <Spacer></Spacer>
-        <SectionDivider/>
-        <Button variant="contained" color="primary">Solve</Button>
+        <form onSubmit={handleSolveSubmit}>
+            <FormControlNoWrap>
+                <InputLabel>Problem instance</InputLabel>
+                <Select onChange={handleProblemInstanceSelectChange}>
+                    <MenuItem value={"basic"}>basic</MenuItem>
+                    <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
+                </Select>
+            </FormControlNoWrap>
+            <FormControlNoWrap>
+                <InputLabel>Algorithm</InputLabel>
+                <Select onChange={handleAlgorthmSelectChange}>
+                    <MenuItem value={"greedy"}>greedy</MenuItem>
+                    <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
+                    <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
+                </Select>
+            </FormControlNoWrap>
+            <Spacer/>
+            <NumberSlider label="Number of centers" min={1} max={10} value={k} setValue={setK}/>
+            <NumberSlider label="Min blue coverage" min={1} max={10} value={blue} setValue={setBlue}
+                          icon={<BluePaletteIcon/>}/>
+            <NumberSlider label="Min red coverage" min={1} max={10} value={red} setValue={setRed}
+                          icon={<RedPaletteIcon/>}/>
+            <Spacer></Spacer>
+            <SectionDivider/>
+            <Button variant="contained" color="primary" type="submit">Solve</Button>
+        </form>
     </ChartFrame>
 }
 

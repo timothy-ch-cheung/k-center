@@ -17,6 +17,9 @@ D3Chart.create = function (props) {
 }
 
 D3Chart.update = function (props) {
+    d3.selectAll('.circle').remove();
+    d3.selectAll('.radii').remove();
+    d3.selectAll('.toggle-text').remove();
     const x = d3.scaleLinear()
         .range([0, props.width]);
 
@@ -112,6 +115,7 @@ function drawCentersBoundaryToggle(chartWidth) {
         );
 
     chart.append("text")
+        .attr('class', 'toggle-text')
         .attr('x', chartWidth + 45)
         .attr('y', 28)
         .style('font-size', "10px")
@@ -136,6 +140,7 @@ function drawHighlightCenterButton(chartWidth) {
         });
 
     chart.append("text")
+        .attr('class', 'toggle-text')
         .attr('x', chartWidth + 45)
         .attr('y', 48)
         .style('font-size', "10px")
@@ -170,6 +175,7 @@ function drawClassToggles(chartData, chartWidth) {
         .data(colours)
         .enter()
         .append("text")
+        .attr('class', 'toggle-text')
         .attr('x', chartWidth + 45)
         .attr('y', (d, i) => {
             return 88 + (i * 20)
