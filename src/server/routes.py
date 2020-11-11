@@ -1,11 +1,10 @@
 from flask import render_template, request, jsonify, Blueprint
 
-from server.graph_loader import GraphLoader
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy import GreedySolver
 from src.kcenter.greedy.greedy_reduce import GreedyReduceSolver
-from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
+from src.server.graph_loader import GraphLoader
 
 main = Blueprint('main', __name__)
 
@@ -20,21 +19,7 @@ def get_graph(name):
     return GraphLoader.get_json(name)
 
 
-def determine_graph(name):
-    if name == "basic":
-        return basic_graph()
-    elif name == "basic_with_outlier":
-        return basic_graph_with_outlier()
-
-
 def repackage_solution(graph, clusters, outliers, radius):
-    def to_colour(colour: Colour):
-        colours = {
-            1: "blue",
-            2: "red"
-        }
-        return colours[colour]
-
     json = {"centerRadius": radius}
     data = []
     nodes = list(graph.nodes())
@@ -45,7 +30,7 @@ def repackage_solution(graph, clusters, outliers, radius):
         position = graph.nodes()[node]["pos"]
         point_data["x"] = position[0]
         point_data["y"] = position[1]
-        point_data["colour"] = to_colour(graph.nodes()[node]["colour"])
+        point_data["colour"] = graph.nodes()[node]["colour"].name.lower()
         data.append(point_data)
     json["data"] = data
     return json
@@ -60,7 +45,7 @@ def solve():
     red = request_data['red']
     constraints = {Colour.BLUE: blue, Colour.RED: red}
 
-    graph = determine_graph(request_data['graph'])
+    graph = GraphLoader.get_graph(request_data['graph'])
     algorithm = request_data['algorithm']
 
     instance = None

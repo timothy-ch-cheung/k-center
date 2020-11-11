@@ -33,11 +33,11 @@ def test_solve_basic_graph_with_greedy(basic_graph):
     assert response.get_json() == {
         'centerRadius': 0.8544003745317533,
         'data': [
-            {'center': True, 'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'colour': 'red', 'x': 1.2, 'y': 2.1},
-            {'colour': 'red', 'x': 0.5, 'y': 2.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'colour': 'blue', 'x': 1.2, 'y': 2.1},
+            {'colour': 'blue', 'x': 0.5, 'y': 2.3},
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }
 
@@ -51,11 +51,11 @@ def test_solve_basic_graph_with_greedy_reduce(basic_graph):
     assert response.get_json() == {
         'centerRadius': 0.7071067811865476,
         'data': [
-            {'center': True, 'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'colour': 'red', 'x': 1.2, 'y': 2.1},
-            {'colour': 'red', 'x': 0.5, 'y': 2.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'colour': 'blue', 'x': 1.2, 'y': 2.1},
+            {'colour': 'blue', 'x': 0.5, 'y': 2.3},
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }
 
@@ -68,11 +68,11 @@ def test_solve_basic_graph_with_bandyapadhyay_algorithm(basic_graph):
     assert response.get_json() == {
         'centerRadius': 1.4560219778561034,
         'data': [
-            {'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'colour': 'red', 'x': 1.2, 'y': 2.1},
-            {'center': True, 'colour': 'red', 'x': 0.5, 'y': 2.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'colour': 'blue', 'x': 1.2, 'y': 2.1},
+            {'center': True, 'colour': 'blue', 'x': 0.5, 'y': 2.3},
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }
 
@@ -85,11 +85,11 @@ def test_solve_basic_outlier_graph_with_greedy(basic_graph_with_outlier):
     assert response.get_json() == {
         'centerRadius': 3.7854986461495397,
         'data': [
-            {'center': True, 'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'colour': 'red', 'x': 1.2, 'y': 2.1},
+            {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'colour': 'blue', 'x': 1.2, 'y': 2.1},
             {'colour': 'blue', 'x': 0.5, 'y': 6.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }
 
@@ -102,11 +102,11 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
     assert response.get_json() == {
         'centerRadius': 0.7071067811865476,
         'data': [
-            {'center': True, 'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'colour': 'red', 'x': 1.2, 'y': 2.1},
+            {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'colour': 'blue', 'x': 1.2, 'y': 2.1},
             {'colour': 'blue', 'x': 0.5, 'y': 6.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }
 
@@ -119,10 +119,10 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
     assert response.get_json() == {
         'centerRadius': 1.4142135623730951,
         'data': [
-            {'colour': 'red', 'x': 1.3, 'y': 2.6},
-            {'center': True, 'colour': 'red', 'x': 1.2, 'y': 2.1},
+            {'colour': 'blue', 'x': 1.3, 'y': 2.6},
+            {'center': True, 'colour': 'blue', 'x': 1.2, 'y': 2.1},
             {'colour': 'blue', 'x': 0.5, 'y': 6.3},
-            {'colour': 'blue', 'x': 5.9, 'y': 5.2},
-            {'center': True, 'colour': 'blue', 'x': 6.4, 'y': 4.7}
+            {'colour': 'red', 'x': 5.9, 'y': 5.2},
+            {'center': True, 'colour': 'red', 'x': 6.4, 'y': 4.7}
         ]
     }

@@ -1,4 +1,7 @@
+import networkx as nx
+
 from src.server.graph_loader import GraphLoader
+from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
 
 def test_get_json_basic_graph():
@@ -71,3 +74,19 @@ def test_get_json_basic_outlier_graph():
         "blue": 2,
         "red": 2
     }
+
+
+def test_get_graph_basic_graph():
+    actual_graph = GraphLoader.get_graph("basic")
+    expected_graph = basic_graph()
+
+    em = nx.algorithms.isomorphism.numerical_edge_match('weight', 1)
+    assert nx.is_isomorphic(actual_graph, expected_graph, edge_match=em)
+
+
+def test_get_graph_basic_outlier_graph():
+    actual_graph = GraphLoader.get_graph("basic_with_outlier")
+    expected_graph = basic_graph_with_outlier()
+
+    em = nx.algorithms.isomorphism.numerical_edge_match('weight', 1)
+    assert nx.is_isomorphic(actual_graph, expected_graph, edge_match=em)
