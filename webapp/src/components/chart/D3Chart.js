@@ -20,6 +20,8 @@ D3Chart.update = function (props) {
     d3.selectAll('.circle').remove();
     d3.selectAll('.radii').remove();
     d3.selectAll('.toggle-text').remove();
+    d3.selectAll('.toggle').remove();
+    d3.selectAll('.axis').remove();
     const x = d3.scaleLinear()
         .range([0, props.width]);
 
@@ -32,19 +34,22 @@ D3Chart.update = function (props) {
     y.domain([0, maxDomain]);
 
     chart.append('g')
+        .attr('class', 'axis')
         .attr('transform', `translate(0,${props.height})`)
         .call(d3.axisBottom(x).tickValues([1].concat(x.ticks())));
 
     chart.append('text')
         .attr('transform', `translate(${props.width / 2},${props.height + margin.top})`)
-        .attr('id', 'x-label')
+        .attr('class', 'axis')
         .text('X');
 
     chart.append('g')
+        .attr('class', 'axis')
         .call(d3.axisLeft(y).tickValues([1].concat(y.ticks())));
 
     chart.append('text')
         .attr('transform', 'rotate(-90)')
+        .attr('class', 'axis')
         .attr('dx', `-${props.height / 2}`)
         .attr('dy', '-1.5em')
         .text('Y');
@@ -101,6 +106,7 @@ function drawLegend(props) {
 function drawCentersBoundaryToggle(chartWidth) {
     chart.append("rect")
         .attr('class', 'center-toggle')
+        .attr('class', 'toggle')
         .attr('x', chartWidth + 20)
         .attr('y', 20)
         .attr('width', '20')
@@ -125,6 +131,7 @@ function drawCentersBoundaryToggle(chartWidth) {
 function drawHighlightCenterButton(chartWidth) {
     chart.append("rect")
         .attr('class', 'center-toggle')
+        .attr('class', 'toggle')
         .attr('x', chartWidth + 20)
         .attr('y', 40)
         .attr('width', '20')
@@ -156,6 +163,7 @@ function drawClassToggles(chartData, chartWidth) {
         .append("g")
         .append("rect")
         .attr('class', (d) => `${d}-toggle`)
+        .attr('class', 'toggle')
         .attr('x', chartWidth + 20)
         .attr('y', (d, i) => {
             return 80 + (i * 20)

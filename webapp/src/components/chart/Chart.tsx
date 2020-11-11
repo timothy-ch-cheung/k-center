@@ -41,6 +41,11 @@ const ToolTip = styled("div")`
     padding: 5px;
 `
 
+const GraphPlaceHolder = styled("h3")`
+    color: grey;
+    text-align: center;
+`
+
 interface ChartItem {
     colour: string,
     x: number,
@@ -87,6 +92,7 @@ export default function Chart(props: Props): JSX.Element {
 
     return <ChartFrame width={props.width * 1.5} height={props.height * 1.3}>
         <ChartSvg className="chart"/>
+        {!props.chart && <GraphPlaceHolder>Choose a problem instance</GraphPlaceHolder>}
         <ToolTip className="tooltip"/>
     </ChartFrame>
 }
