@@ -24,3 +24,8 @@ which weren't as good as the greedy algorithm. The greedy algorithm go a cost of
 - Investigate what benchmarking options there are
 - Re-read the paper by Jia et al. to understand their algorithm which uses Bandyapadhyay's (constant pseudo approximation) algorithm to create a true 3-approximation to the Colourful K-Center problem. Implement it.
 - If I have time, create the generator equivalent of the Bandyapadhyay algorithm.
+
+## Revised goals after talking with supervisor
+- implement the integration between the React app and Python K-Center solvers. Aim to get at least solving and returning the solution for the D3 Chart to display at minimum.
+- Investigate what benchmarking options there are
+- Look at performance of algorithms against large data sets
