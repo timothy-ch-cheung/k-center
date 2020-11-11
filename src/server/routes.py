@@ -1,10 +1,10 @@
 from flask import render_template, request, jsonify, Blueprint
 
-from kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
-from kcenter.constant.colour import Colour
-from kcenter.greedy.greedy import GreedySolver
-from kcenter.greedy.greedy_reduce import GreedyReduceSolver
-from server.graphs import graphs
+from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
+from src.kcenter.constant.colour import Colour
+from src.kcenter.greedy.greedy import GreedySolver
+from src.kcenter.greedy.greedy_reduce import GreedyReduceSolver
+from src.server.graphs import graphs
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
 main = Blueprint('main', __name__)
