@@ -9,6 +9,7 @@ import API from "../../API";
 interface Props {
     width: number
     height: number
+    chartData?: ChartData
     setChartData: (chart: any) => void
 }
 
@@ -50,6 +51,9 @@ function Configurator(props: Props) {
         setProblemInstance(problemInstance)
         API.get(`/graph/${problemInstance}`).then(function (response) {
                 props.setChartData(response.data)
+                setK(response.data.k)
+                setBlue(response.data.minBlue)
+                setRed(response.data.minRed)
             }
         )
     }
@@ -68,8 +72,8 @@ function Configurator(props: Props) {
             algorithm: algorithm
         }
         API.post("/solve", requestBody).then(function (response) {
-            console.log(response.data)
-            props.setChartData(response.data)
+                console.log(response.data)
+                props.setChartData(response.data)
             }
         )
     }
@@ -94,11 +98,26 @@ function Configurator(props: Props) {
                 </Select>
             </FormControlNoWrap>
             <Spacer/>
-            <NumberSlider label="Number of centers" min={1} max={10} value={k} setValue={setK}/>
-            <NumberSlider label="Min blue coverage" min={1} max={10} value={blue} setValue={setBlue}
-                          icon={<BluePaletteIcon/>}/>
-            <NumberSlider label="Min red coverage" min={1} max={10} value={red} setValue={setRed}
-                          icon={<RedPaletteIcon/>}/>
+            <NumberSlider
+                label="Number of centers"
+                min={1}
+                max={props.chartData?.nodes ||10}
+                value={k}
+                setValue={setK}/>
+            <NumberSlider
+                label="Min blue coverage"
+                min={1}
+                max={props.chartData?.blue ||10}
+                value={blue}
+                setValue={setBlue}
+                icon={<BluePaletteIcon/>}/>
+            <NumberSlider
+                label="Min red coverage"
+                min={1}
+                max={props.chartData?.red ||10}
+                value={red}
+                setValue={setRed}
+                icon={<RedPaletteIcon/>}/>
             <Spacer></Spacer>
             <SectionDivider/>
             <Button variant="contained" color="primary" type="submit">Solve</Button>

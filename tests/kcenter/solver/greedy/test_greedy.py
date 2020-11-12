@@ -50,6 +50,23 @@ def test_greedy_basic_graph_colourful_clustering():
     assert verify_solution(graph, STRICT_CONSTRAINTS, K, radius, set(clusters.keys())) is True
 
 
+def test_greedy_basic_graph_max_centers():
+    graph = basic_graph()
+    instance = GreedySolver(graph, 5, STRICT_CONSTRAINTS)
+    clusters, outliers, radius = instance.solve()
+
+    assert radius == pytest.approx(0, FLOAT_ERROR_MARGIN)
+    assert clusters == {
+        0: {0},
+        1: {1},
+        2: {2},
+        3: {3},
+        4: {4}
+    }
+    assert outliers == set()
+    assert verify_solution(graph, STRICT_CONSTRAINTS, 5, radius, set(clusters.keys())) is True
+
+
 def test_greedy_basic_graph_outlier_colourful_clustering():
     """This is an example of a colourful k-center graph that is not solved optimally with the standard greedy algorithm
     by Gonzalez. The computed centers are still [0, 4], but node 2 becomes an outlier. The distance between node 2 and

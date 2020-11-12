@@ -19,7 +19,7 @@ class GreedySolver(AbstractSolver):
 
     @staticmethod
     def max_dist(graph: nx.Graph, clusters: Dict[int, Set[int]]):
-        max_dist = -float("inf")
+        max_dist = 0
         max_node = None
         owning_center = None
         for center, cluster in zip(clusters.keys(), clusters.values()):
