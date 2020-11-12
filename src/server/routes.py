@@ -26,6 +26,8 @@ def get_graph(name):
 
 
 def repackage_solution(graph, clusters, outliers, radius):
+    """Reformat the clusters, outliers and radius to be in a format that the front-end can process
+    """
     json = {"centerRadius": radius}
     data = []
     nodes = list(graph.nodes())
@@ -51,5 +53,5 @@ def solve():
     instance = k_center_algorithms[algorithm](graph, k, constraints)
 
     clusters, outliers, radius = instance.solve()
-    
+
     return jsonify(repackage_solution(graph, clusters, outliers, radius))
