@@ -32,6 +32,9 @@ def test_solve_basic_graph_with_greedy(basic_graph):
     assert response.status_code == 200
     assert response.get_json() == {
         'centerRadius': 0.8544003745317533,
+        'nodes': 5,
+        'blue': 3,
+        'red': 2,
         'data': [
             {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
             {'colour': 'blue', 'x': 1.2, 'y': 2.1},
@@ -50,6 +53,9 @@ def test_solve_basic_graph_with_greedy_reduce(basic_graph):
     assert response.status_code == 200
     assert response.get_json() == {
         'centerRadius': 0.7071067811865476,
+        'nodes': 5,
+        'blue': 3,
+        'red': 2,
         'data': [
             {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
             {'colour': 'blue', 'x': 1.2, 'y': 2.1},
@@ -67,6 +73,9 @@ def test_solve_basic_graph_with_bandyapadhyay_algorithm(basic_graph):
     assert response.status_code == 200
     assert response.get_json() == {
         'centerRadius': 1.4560219778561034,
+        'nodes': 5,
+        'blue': 3,
+        'red': 2,
         'data': [
             {'colour': 'blue', 'x': 1.3, 'y': 2.6},
             {'colour': 'blue', 'x': 1.2, 'y': 2.1},
@@ -84,6 +93,9 @@ def test_solve_basic_outlier_graph_with_greedy(basic_graph_with_outlier):
     assert response.status_code == 200
     assert response.get_json() == {
         'centerRadius': 3.7854986461495397,
+        'nodes': 5,
+        'blue': 3,
+        'red': 2,
         'data': [
             {'center': True, 'colour': 'blue', 'x': 1.3, 'y': 2.6},
             {'colour': 'blue', 'x': 1.2, 'y': 2.1},
@@ -118,6 +130,9 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
     assert response.status_code == 200
     assert response.get_json() == {
         'centerRadius': 1.4142135623730951,
+        'nodes': 5,
+        'blue': 3,
+        'red': 2,
         'data': [
             {'colour': 'blue', 'x': 1.3, 'y': 2.6},
             {'center': True, 'colour': 'blue', 'x': 1.2, 'y': 2.1},

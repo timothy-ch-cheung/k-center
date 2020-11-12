@@ -47,11 +47,15 @@ def solve():
     k, blue, red = request_data['k'], request_data['blue'], request_data['red']
     constraints = {Colour.BLUE: blue, Colour.RED: red}
 
-    graph = GraphLoader.get_graph(request_data['graph'])
+    graph_name = request_data['graph']
+    graph = GraphLoader.get_graph(graph_name)
     algorithm = request_data['algorithm']
 
     instance = k_center_algorithms[algorithm](graph, k, constraints)
 
     clusters, outliers, radius = instance.solve()
 
-    return jsonify(repackage_solution(graph, clusters, outliers, radius))
+    solution = repackage_solution(graph, clusters, outliers, radius)
+    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
+
+    return jsonify(solution)

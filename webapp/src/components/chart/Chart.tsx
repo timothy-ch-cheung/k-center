@@ -56,6 +56,12 @@ interface ChartItem {
 export interface ChartData {
     data: ChartItem[]
     centerRadius: number
+    k: number
+    nodes: number
+    minBlue: number
+    minRed: number
+    blue: number
+    red: number
 }
 
 interface Props {

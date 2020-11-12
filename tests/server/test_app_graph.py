@@ -13,7 +13,7 @@ def test_get_graph_basic():
                  {'colour': 'red', 'x': 5.9, 'y': 5.2},
                  {'colour': 'red', 'x': 6.4, 'y': 4.7}
                  ],
-        'blue': 3, 'red': 2, 'k': 2, 'nodes': 5
+        'minBlue': 3, 'minRed': 2, 'k': 2, 'nodes': 5, "blue": 3, "red": 2
     }
 
 
@@ -27,5 +27,5 @@ def test_get_graph_basic_with_outlier():
                  {'colour': 'red', 'x': 5.9, 'y': 5.2},
                  {'colour': 'red', 'x': 6.4, 'y': 4.7}
                  ],
-        'blue': 2, 'red': 2, 'k': 2, 'nodes': 5
+        'minBlue': 2, 'minRed': 2, 'k': 2, 'nodes': 5, "blue": 3, "red": 2
     }

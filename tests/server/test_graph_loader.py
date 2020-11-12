@@ -35,6 +35,8 @@ def test_get_json_basic_graph():
         ],
         "k": 2,
         "nodes": 5,
+        "minBlue": 3,
+        "minRed": 2,
         "blue": 3,
         "red": 2
     }
@@ -71,7 +73,18 @@ def test_get_json_basic_outlier_graph():
         ],
         "k": 2,
         "nodes": 5,
-        "blue": 2,
+        "minBlue": 2,
+        "minRed": 2,
+        "blue": 3,
+        "red": 2
+    }
+
+
+def test_get_graph_meta_data():
+    meta_data = GraphLoader.get_json_meta_data("basic")
+    assert meta_data == {
+        "nodes": 5,
+        "blue": 3,
         "red": 2
     }
 

@@ -31,7 +31,7 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
-            <Configurator width={350} height={455} setChartData={setChartData}/>
+            <Configurator width={350} height={455} chartData={chartData} setChartData={setChartData}/>
             <Chart chart={chartData} width={350} height={350}/>
         </ChartContainer>
     </Container>

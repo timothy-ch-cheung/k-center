@@ -28,18 +28,20 @@ class GraphLoader:
     graphs = get_available_graphs()
 
     @staticmethod
-    def parse_header(header: str) -> Tuple[int, int, int, int]:
+    def parse_header(header: str) -> Tuple[int, int, int, int, int, int]:
         """Return K-Center parameters from a space seperated string
 
-        :param header: String formatted like the following: "NODE_COUNT K BLUE RED"
-        e.g. "4 2 1 1"
+        :param header: String formatted like the following: "NODE_COUNT K TOTAL_BLUE TOTAL_RED MIN_BLUE MIN_RED"
+        e.g. "4 2 2 2 1 1"
         """
         header = header.split(" ")
         node_count = int(header[0])
         k = int(header[1])
         blue = int(header[2])
         red = int(header[3])
-        return node_count, k, blue, red
+        min_blue = int(header[4])
+        min_red = int(header[5])
+        return node_count, k, blue, red, min_blue, min_red
 
     @staticmethod
     def parse_row(row: str) -> Tuple[float, float, str]:
@@ -61,7 +63,7 @@ class GraphLoader:
         if graph_name not in GraphLoader.graphs:
             return None
         f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
-        node_count, k, blue, red = GraphLoader.parse_header(f.readline())
+        node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
 
         data = []
         for i in range(node_count):
@@ -71,11 +73,27 @@ class GraphLoader:
 
         json = {}
         json["k"] = k
+        json["minBlue"] = min_blue
+        json["minRed"] = min_red
         json["blue"] = blue
         json["red"] = red
         json["nodes"] = node_count
         json["data"] = data
         return json
+
+    @staticmethod
+    def get_json_meta_data(graph_name: str):
+        """Return number of nodes, number of blue nodes and number of red nodes
+        """
+        if graph_name not in GraphLoader.graphs:
+            return None
+        with open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r") as f:
+            node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
+            return {
+                "nodes": node_count,
+                "blue": blue,
+                "red": red
+            }
 
     @staticmethod
     def get_graph(graph_name: str) -> nx.Graph:
@@ -84,12 +102,13 @@ class GraphLoader:
         if graph_name not in GraphLoader.graphs:
             return None
         f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
-        node_count, k, blue, red = GraphLoader.parse_header(f.readline())
+        node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
 
         G = nx.Graph()
         for i in range(node_count):
             x, y, colour = GraphLoader.parse_row(f.readline())
             G.add_node(i, pos=numpy.array((x, y)), colour=Colour[colour.upper()])
+        f.close()
 
         calculate_edges(G)
         return G
