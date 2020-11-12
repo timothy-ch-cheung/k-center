@@ -7,6 +7,11 @@ from src.kcenter.greedy.greedy_reduce import GreedyReduceSolver
 from src.server.graph_loader import GraphLoader
 
 main = Blueprint('main', __name__)
+k_center_algorithms = {
+    "greedy": GreedySolver,
+    "greedy_reduce": GreedyReduceSolver,
+    "colourful_bandyapadhyay": ConstantColourfulKCenterSolver
+}
 
 
 @main.route("/")
@@ -25,13 +30,10 @@ def repackage_solution(graph, clusters, outliers, radius):
     data = []
     nodes = list(graph.nodes())
     for node in nodes:
-        point_data = {}
+        position = graph.nodes()[node]["pos"]
+        point_data = {"x": position[0], "y": position[1], "colour": graph.nodes()[node]["colour"].name.lower()}
         if node in clusters:
             point_data["center"] = True
-        position = graph.nodes()[node]["pos"]
-        point_data["x"] = position[0]
-        point_data["y"] = position[1]
-        point_data["colour"] = graph.nodes()[node]["colour"].name.lower()
         data.append(point_data)
     json["data"] = data
     return json
@@ -40,22 +42,14 @@ def repackage_solution(graph, clusters, outliers, radius):
 @main.route('/api/v1/solve', methods=["POST"])
 def solve():
     request_data = request.get_json()
-    k = request_data['k']
-
-    blue = request_data['blue']
-    red = request_data['red']
+    k, blue, red = request_data['k'], request_data['blue'], request_data['red']
     constraints = {Colour.BLUE: blue, Colour.RED: red}
 
     graph = GraphLoader.get_graph(request_data['graph'])
     algorithm = request_data['algorithm']
 
-    instance = None
-    if algorithm == "greedy":
-        instance = GreedySolver(graph, k, constraints)
-    elif algorithm == "greedy_reduce":
-        instance = GreedyReduceSolver(graph, k, constraints)
-    elif algorithm == "colourful_bandyapadhyay":
-        instance = ConstantColourfulKCenterSolver(graph, k, constraints)
+    instance = k_center_algorithms[algorithm](graph, k, constraints)
 
     clusters, outliers, radius = instance.solve()
+    
     return jsonify(repackage_solution(graph, clusters, outliers, radius))
