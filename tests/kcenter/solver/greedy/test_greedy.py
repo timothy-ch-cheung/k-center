@@ -53,13 +53,13 @@ def test_greedy_basic_graph_colourful_clustering():
 def test_greedy_basic_graph_outlier_colourful_clustering():
     """This is an example of a colourful k-center graph that is not solved optimally with the standard greedy algorithm
     by Gonzalez. The computed centers are still [0, 4], but node 2 becomes an outlier. The distance between node 2 and
-    the center 0 is 3.275. When we relax the constraints, we don't need to cover node 2, which means we cluster
+    the center 0 is 3.785. When we relax the constraints, we don't need to cover node 2, which means we cluster
     with a much lower cost of 0.707"""
     graph = basic_graph_with_outlier()
     instance = GreedySolver(graph, K, RELAXED_CONSTRAINTS)
     clusters, outliers, radius = instance.solve()
 
-    assert radius == pytest.approx(3.275, FLOAT_ERROR_MARGIN)
+    assert radius == pytest.approx(3.785, FLOAT_ERROR_MARGIN)
     assert clusters == {
         0: {0, 1, 2},
         4: {3, 4}
@@ -85,9 +85,9 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
     instance = GreedySolver(graph, K, RELAXED_CONSTRAINTS)
     solution = instance.generator()
 
-    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(7.910, FLOAT_ERROR_MARGIN), 'initial center')
+    assert next(solution) == ({0: {0, 1, 2, 3, 4}}, set(), pytest.approx(6.113, FLOAT_ERROR_MARGIN), 'initial center')
     assert next(solution) == ({0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(5.515, FLOAT_ERROR_MARGIN),
                               'center 2 added')
     assert next(solution) == (
-        {0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(3.275, FLOAT_ERROR_MARGIN),
-        'completed solution with radius of 3.276')
+        {0: {0, 1, 2}, 4: {3, 4}}, set(), pytest.approx(3.785, FLOAT_ERROR_MARGIN),
+        'completed solution with radius of 3.785')

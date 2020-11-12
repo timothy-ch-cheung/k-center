@@ -31,7 +31,7 @@ def basic_graph_with_outlier() -> nx.Graph:
     G = nx.Graph()
     G.add_node(0, pos=numpy.array((1.3, 2.6)), colour=Colour.BLUE)
     G.add_node(1, pos=numpy.array((1.2, 2.1)), colour=Colour.BLUE)
-    G.add_node(2, pos=numpy.array((-1.5, 4.3)), colour=Colour.RED)
+    G.add_node(2, pos=numpy.array((0.5, 6.3)), colour=Colour.RED)
     G.add_node(3, pos=numpy.array((5.9, 5.2)), colour=Colour.RED)
     G.add_node(4, pos=numpy.array((6.4, 4.7)), colour=Colour.RED)
 

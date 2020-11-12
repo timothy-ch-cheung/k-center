@@ -41,6 +41,11 @@ const ToolTip = styled("div")`
     padding: 5px;
 `
 
+const GraphPlaceHolder = styled("h3")`
+    color: grey;
+    text-align: center;
+`
+
 interface ChartItem {
     colour: string,
     x: number,
@@ -48,36 +53,46 @@ interface ChartItem {
     center?: boolean
 }
 
-interface ChartData {
+export interface ChartData {
     data: ChartItem[]
     centerRadius: number
 }
 
 interface Props {
-    chart: ChartData
+    chart?: ChartData
     width: number
     height: number
 }
 
 export default function Chart(props: Props): JSX.Element {
-    useEffect(() => {
-        d3Chart.create({
+    let initialised = false
+    const initialise = () => {
+        props.chart && d3Chart.create({
             width: props.width,
             height: props.height,
             chart: props.chart
         });
+        initialised = true
+    }
+    useEffect(() => {
+        initialise()
     }, [])
 
     useEffect(() => {
-        d3Chart.update({
+        if(!initialised){
+            initialise()
+        }
+        props.chart && d3Chart.update({
             width: props.width,
             height: props.height,
             chart: props.chart
         });
-    }, [props])
+        console.log("udapted")
+    }, [props, props.chart])
 
     return <ChartFrame width={props.width * 1.5} height={props.height * 1.3}>
         <ChartSvg className="chart"/>
+        {!props.chart && <GraphPlaceHolder>Choose a problem instance</GraphPlaceHolder>}
         <ToolTip className="tooltip"/>
     </ChartFrame>
 }

@@ -1,13 +1,19 @@
-from flask import Flask, render_template
-import os
-print(os.getcwd())
+import pyutilib.subprocess.GlobalData
+from flask import Flask
+from flask_cors import CORS
 
-app = Flask("__main__", static_folder="../../webapp/build/static", template_folder="../../webapp/build")
+from src.server.routes import main
 
-
-@app.route("/")
-def index():
-    return render_template('index.html')
+pyutilib.subprocess.GlobalData.DEFINE_SIGNAL_HANDLERS_DEFAULT = False
 
 
-app.run(debug=False, host='0.0.0.0')
+def create_app():
+    app = Flask("__main__", static_folder="../../webapp/build/static", template_folder="../../webapp/build")
+    app.register_blueprint(main)
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    CORS(app)
+    app.run(debug=False, host='0.0.0.0')
