@@ -1,2 +1,5 @@
 # Final Year Project on Fair K-Center Clustering
-Timothy Cheung
+By Timothy Cheung
+
+## Run instructions
+```python3 run.py```
