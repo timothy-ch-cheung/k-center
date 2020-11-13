@@ -87,6 +87,8 @@ function Configurator(props: Props) {
                 <Select onChange={handleProblemInstanceSelectChange}>
                     <MenuItem value={"basic"}>basic</MenuItem>
                     <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
+                    <MenuItem value={"medium"}>medium</MenuItem>
+                    <MenuItem value={"large"}>large</MenuItem>
                 </Select>
             </FormControlNoWrap>
             <FormControlNoWrap>

@@ -4,6 +4,7 @@ from typing import Tuple, Optional, Set
 import numpy as np
 
 from kcenter.constant.colour import Colour
+from server.graph_loader import GraphLoader
 
 
 class GraphGenerator:
@@ -124,11 +125,11 @@ class GraphGenerator:
 
         # Generate remaining points belonging to clusters
         for i in range(remaining_blue):
-            cluster_point = GraphGenerator.get_random_point_around_circumference(opt, random.choice(tuple(centers)))
+            cluster_point = GraphGenerator.get_random_point_around_center(opt, random.choice(tuple(centers)))
             points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.BLUE.name.lower()})
 
         for i in range(remaining_red):
-            cluster_point = GraphGenerator.get_random_point_around_circumference(opt, random.choice(tuple(centers)))
+            cluster_point = GraphGenerator.get_random_point_around_center(opt, random.choice(tuple(centers)))
             points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.RED.name.lower()})
 
         # Generate outlier points
@@ -155,14 +156,19 @@ class GraphGenerator:
             "minRed": r,
             "blue": total_blue_points,
             "red": total_red_points,
-            "nodes": total_blue_points + total_red_points
+            "nodes": total_blue_points + total_red_points,
+            "optimalRadius": opt,
+            "optimalOutliers": num_outliers
         }
         return graph
 
 
 gen = GraphGenerator(min_x=0, min_y=0, max_x=100, max_y=100)
-b = 10
-r = 10
-k = 4
+b = 50
+r = 50
+k = 10
 opt = 5.5
-print(gen.generate(b, r, k, opt, 5))
+graph = gen.generate(b, r, k, opt, 15)
+print(graph)
+
+GraphLoader.save_json(graph, "large")
