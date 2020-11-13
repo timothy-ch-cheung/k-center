@@ -1,5 +1,6 @@
 import random
-from typing import Tuple, Optional, Set
+from collections import deque
+from typing import Tuple, Set
 
 import numpy as np
 
@@ -8,23 +9,6 @@ from server.graph_loader import GraphLoader
 
 
 class GraphGenerator:
-
-    @staticmethod
-    def choose_colour(remaining_blue: int, remaining_red: int) -> Tuple[Optional[Colour], int, int]:
-        if remaining_blue < 0 or remaining_red < 0:
-            return None, remaining_blue, remaining_red
-        if remaining_blue == 0 and remaining_red == 0:
-            return None, remaining_blue, remaining_red
-        if remaining_blue == 0:
-            return Colour.RED, remaining_blue, remaining_red - 1
-        if remaining_red == 0:
-            return Colour.BLUE, remaining_blue - 1, remaining_red
-
-        rand_num = np.random.uniform(0, remaining_blue + remaining_blue)
-        if rand_num < remaining_blue:
-            return Colour.BLUE, remaining_blue - 1, remaining_red
-        else:
-            return Colour.RED, remaining_blue, remaining_red - 1
 
     @staticmethod
     def get_random_point_around_center(opt: float, point: Tuple[int, int]):
@@ -41,7 +25,7 @@ class GraphGenerator:
     def get_random_point_around_circumference(dist: float, point: Tuple[float, float]):
         """Returns a random point the circumference of radius [opt] from a given [point]
 
-        :param opt: distance away from point
+        :param dist: distance away from point
         :param point: point to generate new point around
         :return:
         """
@@ -50,6 +34,14 @@ class GraphGenerator:
         x = dist * np.cos(angle)
         y = dist * np.sin(angle)
         return point[0] + x, point[1] + y
+
+    @staticmethod
+    def generate_colour_queue(blue: int, red: int) -> deque:
+        """Generates a randomly shuffled deque of colours
+        """
+        colours = [*[Colour.BLUE for x in range(blue)], *[Colour.RED for x in range(red)]]
+        random.shuffle(colours)
+        return deque(colours)
 
     def generate_point(self):
         return random.uniform(self.min_x, self.max_x), random.uniform(self.min_y, self.max_y)
@@ -83,7 +75,7 @@ class GraphGenerator:
         self.max_x = max_x
         self.max_y = max_y
 
-    def generate(self, b, r, num_centers, opt, num_outliers, blue_red_outliers: Optional[Tuple[int, int]] = None):
+    def generate(self, b, r, num_centers, opt, num_outliers):
         """Generates a graph with [r + b + num_outliers] nodes with optimal cost [opt]
 
         :param b: number of blue points to generate within the optimal solution
@@ -91,64 +83,45 @@ class GraphGenerator:
         :param num_centers: number of centers
         :param opt: optimal cost
         :param num_outliers: number of points outside the optimal solution
-        :param blue_red_outliers: tuple of outlier numbers for (blue, red) (optional)
         :return: Dictionary representing graph
         """
         if r + b < 2 * num_centers:
             raise ValueError("Total points on graph must be larger than twice the number of centers")
-        if blue_red_outliers is not None:
-            if blue_red_outliers[0] + blue_red_outliers[1] != num_outliers:
-                raise ValueError("Number of red and blue outliers do not match total outliers")
 
         # Initialise variables
         points = []
         remaining_blue, remaining_red = b, r
         centers = set()
+        # queue of r + b randomly shuffled colours
+        colours = GraphGenerator.generate_colour_queue(b, r)
 
         # Generate centers
         for i in range(num_centers):
-            centers.add(self.generate_unique_point(centers))
-
-        for center in centers:
-            colour, remaining_blue, remaining_red = GraphGenerator.choose_colour(remaining_blue, remaining_red)
-            if not colour:
-                raise ValueError("invalid blue and red point count")
-            points.append({"x": center[0], "y": center[1], "colour": colour.name.lower()})
+            center = self.generate_unique_point(centers)
+            centers.add(center)
+            points.append({"x": center[0], "y": center[1], "colour": colours.pop().name.lower()})
 
         # Generate a single point [opt] away from each center (ensures opt is indeed the optimal solution)
         for center in centers:
-            colour, remaining_blue, remaining_red = GraphGenerator.choose_colour(remaining_blue, remaining_red)
-            if not colour:
-                raise ValueError("invalid blue and red point count")
             edge_point = GraphGenerator.get_random_point_around_circumference(opt, center)
-            points.append({"x": edge_point[0], "y": edge_point[1], "colour": colour.name.lower()})
+            points.append({"x": edge_point[0], "y": edge_point[1], "colour": colours.pop().name.lower()})
 
         # Generate remaining points belonging to clusters
-        for i in range(remaining_blue):
+        for i in range(len(colours)):
             cluster_point = GraphGenerator.get_random_point_around_center(opt, random.choice(tuple(centers)))
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.BLUE.name.lower()})
-
-        for i in range(remaining_red):
-            cluster_point = GraphGenerator.get_random_point_around_center(opt, random.choice(tuple(centers)))
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.RED.name.lower()})
+            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
 
         # Generate outlier points
-        remaining_blue_outliers = np.random.randint(0, num_outliers)
-        remaining_red_outliers = num_outliers - remaining_blue_outliers
-        if blue_red_outliers:
-            remaining_blue_outliers = blue_red_outliers[0]
-            remaining_red_outliers = blue_red_outliers[1]
+        blue_outliers = np.random.randint(0, num_outliers)
+        red_outliers = num_outliers - blue_outliers
+        colours = GraphGenerator.generate_colour_queue(blue_outliers, red_outliers)
 
-        for i in range(remaining_blue_outliers):
+        for i in range(len(colours)):
             cluster_point = self.get_random_distanced_point(opt, centers)
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.BLUE.name.lower()})
+            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
 
-        for i in range(remaining_red_outliers):
-            cluster_point = self.get_random_distanced_point(opt, centers)
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": Colour.RED.name.lower()})
-
-        total_blue_points = b + remaining_blue_outliers
-        total_red_points = r + remaining_red_outliers
+        total_blue_points = b + blue_outliers
+        total_red_points = r + red_outliers
         graph = {
             "data": points,
             "k": num_centers,
@@ -171,4 +144,4 @@ opt = 5.5
 graph = gen.generate(b, r, k, opt, 15)
 print(graph)
 
-GraphLoader.save_json(graph, "large")
+GraphLoader.save_json(graph, "test")

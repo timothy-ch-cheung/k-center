@@ -1,6 +1,6 @@
 # Data set format
 ## Header
-- first row has 7 values:
+- first row has 8 values:
     - number of nodes [N]
     - number of centers [k]
     - number of blue nodes [B]
@@ -11,7 +11,7 @@
     - unclustered points for this problem instance [out]
 - e.g. "[N] [k] [B] [R] [b] [r] [opt] [out]"
 
-# Subsequent data    
+## Subsequent data    
 - subsequent N rows have 3 values:
     - x coordinate
     - y coordinate
