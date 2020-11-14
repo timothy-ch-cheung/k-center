@@ -62,6 +62,8 @@ export interface ChartData {
     minRed: number
     blue: number
     red: number
+    optimalRadius: number
+    optimalOutliers: number
 }
 
 interface Props {

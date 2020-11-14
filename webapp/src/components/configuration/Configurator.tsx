@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {ChartData, ChartFrame} from "../chart/Chart";
-import {Button, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import styled from "@emotion/styled";
 import NumberSlider from "../number_slider/NumberSlider";
 import PaletteIcon from '@material-ui/icons/Palette';
@@ -39,12 +39,18 @@ const RedPaletteIcon = styled(PaletteIcon)`
     color: red
 `
 
+const HorizontalGroup = styled("div")`
+    display: flex;
+    justify-content: space-between;
+`
+
 function Configurator(props: Props) {
     const [k, setK] = useState<number>(1)
     const [blue, setBlue] = useState<number>(1)
     const [red, setRed] = useState<number>(1)
     const [problemInstance, setProblemInstance] = useState<string>('')
     const [algorithm, setAlgorithm] = useState<string>('')
+    const [isSolving, setIsSolving] = useState<boolean>(false)
 
     const handleProblemInstanceSelectChange = (event: any) => {
         const problemInstance = event.target.value
@@ -64,6 +70,7 @@ function Configurator(props: Props) {
 
     const handleSolveSubmit = (event: any) => {
         event.preventDefault()
+        setIsSolving(true)
         const requestBody = {
             k: k,
             blue: blue,
@@ -74,6 +81,7 @@ function Configurator(props: Props) {
         API.post("/solve", requestBody).then(function (response) {
                 console.log(response.data)
                 props.setChartData(response.data)
+                setIsSolving(false)
             }
         )
     }
@@ -120,7 +128,11 @@ function Configurator(props: Props) {
                 icon={<RedPaletteIcon/>}/>
             <Spacer></Spacer>
             <SectionDivider/>
-            <Button variant="contained" color="primary" type="submit">Solve</Button>
+            <HorizontalGroup>
+                <Button variant="contained" color="primary" type="submit">Solve</Button>
+                {isSolving && <CircularProgress style={{height: "35px", width:"35px"}}/>}
+            </HorizontalGroup>
+
         </form>
     </ChartFrame>
 }
