@@ -28,11 +28,11 @@ class GraphLoader:
     graphs = get_available_graphs()
 
     @staticmethod
-    def parse_header(header: str) -> Tuple[int, int, int, int, int, int]:
+    def parse_header(header: str) -> Tuple[int, int, int, int, int, int, float, int]:
         """Return K-Center parameters from a space seperated string
 
-        :param header: String formatted like the following: "NODE_COUNT K TOTAL_BLUE TOTAL_RED MIN_BLUE MIN_RED"
-        e.g. "4 2 2 2 1 1"
+        :param header: String formatted like the following: "NODE_COUNT K TOTAL_BLUE TOTAL_RED MIN_BLUE MIN_RED OPT OUT"
+        e.g. "4 2 2 2 1 1 2.2 0"
         """
         header = header.split(" ")
         node_count = int(header[0])
@@ -41,7 +41,9 @@ class GraphLoader:
         red = int(header[3])
         min_blue = int(header[4])
         min_red = int(header[5])
-        return node_count, k, blue, red, min_blue, min_red
+        opt = float(header[6])
+        outliers = int(header[7])
+        return node_count, k, blue, red, min_blue, min_red, opt, outliers
 
     @staticmethod
     def parse_row(row: str) -> Tuple[float, float, str]:
@@ -63,7 +65,7 @@ class GraphLoader:
         if graph_name not in GraphLoader.graphs:
             return None
         f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
-        node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
+        node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
 
         data = []
         for i in range(node_count):
@@ -79,7 +81,23 @@ class GraphLoader:
         json["red"] = red
         json["nodes"] = node_count
         json["data"] = data
+        json["optimalRadius"] = opt
+        json["optimalOutliers"] = outliers
         return json
+
+    @staticmethod
+    def save_json(json, name: str):
+        if name in GraphLoader.graphs:
+            raise ValueError("Graph already exists")
+        f = open(f"{os.path.dirname(__file__)}/dataset/{name}.txt", "w")
+        f.write(f'{json["nodes"]} {json["k"]} {json["blue"]} {json["red"]} {json["minBlue"]} {json["minBlue"]} {json["optimalRadius"]} {json["optimalOutliers"]}\n')
+        data = json["data"]
+        for i, point in enumerate(data):
+            if i > 0:
+                f.write("\n")
+            f.write(f'{point["x"]} {point["y"]} {point["colour"]}')
+        f.close()
+        GraphLoader.graphs.add(name)
 
     @staticmethod
     def get_json_meta_data(graph_name: str):
@@ -88,11 +106,13 @@ class GraphLoader:
         if graph_name not in GraphLoader.graphs:
             return None
         with open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r") as f:
-            node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
+            node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
             return {
                 "nodes": node_count,
                 "blue": blue,
-                "red": red
+                "red": red,
+                "optimalRadius": opt,
+                "optimalOutliers": outliers
             }
 
     @staticmethod
@@ -102,7 +122,7 @@ class GraphLoader:
         if graph_name not in GraphLoader.graphs:
             return None
         f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
-        node_count, k, blue, red, min_blue, min_red = GraphLoader.parse_header(f.readline())
+        node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
 
         G = nx.Graph()
         for i in range(node_count):
