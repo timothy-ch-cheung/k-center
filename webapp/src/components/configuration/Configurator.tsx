@@ -11,13 +11,14 @@ interface Props {
     height: number
     chartData?: ChartData
     setChartData: (chart: any) => void
+    className?: string
 }
 
-const H3 = styled("h3")`
+export const H3 = styled("h3")`
     margin: 5px 10px;
 `
 
-const SectionDivider = styled(Divider)`
+export const SectionDivider = styled(Divider)`
     margin-bottom: 10px;
 `
 
@@ -39,7 +40,7 @@ const RedPaletteIcon = styled(PaletteIcon)`
     color: red
 `
 
-const HorizontalGroup = styled("div")`
+export const HorizontalGroup = styled("div")`
     display: flex;
     justify-content: space-between;
 `

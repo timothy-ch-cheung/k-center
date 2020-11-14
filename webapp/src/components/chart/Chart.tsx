@@ -41,7 +41,7 @@ const ToolTip = styled("div")`
     padding: 5px;
 `
 
-const GraphPlaceHolder = styled("h3")`
+export const GraphPlaceHolder = styled("h3")`
     color: grey;
     text-align: center;
 `
@@ -70,6 +70,7 @@ interface Props {
     chart?: ChartData
     width: number
     height: number
+    className?: string
 }
 
 export default function Chart(props: Props): JSX.Element {

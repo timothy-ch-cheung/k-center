@@ -6,14 +6,22 @@ import Home from '@material-ui/icons/Home';
 import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Configurator from "../../components/configuration/Configurator";
+import InstanceStats from "../../components/stats/optimal/InstanceStats";
 
 const HomeIcon = styled(Home)`
     color: white;
 `
 
 const ChartContainer = styled("div")`
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-rows: 495px 150px;
+    grid-template-columns: 405px 580px;
+    grid-gap: 5px;
+    
+    grid-template-areas:
+    "left middle top-right"
+    "left middle bot-right";
+    margin: 30px auto;
 `
 
 function Solve() {
@@ -31,8 +39,9 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
-            <Configurator width={350} height={455} chartData={chartData} setChartData={setChartData}/>
-            <Chart chart={chartData} width={350} height={350}/>
+            <Configurator className="left" width={350} height={455} chartData={chartData} setChartData={setChartData}/>
+            <Chart className="middle" chart={chartData} width={350} height={350}/>
+            <InstanceStats chart={chartData} width={180} height={200}/>
         </ChartContainer>
     </Container>
 }
