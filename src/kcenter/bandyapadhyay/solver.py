@@ -10,6 +10,10 @@ from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
 class ConstantColourfulKCenterSolver(AbstractSolver):
+    """Implementation based on the algorithm by Bandyapadhyay et al. from
+    'A Constant Approximation for Colorful k-Center (2019)'
+    """
+
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
@@ -19,10 +23,22 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         """
         return sorted(list(nx.get_edge_attributes(graph, "weight").values()))
 
+    @staticmethod
+    def choose_centers(solution: Dict[int, float]):
+        """given a solution to the subroutine red_maximiser (LP2), we pick centers depending on the number of fractional
+        solutions"""
+        potential_centers = [x for x in solution.keys() if solution[x] != 0]
+        return potential_centers
+
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
+        """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
+
+        Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
+        (LP2 Section 2.1 figure 2).
+        """
         weights = ConstantColourfulKCenterSolver.get_weights(self.graph)
 
         radius_checker = RadiusChecker(self.graph, self.k, self.constraints[Colour.RED], self.constraints[Colour.BLUE])
@@ -44,10 +60,10 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
 
-        centers = set(sorted(solution, key=solution.get)[-self.k:])
+        centers = ConstantColourfulKCenterSolver.choose_centers(solution)
         unused_centers = set(clusters.keys()).difference(centers)
 
-        outliers = set()
+        outliers: Set[int] = set()
         for center in unused_centers:
             outliers = outliers.union(clusters[center])
             del clusters[center]

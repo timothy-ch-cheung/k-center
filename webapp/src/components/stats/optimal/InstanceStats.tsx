@@ -1,10 +1,7 @@
 import React from 'react';
 import {ChartData, ChartFrame, GraphPlaceHolder} from "../../chart/Chart";
-import {H3, HorizontalGroup, SectionDivider} from "../../configuration/Configurator";
-import {IconButton, Tooltip} from "@material-ui/core";
-import InfoIcon from '@material-ui/icons/Info'
-import styled from "@emotion/styled";
-import TextWithTooltip from "../../text_with_tooltip/TextWithTooltip";
+import {H3, SectionDivider} from "../../configuration/Configurator";
+import TextWithTooltip, {ToolTipLine} from "../../text_with_tooltip/TextWithTooltip";
 
 interface Props {
     chart?: ChartData
@@ -17,10 +14,6 @@ interface DataProps {
     chart?: ChartData
 }
 
-const ToolTipLine = styled("p")`
-    font-size: 13px;
-    margin: 5px;
-`
 
 function OptimalStats(props: DataProps) {
     return <div>

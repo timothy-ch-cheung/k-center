@@ -15,6 +15,11 @@ const IconBtn = styled(IconButton)`
     padding: 0px;
 `
 
+export const ToolTipLine = styled("p")`
+    font-size: 13px;
+    margin: 5px;
+`
+
 export default function TextWithTooltip(props: Props): JSX.Element {
     return <HorizontalGroup>
         <p style={{...{marginTop: "0px", marginBottom: "0px"}, ...props.style}}>{props.text}</p>

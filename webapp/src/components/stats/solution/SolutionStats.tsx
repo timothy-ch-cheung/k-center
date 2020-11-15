@@ -1,7 +1,7 @@
 import React from 'react';
 import {ChartFrame, GraphPlaceHolder, Solution} from "../../chart/Chart";
 import {H3, SectionDivider, SolveRequestData} from "../../configuration/Configurator";
-import TextWithTooltip from "../../text_with_tooltip/TextWithTooltip";
+import TextWithTooltip, {ToolTipLine} from "../../text_with_tooltip/TextWithTooltip";
 
 interface Props {
     solution?: Solution
@@ -27,7 +27,7 @@ function SolutionK(props: CompareK) {
         return <p>{text}</p>
     } else {
         return <TextWithTooltip
-            tooltipText={"The solution has more centers than specified (pseudo solution)"}
+            tooltipText={<ToolTipLine>The solution has more centers than specified (pseudo solution)</ToolTipLine>}
             text={text}
             style={{color: "red"}}
         />
