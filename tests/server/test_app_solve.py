@@ -3,6 +3,15 @@ import pytest
 from src.server.app import create_app
 
 test_client = create_app().test_client()
+FLOAT_ERROR_MARGIN = 0.001
+
+
+class Ignore:
+    def __eq__(self, other):
+        return True
+
+
+ignore = Ignore()
 
 
 @pytest.fixture
@@ -31,12 +40,21 @@ def test_solve_basic_graph_with_greedy(basic_graph):
 
     assert response.status_code == 200
     assert response.get_json() == {
-        "centerRadius": 0.8544003745317533,
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728},
+        "solution": {
+            "k": 2,
+            "outliers": 0,
+            "radius": pytest.approx(0.854, FLOAT_ERROR_MARGIN),
+            "timeTaken": ignore
+        },
         "data": [
             {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
@@ -54,12 +72,22 @@ def test_solve_basic_graph_with_greedy_reduce(basic_graph):
 
     assert response.status_code == 200
     assert response.get_json() == {
-        "centerRadius": 0.7071067811865476,
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728
+        },
+        "solution": {
+            "k": 2,
+            "outliers": 0,
+            "radius": pytest.approx(0.707, FLOAT_ERROR_MARGIN),
+            "timeTaken": ignore
+        },
         "data": [
             {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
@@ -76,12 +104,22 @@ def test_solve_basic_graph_with_bandyapadhyay_algorithm(basic_graph):
 
     assert response.status_code == 200
     assert response.get_json() == {
-        "centerRadius": 1.4560219778561034,
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728
+        },
+        "solution": {
+            "k": 2,
+            "outliers": 0,
+            "radius": pytest.approx(1.456, FLOAT_ERROR_MARGIN),
+            "timeTaken": ignore
+        },
         "data": [
             {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
@@ -98,12 +136,22 @@ def test_solve_basic_outlier_graph_with_greedy(basic_graph_with_outlier):
 
     assert response.status_code == 200
     assert response.get_json() == {
-        "centerRadius": 3.7854986461495397,
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 1,
-        "optimalRadius": 0.86,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 2,
+            "minRed": 2,
+            "outliers": 1,
+            "radius": 0.86
+        },
+        "solution": {
+            "k": 2,
+            "outliers": 0,
+            "radius": pytest.approx(3.785, FLOAT_ERROR_MARGIN),
+            "timeTaken": ignore
+        },
         "data": [
             {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
@@ -137,12 +185,22 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
 
     assert response.status_code == 200
     assert response.get_json() == {
-        "centerRadius": 1.4142135623730951,
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 1,
-        "optimalRadius": 0.86,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 2,
+            "minRed": 2,
+            "outliers": 1,
+            "radius": 0.86
+        },
+        "solution": {
+            "k": 2,
+            "outliers": 1,
+            "radius": pytest.approx(1.414, FLOAT_ERROR_MARGIN),
+            "timeTaken": ignore
+        },
         "data": [
             {"colour": "blue", "x": 1.3, "y": 2.6},
             {"center": True, "colour": "blue", "x": 1.2, "y": 2.1},

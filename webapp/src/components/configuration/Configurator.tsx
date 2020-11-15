@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {ChartData, ChartFrame} from "../chart/Chart";
-import {Button, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Button, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import styled from "@emotion/styled";
 import NumberSlider from "../number_slider/NumberSlider";
 import PaletteIcon from '@material-ui/icons/Palette';
@@ -11,13 +11,14 @@ interface Props {
     height: number
     chartData?: ChartData
     setChartData: (chart: any) => void
+    gridArea?: string
 }
 
-const H3 = styled("h3")`
+export const H3 = styled("h3")`
     margin: 5px 10px;
 `
 
-const SectionDivider = styled(Divider)`
+export const SectionDivider = styled(Divider)`
     margin-bottom: 10px;
 `
 
@@ -39,21 +40,27 @@ const RedPaletteIcon = styled(PaletteIcon)`
     color: red
 `
 
+export const HorizontalGroup = styled("div")`
+    display: flex;
+    justify-content: space-between;
+`
+
 function Configurator(props: Props) {
     const [k, setK] = useState<number>(1)
     const [blue, setBlue] = useState<number>(1)
     const [red, setRed] = useState<number>(1)
     const [problemInstance, setProblemInstance] = useState<string>('')
     const [algorithm, setAlgorithm] = useState<string>('')
+    const [isSolving, setIsSolving] = useState<boolean>(false)
 
     const handleProblemInstanceSelectChange = (event: any) => {
         const problemInstance = event.target.value
         setProblemInstance(problemInstance)
         API.get(`/graph/${problemInstance}`).then(function (response) {
                 props.setChartData(response.data)
-                setK(response.data.k)
-                setBlue(response.data.minBlue)
-                setRed(response.data.minRed)
+                setK(response.data.optimalSolution.k)
+                setBlue(response.data.optimalSolution.minBlue)
+                setRed(response.data.optimalSolution.minRed)
             }
         )
     }
@@ -64,6 +71,7 @@ function Configurator(props: Props) {
 
     const handleSolveSubmit = (event: any) => {
         event.preventDefault()
+        setIsSolving(true)
         const requestBody = {
             k: k,
             blue: blue,
@@ -74,11 +82,12 @@ function Configurator(props: Props) {
         API.post("/solve", requestBody).then(function (response) {
                 console.log(response.data)
                 props.setChartData(response.data)
+                setIsSolving(false)
             }
         )
     }
 
-    return <ChartFrame width={props.width} height={props.height}>
+    return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Configuration</H3>
         <SectionDivider/>
         <form onSubmit={handleSolveSubmit}>
@@ -122,7 +131,11 @@ function Configurator(props: Props) {
                 icon={<RedPaletteIcon/>}/>
             <Spacer></Spacer>
             <SectionDivider/>
-            <Button variant="contained" color="primary" type="submit">Solve</Button>
+            <HorizontalGroup>
+                <Button variant="contained" color="primary" type="submit">Solve</Button>
+                {isSolving && <CircularProgress style={{height: "35px", width:"35px"}}/>}
+            </HorizontalGroup>
+
         </form>
     </ChartFrame>
 }

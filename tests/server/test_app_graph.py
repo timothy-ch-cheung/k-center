@@ -13,14 +13,16 @@ def test_get_graph_basic():
                  {"colour": "red", "x": 5.9, "y": 5.2},
                  {"colour": "red", "x": 6.4, "y": 4.7}
                  ],
-        "minBlue": 3,
-        "minRed": 2,
-        "k": 2,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728
+        },
         "nodes": 5,
         "blue": 3,
-        "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728
+        "red": 2
     }
 
 
@@ -34,12 +36,14 @@ def test_get_graph_basic_with_outlier():
                  {"colour": "red", "x": 5.9, "y": 5.2},
                  {"colour": "red", "x": 6.4, "y": 4.7}
                  ],
-        "minBlue": 2,
-        "minRed": 2,
-        "k": 2,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 2,
+            "minRed": 2,
+            "outliers": 1,
+            "radius": 0.86
+        },
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 1,
-        "optimalRadius": 0.86,
     }

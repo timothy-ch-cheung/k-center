@@ -36,14 +36,16 @@ def test_get_json_basic_graph():
                 "x": 6.4,
             }
         ],
-        "k": 2,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728
+        },
         "nodes": 5,
-        "minBlue": 3,
-        "minRed": 2,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728
     }
 
 
@@ -76,14 +78,16 @@ def test_get_json_basic_outlier_graph():
                 "x": 6.4,
             }
         ],
-        "k": 2,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 2,
+            "minRed": 2,
+            "outliers": 1,
+            "radius": 0.86
+        },
         "nodes": 5,
-        "minBlue": 2,
-        "minRed": 2,
         "blue": 3,
-        "red": 2,
-        "optimalOutliers": 1,
-        "optimalRadius": 0.86
+        "red": 2
     }
 
 
@@ -100,14 +104,16 @@ def test_save_json():
                 "x": 6.4,
             }
         ],
-        "k": 1,
+        "optimalSolution": {
+            "k": 1,
+            "minBlue": 1,
+            "minRed": 1,
+            "outliers": 0,
+            "radius": 0.86
+        },
         "nodes": 2,
-        "minBlue": 1,
-        "minRed": 1,
         "blue": 1,
-        "red": 1,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.86
+        "red": 1
     }
 
     GraphLoader.save_json(graph, "test_save_json")
@@ -121,8 +127,13 @@ def test_get_graph_meta_data():
         "nodes": 5,
         "blue": 3,
         "red": 2,
-        "optimalOutliers": 0,
-        "optimalRadius": 0.728,
+        "optimalSolution": {
+            "k": 2,
+            "minBlue": 3,
+            "minRed": 2,
+            "outliers": 0,
+            "radius": 0.728
+        }
     }
 
 
