@@ -41,7 +41,7 @@ def test_get_graph_basic_with_outlier():
             "minBlue": 2,
             "minRed": 2,
             "outliers": 1,
-            "radius": 0.86
+            "radius": 0.707
         },
         "nodes": 5,
         "blue": 3,

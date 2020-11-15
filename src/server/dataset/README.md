@@ -4,7 +4,7 @@
     - number of nodes [N]
     - number of centers [k]
     - number of blue nodes [B]
-    = number of red nodes [R]
+    - number of red nodes [R]
     - minimum blue coverage [b]
     - minimum red coverage [r]
     - optimal radius [opt] that covers [b] blue points and [r] red points

@@ -11,7 +11,16 @@ interface Props {
     height: number
     chartData?: ChartData
     setChartData: (chart: any) => void
+    setSolveRequestData: (data: SolveRequestData) => void
     gridArea?: string
+}
+
+export interface SolveRequestData {
+    k: number
+    blue: number
+    red: number
+    graph: string
+    algorithm: string
 }
 
 export const H3 = styled("h3")`
@@ -72,7 +81,7 @@ function Configurator(props: Props) {
     const handleSolveSubmit = (event: any) => {
         event.preventDefault()
         setIsSolving(true)
-        const requestBody = {
+        const requestBody: SolveRequestData = {
             k: k,
             blue: blue,
             red: red,
@@ -82,6 +91,7 @@ function Configurator(props: Props) {
         API.post("/solve", requestBody).then(function (response) {
                 console.log(response.data)
                 props.setChartData(response.data)
+                props.setSolveRequestData(requestBody)
                 setIsSolving(false)
             }
         )
@@ -98,6 +108,7 @@ function Configurator(props: Props) {
                     <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                     <MenuItem value={"medium"}>medium</MenuItem>
                     <MenuItem value={"large"}>large</MenuItem>
+                    <MenuItem value={"extreme_point"}>extreme point</MenuItem>
                 </Select>
             </FormControlNoWrap>
             <FormControlNoWrap>
@@ -112,28 +123,28 @@ function Configurator(props: Props) {
             <NumberSlider
                 label="Number of centers"
                 min={1}
-                max={props.chartData?.nodes ||10}
+                max={props.chartData?.nodes || 10}
                 value={k}
                 setValue={setK}/>
             <NumberSlider
                 label="Min blue coverage"
                 min={1}
-                max={props.chartData?.blue ||10}
+                max={props.chartData?.blue || 10}
                 value={blue}
                 setValue={setBlue}
                 icon={<BluePaletteIcon/>}/>
             <NumberSlider
                 label="Min red coverage"
                 min={1}
-                max={props.chartData?.red ||10}
+                max={props.chartData?.red || 10}
                 value={red}
                 setValue={setRed}
                 icon={<RedPaletteIcon/>}/>
             <Spacer></Spacer>
             <SectionDivider/>
             <HorizontalGroup>
-                <Button variant="contained" color="primary" type="submit">Solve</Button>
-                {isSolving && <CircularProgress style={{height: "35px", width:"35px"}}/>}
+                <Button variant="contained" color="primary" type="submit" disabled={isSolving}>Solve</Button>
+                {isSolving && <CircularProgress style={{height: "35px", width: "35px"}}/>}
             </HorizontalGroup>
 
         </form>

@@ -144,7 +144,7 @@ def test_solve_basic_outlier_graph_with_greedy(basic_graph_with_outlier):
             "minBlue": 2,
             "minRed": 2,
             "outliers": 1,
-            "radius": 0.86
+            "radius": 0.707
         },
         "solution": {
             "k": 2,
@@ -193,7 +193,7 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
             "minBlue": 2,
             "minRed": 2,
             "outliers": 1,
-            "radius": 0.86
+            "radius": 0.707
         },
         "solution": {
             "k": 2,

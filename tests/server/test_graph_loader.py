@@ -83,7 +83,7 @@ def test_get_json_basic_outlier_graph():
             "minBlue": 2,
             "minRed": 2,
             "outliers": 1,
-            "radius": 0.86
+            "radius": 0.707
         },
         "nodes": 5,
         "blue": 3,
