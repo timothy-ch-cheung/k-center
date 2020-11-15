@@ -1,3 +1,5 @@
+import time
+
 from flask import render_template, request, jsonify, Blueprint
 
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
@@ -25,10 +27,9 @@ def get_graph(name):
     return GraphLoader.get_json(name)
 
 
-def repackage_solution(graph, clusters, outliers, radius):
+def repackage_solution(graph, clusters, outliers, radius, time_elapsed):
     """Reformat the clusters, outliers and radius to be in a format that the front-end can process
     """
-    json = {"centerRadius": radius}
     data = []
     nodes = list(graph.nodes())
     for node in nodes:
@@ -37,8 +38,14 @@ def repackage_solution(graph, clusters, outliers, radius):
         if node in clusters:
             point_data["center"] = True
         data.append(point_data)
-    json["data"] = data
-    return json
+
+    solution = {
+        "k": len(clusters.keys()),
+        "radius": radius,
+        "outliers": len(outliers),
+        "timeTaken": time_elapsed
+    }
+    return {"data": data, "solution": solution}
 
 
 @main.route('/api/v1/solve', methods=["POST"])
@@ -53,9 +60,12 @@ def solve():
 
     instance = k_center_algorithms[algorithm](graph, k, constraints)
 
+    start = time.time()
     clusters, outliers, radius = instance.solve()
+    end = time.time()
+    time_elapsed = end - start
 
-    solution = repackage_solution(graph, clusters, outliers, radius)
+    solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
     solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
 
     return jsonify(solution)

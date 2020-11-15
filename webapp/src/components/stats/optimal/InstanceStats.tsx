@@ -9,6 +9,7 @@ interface Props {
     chart?: ChartData
     width: number
     height: number
+    gridArea: string
 }
 
 interface DataProps {
@@ -28,11 +29,12 @@ const ToolTipLine = styled("p")`
 function OptimalStats(props: DataProps) {
     return <div>
         <ToolTipLine>Optimal radius with constraints:</ToolTipLine>
-        <ToolTipLine>k: {props.chart?.k}</ToolTipLine>
-        <ToolTipLine>min blue: {props.chart?.minBlue}</ToolTipLine>
-        <ToolTipLine>min red: {props.chart?.minRed}</ToolTipLine>
+        <ToolTipLine>k: {props.chart?.optimalSolution.k}</ToolTipLine>
+        <ToolTipLine>min blue: {props.chart?.optimalSolution.minRed}</ToolTipLine>
+        <ToolTipLine>min red: {props.chart?.optimalSolution.minRed}</ToolTipLine>
         <ToolTipLine>
-            which leaves {props.chart?.optimalOutliers} {props.chart?.optimalOutliers == 1 ? "outlier" : "outliers"}
+            which
+            leaves {props.chart?.optimalSolution.outliers} {props.chart?.optimalSolution.outliers == 1 ? "outlier" : "outliers"}
         </ToolTipLine>
     </div>
 }
@@ -40,7 +42,7 @@ function OptimalStats(props: DataProps) {
 
 export default function InstanceStats(props: Props): JSX.Element {
     return <ChartFrame width={props.width} height={props.height}>
-        <H3>Problem Stats</H3>
+        <H3>Problem Details</H3>
         <SectionDivider/>
         {!props.chart && <GraphPlaceHolder>N/A</GraphPlaceHolder>}
         {props.chart && <>
@@ -48,7 +50,7 @@ export default function InstanceStats(props: Props): JSX.Element {
             <p>Blue nodes: {props.chart.blue}</p>
             <p>Red nodes: {props.chart.red}</p>
             <HorizontalGroup>
-                <p style={{marginTop: "0px"}}>optimal cost: {props.chart.optimalRadius}</p>
+                <p style={{marginTop: "0px"}}>optimal cost: {props.chart.optimalSolution.radius}</p>
                 <Tooltip title={<OptimalStats chart={props.chart}/>}>
                     <IconBtn aria-label="back">
                         <InfoIcon/>

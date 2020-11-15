@@ -7,6 +7,7 @@ import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Configurator from "../../components/configuration/Configurator";
 import InstanceStats from "../../components/stats/optimal/InstanceStats";
+import SolutionStats from "../../components/stats/solution/SolutionStats";
 
 const HomeIcon = styled(Home)`
     color: white;
@@ -14,14 +15,14 @@ const HomeIcon = styled(Home)`
 
 const ChartContainer = styled("div")`
     display: grid;
-    grid-template-rows: 495px 150px;
-    grid-template-columns: 405px 580px;
+    grid-template-rows: 250px 250px;
+    grid-template-columns: 405px 580px 250px;
     grid-gap: 5px;
-    
+    margin: 30px auto;
+    width: 1250px;
     grid-template-areas:
     "left middle top-right"
     "left middle bot-right";
-    margin: 30px auto;
 `
 
 function Solve() {
@@ -39,9 +40,10 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
-            <Configurator className="left" width={350} height={455} chartData={chartData} setChartData={setChartData}/>
-            <Chart className="middle" chart={chartData} width={350} height={350}/>
-            <InstanceStats chart={chartData} width={180} height={200}/>
+            <Configurator gridArea="left" width={350} height={455} chartData={chartData} setChartData={setChartData}/>
+            <Chart gridArea="middle" chart={chartData} width={350} height={350}/>
+            <InstanceStats gridArea="top-right" chart={chartData} width={180} height={210}/>
+            <SolutionStats gridArea="bot-right" solution={chartData?.solution} width={180} height={200}/>
         </ChartContainer>
     </Container>
 }

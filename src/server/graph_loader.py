@@ -1,5 +1,5 @@
 import os
-from typing import Set, Tuple, Union, Dict, List
+from typing import Set, Tuple, Union, Dict, List, Optional
 
 import networkx as nx
 import numpy
@@ -73,24 +73,16 @@ class GraphLoader:
             data.append({"x": x, "y": y, "colour": colour})
         f.close()
 
-        json = {}
-        json["k"] = k
-        json["minBlue"] = min_blue
-        json["minRed"] = min_red
-        json["blue"] = blue
-        json["red"] = red
-        json["nodes"] = node_count
-        json["data"] = data
-        json["optimalRadius"] = opt
-        json["optimalOutliers"] = outliers
-        return json
+        meta_data = GraphLoader.get_json_meta_data(graph_name)
+        return {**{"data": data}, **meta_data}
 
     @staticmethod
     def save_json(json, name: str):
         if name in GraphLoader.graphs:
             raise ValueError("Graph already exists")
         f = open(f"{os.path.dirname(__file__)}/dataset/{name}.txt", "w")
-        f.write(f'{json["nodes"]} {json["k"]} {json["blue"]} {json["red"]} {json["minBlue"]} {json["minBlue"]} {json["optimalRadius"]} {json["optimalOutliers"]}\n')
+        f.write(
+            f'{json["nodes"]} {json["optimalSolution"]["k"]} {json["blue"]} {json["red"]} {json["optimalSolution"]["minBlue"]} {json["optimalSolution"]["minRed"]} {json["optimalSolution"]["radius"]} {json["optimalSolution"]["outliers"]}\n')
         data = json["data"]
         for i, point in enumerate(data):
             if i > 0:
@@ -111,8 +103,13 @@ class GraphLoader:
                 "nodes": node_count,
                 "blue": blue,
                 "red": red,
-                "optimalRadius": opt,
-                "optimalOutliers": outliers
+                "optimalSolution": {
+                    "k": k,
+                    "minBlue": min_blue,
+                    "minRed": min_red,
+                    "radius": opt,
+                    "outliers": outliers
+                }
             }
 
     @staticmethod

@@ -53,24 +53,36 @@ interface ChartItem {
     center?: boolean
 }
 
-export interface ChartData {
-    data: ChartItem[]
-    centerRadius: number
+export interface OptimalSolution {
     k: number
-    nodes: number
     minBlue: number
     minRed: number
+    radius: number
+    outliers: number
+}
+
+export interface Solution {
+    k: number
+    timeTaken: number
+    radius: number
+    outliers: number
+}
+
+
+export interface ChartData {
+    data: ChartItem[]
+    nodes: number
     blue: number
     red: number
-    optimalRadius: number
-    optimalOutliers: number
+    optimalSolution: OptimalSolution
+    solution?: Solution
 }
 
 interface Props {
     chart?: ChartData
     width: number
     height: number
-    className?: string
+    gridArea?: string
 }
 
 export default function Chart(props: Props): JSX.Element {
@@ -88,7 +100,7 @@ export default function Chart(props: Props): JSX.Element {
     }, [])
 
     useEffect(() => {
-        if(!initialised){
+        if (!initialised) {
             initialise()
         }
         props.chart && d3Chart.update({
@@ -99,7 +111,7 @@ export default function Chart(props: Props): JSX.Element {
         console.log("udapted")
     }, [props, props.chart])
 
-    return <ChartFrame width={props.width * 1.5} height={props.height * 1.3}>
+    return <ChartFrame style={{gridArea: props.gridArea}} width={props.width * 1.5} height={props.height * 1.3}>
         <ChartSvg className="chart"/>
         {!props.chart && <GraphPlaceHolder>Choose a problem instance</GraphPlaceHolder>}
         <ToolTip className="tooltip"/>

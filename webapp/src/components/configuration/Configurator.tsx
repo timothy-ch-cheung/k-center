@@ -11,7 +11,7 @@ interface Props {
     height: number
     chartData?: ChartData
     setChartData: (chart: any) => void
-    className?: string
+    gridArea?: string
 }
 
 export const H3 = styled("h3")`
@@ -58,9 +58,9 @@ function Configurator(props: Props) {
         setProblemInstance(problemInstance)
         API.get(`/graph/${problemInstance}`).then(function (response) {
                 props.setChartData(response.data)
-                setK(response.data.k)
-                setBlue(response.data.minBlue)
-                setRed(response.data.minRed)
+                setK(response.data.optimalSolution.k)
+                setBlue(response.data.optimalSolution.minBlue)
+                setRed(response.data.optimalSolution.minRed)
             }
         )
     }
@@ -87,7 +87,7 @@ function Configurator(props: Props) {
         )
     }
 
-    return <ChartFrame width={props.width} height={props.height}>
+    return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Configuration</H3>
         <SectionDivider/>
         <form onSubmit={handleSolveSubmit}>
