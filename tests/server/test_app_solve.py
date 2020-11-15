@@ -84,7 +84,7 @@ def test_solve_basic_graph_with_greedy_reduce(basic_graph):
         },
         "solution": {
             "k": 2,
-            "outliers": 0,
+            "outliers": 1,
             "radius": pytest.approx(0.707, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
         },
