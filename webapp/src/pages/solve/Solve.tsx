@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import Home from '@material-ui/icons/Home';
 import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
-import Configurator from "../../components/configuration/Configurator";
+import Configurator, {SolveRequestData} from "../../components/configuration/Configurator";
 import InstanceStats from "../../components/stats/optimal/InstanceStats";
 import SolutionStats from "../../components/stats/solution/SolutionStats";
 
@@ -28,6 +28,7 @@ const ChartContainer = styled("div")`
 function Solve() {
     const history = useHistory();
     const [chartData, setChartData] = useState<ChartData>()
+    const [solveRequestData, setSolveRequestData] = useState<SolveRequestData>()
 
     const handleBackButtonClick = () => {
         history.push('/')
@@ -40,10 +41,19 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
-            <Configurator gridArea="left" width={350} height={455} chartData={chartData} setChartData={setChartData}/>
+            <Configurator
+                gridArea="left" width={350} height={455}
+                chartData={chartData}
+                setChartData={setChartData}
+                setSolveRequestData={setSolveRequestData}
+            />
             <Chart gridArea="middle" chart={chartData} width={350} height={350}/>
             <InstanceStats gridArea="top-right" chart={chartData} width={180} height={210}/>
-            <SolutionStats gridArea="bot-right" solution={chartData?.solution} width={180} height={200}/>
+            <SolutionStats
+                gridArea="bot-right" width={180} height={200}
+                solution={chartData?.solution}
+                solveRequestData={solveRequestData}
+            />
         </ChartContainer>
     </Container>
 }

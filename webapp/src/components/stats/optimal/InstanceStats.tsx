@@ -4,6 +4,7 @@ import {H3, HorizontalGroup, SectionDivider} from "../../configuration/Configura
 import {IconButton, Tooltip} from "@material-ui/core";
 import InfoIcon from '@material-ui/icons/Info'
 import styled from "@emotion/styled";
+import TextWithTooltip from "../../text_with_tooltip/TextWithTooltip";
 
 interface Props {
     chart?: ChartData
@@ -15,11 +16,6 @@ interface Props {
 interface DataProps {
     chart?: ChartData
 }
-
-const IconBtn = styled(IconButton)`
-    height: 24px;
-    padding: 0px;
-`
 
 const ToolTipLine = styled("p")`
     font-size: 13px;
@@ -49,14 +45,10 @@ export default function InstanceStats(props: Props): JSX.Element {
             <p>Nodes: {props.chart.nodes}</p>
             <p>Blue nodes: {props.chart.blue}</p>
             <p>Red nodes: {props.chart.red}</p>
-            <HorizontalGroup>
-                <p style={{marginTop: "0px"}}>optimal cost: {props.chart.optimalSolution.radius}</p>
-                <Tooltip title={<OptimalStats chart={props.chart}/>}>
-                    <IconBtn aria-label="back">
-                        <InfoIcon/>
-                    </IconBtn>
-                </Tooltip>
-            </HorizontalGroup>
+            <TextWithTooltip
+                text={`optimal cost: ${props.chart.optimalSolution.radius}`}
+                tooltipText={<OptimalStats chart={props.chart}/>}
+            />
 
         </>}
     </ChartFrame>

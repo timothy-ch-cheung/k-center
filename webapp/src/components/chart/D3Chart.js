@@ -86,7 +86,7 @@ function drawTooltips(data) {
             tooltip.transition()
                 .duration(100)
                 .style('opacity', .9);
-            tooltip.text(`(x: ${d.y}, y: ${d.x}) Class: ${d.colour}`)
+            tooltip.text(`(x: ${d.x}, y: ${d.y}) Class: ${d.colour}`)
                 .style('left', `${event.pageX + 5}px`)
                 .style('top', `${event.pageY - 20}px`);
         })
