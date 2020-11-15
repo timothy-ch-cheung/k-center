@@ -1,5 +1,5 @@
 import os
-from typing import Set, Tuple, Union, Dict, List, Optional
+from typing import Set, Tuple
 
 import networkx as nx
 import numpy

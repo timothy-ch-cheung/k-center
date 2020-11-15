@@ -9,7 +9,7 @@ interface Props {
     gridArea: string
 }
 
-const threeDecimalPlaces = new Intl.NumberFormat('en-US', {
+const threeDecimalPlaces = new Intl.NumberFormat('en-GB', {
     minimumFractionDigits: 3,
     maximumFractionDigits: 3,
 });

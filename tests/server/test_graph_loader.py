@@ -105,11 +105,11 @@ def test_save_json():
             }
         ],
         "optimalSolution": {
-            "k": 2,
-            "minBlue": 3,
-            "minRed": 2,
+            "k": 1,
+            "minBlue": 1,
+            "minRed": 1,
             "outliers": 0,
-            "radius": 0.728
+            "radius": 0.86
         },
         "nodes": 2,
         "blue": 1,
