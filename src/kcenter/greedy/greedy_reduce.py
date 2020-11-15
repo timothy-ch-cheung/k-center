@@ -37,7 +37,17 @@ class GreedyReduceSolver(GreedySolver):
             else:
                 break
 
-        radius = new_weight if new_weight is not None else radius
+        if new_weight:
+            outliers = set()
+            for center in clusters.keys():
+                points_to_remove = set()
+                for point in clusters[center]:
+                    if center != point and self.graph[center][point]["weight"] > new_weight:
+                        outliers.add(point)
+                        points_to_remove.add(point)
+                clusters[center].difference_update(points_to_remove)
+            radius = new_weight
+
         return clusters, outliers, radius
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:

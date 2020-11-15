@@ -31,10 +31,10 @@ def test_greedy_basic_graph_outlier_colourful_clustering():
 
     assert radius == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
     assert clusters == {
-        0: {0, 1, 2},
+        0: {0, 1},
         4: {3, 4}
     }
-    assert outliers == set()
+    assert outliers == {2}
     assert verify_solution(graph, RELAXED_CONSTRAINTS, K, radius, set(clusters.keys())) is True
 
 
