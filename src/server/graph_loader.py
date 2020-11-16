@@ -16,12 +16,15 @@ def get_available_graphs() -> Set[str]:
 def calculate_edges(graph: nx.Graph):
     """calculate Euclidian distance for all edges (non self-loop) of a graph
     """
+    nodes = set(graph.nodes())
     for n in graph.nodes():
-        for m in graph.nodes():
+        for m in nodes:
             if n == m:
                 continue
             weight = numpy.linalg.norm(graph.nodes[n]["pos"] - graph.nodes[m]["pos"])
             graph.add_edge(n, m, key=str(n) + str(m), weight=weight)
+            graph.add_edge(m, n, key=str(m) + str(n), weight=weight)
+        nodes.remove(n)
 
 
 class GraphLoader:
