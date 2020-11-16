@@ -58,6 +58,7 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         while left <= right:
             mid = (left + right) // 2
             current_weight = weights[mid]
+
             lp_solution = radius_checker.verify(current_weight)
             if lp_solution is not None:
                 weight = current_weight

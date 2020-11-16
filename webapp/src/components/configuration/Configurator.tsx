@@ -109,6 +109,7 @@ function Configurator(props: Props) {
                     <MenuItem value={"medium"}>medium</MenuItem>
                     <MenuItem value={"large"}>large</MenuItem>
                     <MenuItem value={"extreme_point"}>extreme point</MenuItem>
+                    <MenuItem value={"thousand"}>Thousand</MenuItem>
                 </Select>
             </FormControlNoWrap>
             <FormControlNoWrap>

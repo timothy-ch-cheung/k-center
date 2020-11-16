@@ -58,24 +58,13 @@ class GraphGenerator:
             point = self.generate_point()
         return point
 
-    def generate_unique_point(self, points: Set[Tuple[float, float]]) -> Tuple[float, float]:
-        """Generates a random point within the graph space of the GraphGenerator instance
-
-        :param points: the generated point will not be in any point in this set (optional)
-        :return: A tuple of coordinates
-        """
-        center_coord = self.generate_point()
-        while center_coord in points:
-            center_coord = self.generate_point()
-        return center_coord
-
     def __init__(self, min_x: int, min_y: int, max_x: int, max_y: int):
         self.min_x = min_x
         self.min_y = min_y
         self.max_x = max_x
         self.max_y = max_y
 
-    def generate(self, b, r, num_centers, opt, num_outliers):
+    def generate(self, b, r, num_centers, opt, num_outliers, center_seperation, outlier_seperation):
         """Generates a graph with [r + b + num_outliers] nodes with optimal cost [opt]
 
         :param b: number of blue points to generate within the optimal solution
@@ -97,7 +86,7 @@ class GraphGenerator:
 
         # Generate centers
         for i in range(num_centers):
-            center = self.generate_unique_point(centers)
+            center = self.get_random_distanced_point(center_seperation*opt, centers)
             centers.add(center)
             points.append({"x": center[0], "y": center[1], "colour": colours.pop().name.lower()})
 
@@ -117,31 +106,34 @@ class GraphGenerator:
         colours = GraphGenerator.generate_colour_queue(blue_outliers, red_outliers)
 
         for i in range(len(colours)):
-            cluster_point = self.get_random_distanced_point(opt, centers)
+            cluster_point = self.get_random_distanced_point(outlier_seperation*opt, centers)
             points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
 
         total_blue_points = b + blue_outliers
         total_red_points = r + red_outliers
         graph = {
             "data": points,
-            "k": num_centers,
-            "minBlue": b,
-            "minRed": r,
+            "optimalSolution": {
+                "k": num_centers,
+                "minBlue": b,
+                "minRed": r,
+                "radius": opt,
+                "outliers": num_outliers
+            },
             "blue": total_blue_points,
             "red": total_red_points,
             "nodes": total_blue_points + total_red_points,
-            "optimalRadius": opt,
-            "optimalOutliers": num_outliers
+
         }
         return graph
 
 
-gen = GraphGenerator(min_x=0, min_y=0, max_x=100, max_y=100)
-b = 50
-r = 50
-k = 10
-opt = 5.5
-graph = gen.generate(b, r, k, opt, 15)
+gen = GraphGenerator(min_x=2000, min_y=2000, max_x=20000, max_y=20000)
+b = 2500
+r = 2500
+k = 75
+opt = 145.5
+graph = gen.generate(b, r, k, opt, 200, center_seperation=1, outlier_seperation=10)
 print(graph)
 
-GraphLoader.save_json(graph, "test")
+GraphLoader.save_json(graph, "five_thousand")
