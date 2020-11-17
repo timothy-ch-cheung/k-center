@@ -1,3 +1,4 @@
+import math
 from typing import Tuple, Set, Generator, Dict, List
 
 import networkx as nx
@@ -44,18 +45,26 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         return weights[-1], {}
 
     @staticmethod
-    def calculate_optimal_radius_binary(weights: List[float], radius_checker: RadiusChecker) -> Tuple[float, Dict[int, float]]:
+    def calculate_optimal_radius_binary(weights: List[float], radius_checker: RadiusChecker, nodes: int) -> Tuple[float, Dict[int, float]]:
         """Returns the optimal radius for the graph, using a modified binary search
 
         :param weights: list of weights sorted from smallest to largest
         :param radius_checker: object which contains LP1 which can verify whether a given radius is valid
+        :param nodes: number of nodes in graph, used to decide whether do a full search for OPT or to make a guess for
+        running time purposes
         """
         left = 0
         right = len(weights)
         last_valid_solution = None
         weight = weights[-1]
+        max_iterations = math.ceil(math.log(nodes, 2))
+        iteration = 0
 
         while left <= right:
+            if nodes > 500 and iteration >= max_iterations:
+                break
+            else:
+                iteration += 1
             mid = (left + right) // 2
             current_weight = weights[mid]
 
@@ -82,7 +91,7 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
 
         radius_checker = RadiusChecker(self.graph, self.k, self.constraints[Colour.RED], self.constraints[Colour.BLUE])
 
-        opt, lp_solution = ConstantColourfulKCenterSolver.calculate_optimal_radius_binary(weights, radius_checker)
+        opt, lp_solution = ConstantColourfulKCenterSolver.calculate_optimal_radius_binary(weights, radius_checker, len(self.graph.nodes()))
 
         for point, attributes in lp_solution.items():
             self.graph.nodes()[point]["x"] = attributes["x"]
