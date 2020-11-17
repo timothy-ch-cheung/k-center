@@ -54,14 +54,12 @@ class RadiusChecker:
         return sum(mdl.x[i] for i in mdl.x) <= mdl.k
 
     @staticmethod
-    def rule_colour_min_coverage(mdl: pyo.Model, N, graph: nx.Graph, colour: Colour, coverage: int):
+    def rule_colour_min_coverage(mdl: pyo.Model, graph: nx.Graph, colour: Colour, coverage: int):
         """Ensures that a colour has a minimum coverage by the centers
 
         :param colour: colour constraint is placed on
         :param coverage: minimum number to cover
         """
-        if graph.nodes()[N]["colour"] != colour:
-            return pyo.Constraint.Skip
         zj = sum(mdl.z[j] for j in mdl.N if graph.nodes()[j]["colour"] == colour)
         return zj >= coverage
 
@@ -95,13 +93,13 @@ class RadiusChecker:
 
         self.model.rule_k_centers = pyo.Constraint(rule=RadiusChecker.rule_k_centers)
 
-        red_coverage = partial(RadiusChecker.rule_colour_min_coverage, graph=self.graph, colour=Colour.RED,
-                               coverage=self.model.red_coverage)
-        self.model.rule_red_coverage = pyo.Constraint(self.model.N, rule=red_coverage)
+        self.model.rule_red_coverage = pyo.Constraint(
+            expr=RadiusChecker.rule_colour_min_coverage(self.model, graph=self.graph, colour=Colour.RED,
+                                                        coverage=self.model.red_coverage))
 
-        blue_coverage = partial(RadiusChecker.rule_colour_min_coverage, graph=self.graph, colour=Colour.BLUE,
-                                coverage=self.model.blue_coverage)
-        self.model.rule_blue_coverage = pyo.Constraint(self.model.N, rule=blue_coverage)
+        self.model.rule_blue_coverage = pyo.Constraint(
+            expr=RadiusChecker.rule_colour_min_coverage(self.model, graph=self.graph, colour=Colour.BLUE,
+                                                        coverage=self.model.blue_coverage))
 
         self.model.objective = pyo.Objective(rule=RadiusChecker.objective_func, sense=pyo.minimize)
 
