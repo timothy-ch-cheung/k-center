@@ -1,8 +1,8 @@
 import React from 'react';
 import {IconButton, Tooltip} from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
-import {HorizontalGroup} from "../configuration/Configurator";
 import styled from "@emotion/styled";
+import {HorizontalGroup} from "../configuration/Layout";
 
 interface Props {
     tooltipText: any

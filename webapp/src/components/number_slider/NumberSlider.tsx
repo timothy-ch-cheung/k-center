@@ -1,6 +1,5 @@
 import React from "react";
 import {Grid, Input, Slider, Typography} from "@material-ui/core";
-import styled from "@emotion/styled";
 
 interface Props {
     label: string
