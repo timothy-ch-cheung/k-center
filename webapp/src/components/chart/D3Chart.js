@@ -17,6 +17,7 @@ D3Chart.create = function (props) {
 }
 
 D3Chart.update = function (props) {
+    const circleSize = props.chart.data.length > 150 ? 2 : 5
     d3.selectAll('.circle').remove();
     d3.selectAll('.radii').remove();
     d3.selectAll('.toggle-text').remove();
@@ -70,7 +71,7 @@ D3Chart.update = function (props) {
         .attr('class', (d) => `circle ${d.colour} ${d.center ? 'center' : ''}`)
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
-        .attr('r', 5)
+        .attr('r', circleSize)
         .style('fill', (d) => d.colour);
 
     drawTooltips(props.chart.data);

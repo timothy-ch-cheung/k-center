@@ -15,7 +15,7 @@ const IconBtn = styled(IconButton)`
     padding: 0px;
 `
 
-export const ToolTipLine = styled("p")`
+export const  ToolTipLine = styled("p")`
     font-size: 13px;
     margin: 5px;
 `
