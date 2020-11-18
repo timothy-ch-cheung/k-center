@@ -60,6 +60,7 @@ class GreedySolver(AbstractSolver):
         return clusters, set(), radius
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+        yield {}, set(), 0, "Graph loaded"
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
         yield clusters, set(), max(list(nx.get_edge_attributes(self.graph, "weight").values())), "initial center"
 

@@ -3,6 +3,7 @@ import {ChartFrame, GraphPlaceHolder, Solution} from "../../chart/Chart";
 import {SolveRequestData} from "../../configuration/ConfigPanel";
 import TextWithTooltip, {ToolTipLine} from "../../text_with_tooltip/TextWithTooltip";
 import {H3, SectionDivider} from "../../configuration/Layout";
+import {P} from "../Layout";
 
 interface Props {
     solution?: Solution
@@ -25,7 +26,7 @@ const threeDecimalPlaces = new Intl.NumberFormat('en-GB', {
 function SolutionK(props: CompareK) {
     const text = `k: ${Math.round(props.solutionK)}`
     if (props.optimalK === props.solutionK) {
-        return <p>{text}</p>
+        return <P>{text}</P>
     } else {
         return <TextWithTooltip
             tooltipText={<ToolTipLine>The solution a different amount of centers than specified in config</ToolTipLine>}
@@ -42,9 +43,9 @@ export default function SolutionStats(props: Props): JSX.Element {
         {!props.solution?.radius && <GraphPlaceHolder>Graph Unsolved</GraphPlaceHolder>}
         {props.solution?.radius && props.solveRequestData?.k && <>
             <SolutionK solutionK={props.solution?.k} optimalK={props.solveRequestData.k}/>
-            <p>Cost: {threeDecimalPlaces.format(props.solution?.radius)}</p>
-            <p>Outliers: {Math.round(props.solution?.outliers)}</p>
-            <p>Time Taken: {threeDecimalPlaces.format(props.solution?.timeTaken)}s</p>
+            <P>Cost: {threeDecimalPlaces.format(props.solution?.radius)}</P>
+            <P>Outliers: {Math.round(props.solution?.outliers)}</P>
+            <P>Time Taken: {threeDecimalPlaces.format(props.solution?.timeTaken)}s</P>
         </>}
     </ChartFrame>
 }

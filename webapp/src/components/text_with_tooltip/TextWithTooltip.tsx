@@ -22,7 +22,7 @@ export const  ToolTipLine = styled("p")`
 
 export default function TextWithTooltip(props: Props): JSX.Element {
     return <HorizontalGroup>
-        <p style={{...{marginTop: "0px", marginBottom: "0px"}, ...props.style}}>{props.text}</p>
+        <p style={{...{marginTop: "0px", marginBottom: "0px", marginLeft: "10px"}, ...props.style}}>{props.text}</p>
         <Tooltip title={props.tooltipText}>
             <IconBtn aria-label="back">
                 <InfoIcon/>

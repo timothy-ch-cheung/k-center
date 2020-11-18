@@ -5,6 +5,7 @@ import App from './pages/index/App';
 import {StylesProvider} from '@material-ui/core/styles';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Solve from "./pages/solve/Solve";
+import Steps from "./pages/steps/Steps";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -13,6 +14,7 @@ ReactDOM.render(
                 <Switch>
                     <Route exact path='/' component={App}/>
                     <Route exact path='/solve' component={Solve}/>
+                    <Route exact path='/steps' component={Steps}/>
                 </Switch>
             </Router>
         </StylesProvider>
