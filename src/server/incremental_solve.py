@@ -26,11 +26,6 @@ def start():
     instance = k_center_algorithms[algorithm](graph, k, constraints)
     generator = instance.generator()
     problem_instances[id] = {"instance": instance, "generator": generator, "name": graph_name}
-    clusters, outliers, radius, label = next(generator)
-
-    solution = {"step": {"label": label, "active": True}}
-    solution = {**solution, **GraphLoader.get_json(graph_name)}
-    return jsonify(solution)
 
 
 @step.route('/api/v1/step/next', methods=["POST"])
@@ -42,15 +37,13 @@ def next_step():
     generator = problem_instance["generator"]
     graph = problem_instance["instance"].graph
     graph_name = problem_instance["name"]
-    try:
-        start = time.time()
-        clusters, outliers, radius, label = next(generator)
-        end = time.time()
-        time_elapsed = end - start
-        solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
-        solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
-        solution["step"] = {"label": label, "active": True}
-    except StopIteration:
-        solution = {"step": {"label": "Solution found.", "active": False}}
+
+    start = time.time()
+    clusters, outliers, radius, label, is_active = next(generator)
+    end = time.time()
+    time_elapsed = end - start
+    solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
+    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
+    solution["step"] = {"label": label, "active": is_active}
 
     return jsonify(solution)

@@ -48,7 +48,8 @@ export default function ConfigModal(props: Props) {
         setOpen(false);
         requestBody.id = props.id
         API.post("/step/start", requestBody).then(function (response) {
-                props.setChartData(response.data)
+                const newChart = {...props.chartData, ...{step: {label: "Graph loaded."}}}
+                props.setChartData(newChart)
                 props.setStepSolveRequestData(requestBody)
                 setIsLoading(false)
             }

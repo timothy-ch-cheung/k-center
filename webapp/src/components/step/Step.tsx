@@ -54,13 +54,12 @@ export default function Step(props: Props) {
         setPrevEnabled(true)
         if (currentPage == props.solutionHistory.length) {
             API.post("/step/next", {id: props.id}).then(function (response) {
-                    if(response.data.step.active) {
-                        props.setChartData(response.data)
-                        props.updateSolutionHistory(response.data)
-                    } else {
+                    console.log(response.data)
+                    props.setChartData(response.data)
+                    props.updateSolutionHistory(response.data)
+                    if(!response.data.step.active) {
                         setMaxPage(newPage)
                         setNextEnabled(false)
-                        console.log(props.solutionHistory[currentPage])
                         let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[currentPage-1]))
                         completedSolution.step.label = response.data.step.label
                     }
@@ -73,6 +72,7 @@ export default function Step(props: Props) {
         if (maxPage != -1  && newPage == maxPage) {
             setNextEnabled(false)
         }
+
         setCurrentPage(newPage)
 
     }
