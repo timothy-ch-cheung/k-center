@@ -41,9 +41,9 @@ export default function Step(props: Props) {
         const newPage = currentPage - 1
         setNextEnabled(true)
         if (currentPage > 1) {
-            props.setChartData(props.solutionHistory[newPage])
+            props.setChartData(props.solutionHistory[newPage-1])
         }
-        if (currentPage == 1) {
+        if (currentPage == 2) {
             setPrevEnabled(false)
         }
         setCurrentPage(newPage)
@@ -59,7 +59,9 @@ export default function Step(props: Props) {
                         props.updateSolutionHistory(response.data)
                     } else {
                         setMaxPage(newPage)
-                        let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[currentPage]))
+                        setNextEnabled(false)
+                        console.log(props.solutionHistory[currentPage])
+                        let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[currentPage-1]))
                         completedSolution.step.label = response.data.step.label
                     }
                 }
@@ -68,7 +70,7 @@ export default function Step(props: Props) {
             props.setChartData(props.solutionHistory[newPage])
         }
 
-        if (maxPage != -1  && currentPage == maxPage) {
+        if (maxPage != -1  && newPage == maxPage) {
             setNextEnabled(false)
         }
         setCurrentPage(newPage)
@@ -87,6 +89,7 @@ export default function Step(props: Props) {
                    isPrevEnabled={prevEnabled}
                    handlePrevClick={handlePrev}
                    handleNextClick={handleNext}
+                   maxPage={maxPage}
         />
     </ChartFrame>
 }

@@ -108,7 +108,6 @@ export default function Chart(props: Props): JSX.Element {
             height: props.height,
             chart: props.chart
         });
-        console.log("udapted")
     }, [props, props.chart])
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width * 1.5} height={props.height * 1.3}>

@@ -29,7 +29,7 @@ export default function (props: Props) {
             <ArrowBackIosIcon/>
         </IconButton>
         <Text variant="button" display="block">
-            Step {props.currentPage}/{props.maxPage ? props.maxPage : "?"}
+            Step {props.currentPage}/{props.maxPage && props.maxPage > 0 ? props.maxPage : "?"}
         </Text>
         <IconButton aria-label="back" disabled={!props.isNextEnabled} onClick={props.handleNextClick}>
             <ArrowForwardIosIcon/>
