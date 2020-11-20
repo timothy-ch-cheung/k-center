@@ -31,7 +31,7 @@ export default function (props: Props) {
         <Text variant="button" display="block">
             Step {props.currentPage}/{props.maxPage && props.maxPage > 0 ? props.maxPage : "?"}
         </Text>
-        <IconButton aria-label="back" disabled={!props.isNextEnabled} onClick={props.handleNextClick}>
+        <IconButton aria-label="forward" disabled={!props.isNextEnabled} onClick={props.handleNextClick}>
             <ArrowForwardIosIcon/>
         </IconButton>
     </ButtonGroup>

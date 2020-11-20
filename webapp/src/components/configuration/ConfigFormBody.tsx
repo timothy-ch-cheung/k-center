@@ -14,7 +14,6 @@ interface Props {
     chartData?: ChartData
     setChartData: (data: any) => void
     isProcessing: boolean
-
 }
 
 const FormControlNoWrap = styled(FormControl)`

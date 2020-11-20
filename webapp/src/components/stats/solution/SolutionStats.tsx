@@ -29,7 +29,7 @@ function SolutionK(props: CompareK) {
         return <P>{text}</P>
     } else {
         return <TextWithTooltip
-            tooltipText={<ToolTipLine>The solution a different amount of centers than specified in config</ToolTipLine>}
+            tooltipText={<ToolTipLine>The solution has a different amount of centers than specified in config</ToolTipLine>}
             text={text}
             style={{color: "red"}}
         />

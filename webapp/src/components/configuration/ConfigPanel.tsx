@@ -24,7 +24,6 @@ export interface SolveRequestData {
 function ConfigPanel(props: Props) {
     const [isSolving, setIsSolving] = useState<boolean>(false)
 
-
     const handleSolveSubmit = (requestBody: any) => {
         setIsSolving(true)
         API.post("/solve", requestBody).then(function (response) {

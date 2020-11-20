@@ -70,7 +70,7 @@ def test_greedy_basic_graph_max_centers():
 def test_greedy_basic_graph_outlier_colourful_clustering():
     """This is an example of a colourful k-center graph that is not solved optimally with the standard greedy algorithm
     by Gonzalez. The computed centers are still [0, 4], but node 2 becomes an outlier. The distance between node 2 and
-    the center 0 is 3.785. When we relax the constraints, we don"t need to cover node 2, which means we cluster
+    the center 0 is 3.785. When we relax the constraints, we do not need to cover node 2, which means we cluster
     with a much lower cost of 0.707"""
     graph = basic_graph_with_outlier()
     instance = GreedySolver(graph, K, RELAXED_CONSTRAINTS)

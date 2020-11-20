@@ -64,7 +64,7 @@ export default function ConfigModal(props: Props) {
         <Button variant="contained" color="primary" onClick={handleOpen}>Load</Button>
 
         <Modal open={open} onClose={handleClose}>
-            <Window variant="outlined" style={{width: "500px", padding: "20px"}}>
+            <Window variant="outlined">
                 <ConfigFormBody
                     submitButtonText="Confirm"
                     handleSubmit={handleLoadSubmit}
