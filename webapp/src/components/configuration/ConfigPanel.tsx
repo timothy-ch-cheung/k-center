@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import {ChartData, ChartFrame} from "../chart/Chart";
-import {Button, CircularProgress} from "@material-ui/core";
 import API from "../../API";
-import {H3, HorizontalGroup, SectionDivider, Spacer} from "./Layout";
+import {H3, SectionDivider} from "./Layout";
 import ConfigFormBody from "./ConfigFormBody";
 
 interface Props {
@@ -29,7 +28,6 @@ function ConfigPanel(props: Props) {
     const handleSolveSubmit = (requestBody: any) => {
         setIsSolving(true)
         API.post("/solve", requestBody).then(function (response) {
-                console.log(response.data)
                 props.setChartData(response.data)
                 props.setSolveRequestData(requestBody)
                 setIsSolving(false)

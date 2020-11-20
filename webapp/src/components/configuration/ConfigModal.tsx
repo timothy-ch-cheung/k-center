@@ -20,6 +20,7 @@ interface Props {
     setChartData: (data: any) => void
     setStepSolveRequestData: (data: StepSolveRequestData) => void
     id: string
+    resetSteps: () => void
 }
 
 const Window = styled(Paper)`
@@ -45,13 +46,14 @@ export default function ConfigModal(props: Props) {
 
     const handleLoadSubmit = (requestBody: StepSolveRequestData) => {
         setIsLoading(true)
-        setOpen(false);
         requestBody.id = props.id
         API.post("/step/start", requestBody).then(function (response) {
                 const newChart = {...props.chartData, ...{step: {label: "Graph loaded."}}}
                 props.setChartData(newChart)
                 props.setStepSolveRequestData(requestBody)
+                props.resetSteps()
                 setIsLoading(false)
+                setOpen(false);
             }
         )
     }

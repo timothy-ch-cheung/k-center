@@ -69,7 +69,7 @@ class GreedyReduceSolver(GreedySolver):
         solution = super().generator()
         clusters, radius = {}, float("inf")
         for step in solution:
-            clusters, outliers, radius, label = step
+            clusters, outliers, radius, label, active = step
             yield clusters, outliers, radius, label
 
         weights = GreedyReduceSolver.get_weights(self.graph, radius)

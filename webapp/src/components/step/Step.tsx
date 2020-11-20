@@ -1,10 +1,28 @@
-import {ChartData, ChartFrame} from "../chart/Chart";
+import {ChartFrame} from "../chart/Chart";
 import {H3, SectionDivider} from "../configuration/Layout";
 import PagingBar from "../Pagination/PagingBar";
-import React, {useState} from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import {SolutionStep} from "../../pages/steps/Steps";
 import API from "../../API";
+
+export interface PageSetting {
+    nextEnabled: boolean
+    prevEnabled: boolean
+    currentPage: number
+    maxPage?: number
+}
+
+export interface UpdatePageControl {
+    nextEnabled?: boolean
+    prevEnabled?: boolean
+    currentPage?: number
+    maxPage?: number
+}
+
+export interface PageControl extends PageSetting {
+    updateControl: (update: UpdatePageControl) => void
+}
 
 interface Props {
     width: number
@@ -15,6 +33,8 @@ interface Props {
     updateSolutionHistory: (history: any) => void
     setChartData: (data: SolutionStep) => void
     id: string
+    algorithm?: string
+    pageControl: PageControl
 
 }
 
@@ -31,65 +51,63 @@ const TextBox = styled("p")`
     height: ${(props: Dimensions) => props.height}px;
 `
 
+const Subtitle = styled("h5")`
+    margin: 5px 20px;
+`
+
 export default function Step(props: Props) {
-    const [nextEnabled, setNextEnabled] = useState<boolean>(true)
-    const [prevEnabled, setPrevEnabled] = useState<boolean>(false)
-    const [currentPage, setCurrentPage] = useState<number>(0)
-    const [maxPage, setMaxPage] = useState<number>(-1)
 
     const handlePrev = () => {
-        const newPage = currentPage - 1
-        setNextEnabled(true)
-        if (currentPage > 1) {
-            props.setChartData(props.solutionHistory[newPage-1])
+        const newPage = props.pageControl.currentPage - 1
+        const update: UpdatePageControl = {nextEnabled: true, currentPage: newPage}
+
+        if (props.pageControl.currentPage > 1) {
+            props.setChartData(props.solutionHistory[newPage - 1])
         }
-        if (currentPage == 2) {
-            setPrevEnabled(false)
+        if (props.pageControl.currentPage == 2) {
+            update.prevEnabled = false
         }
-        setCurrentPage(newPage)
+        props.pageControl.updateControl(update)
     }
 
     const handleNext = () => {
-        const newPage = currentPage + 1
-        setPrevEnabled(true)
-        if (currentPage == props.solutionHistory.length) {
+        const newPage = props.pageControl.currentPage + 1
+        let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
+        if (props.pageControl.currentPage == props.solutionHistory.length) {
             API.post("/step/next", {id: props.id}).then(function (response) {
-                    console.log(response.data)
                     props.setChartData(response.data)
                     props.updateSolutionHistory(response.data)
-                    if(!response.data.step.active) {
-                        setMaxPage(newPage)
-                        setNextEnabled(false)
-                        let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[currentPage-1]))
+                    if (!response.data.step.active) {
+                        update = {...update, ...{maxPage: newPage, nextEnabled: false}}
+                        let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
                         completedSolution.step.label = response.data.step.label
                     }
+                    props.pageControl.updateControl(update)
                 }
             )
-        } else if (currentPage < props.solutionHistory.length - 1) {
-            props.setChartData(props.solutionHistory[newPage])
+        } else {
+            props.setChartData(props.solutionHistory[newPage - 1])
+            if (props.pageControl.maxPage != -1 && newPage == props.pageControl.maxPage) {
+                update = {...update, ...{nextEnabled: false}}
+            }
+            props.pageControl.updateControl(update)
         }
-
-        if (maxPage != -1  && newPage == maxPage) {
-            setNextEnabled(false)
-        }
-
-        setCurrentPage(newPage)
-
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Step-By-Step Walkthrough</H3>
+        <Subtitle>{props.algorithm ? `${props.algorithm} algorithm` : ""}</Subtitle>
         <SectionDivider/>
-        <TextBox width={props.width} height={340}>
+        <TextBox width={props.width} height={320}>
             {props.text ? props.text : DEFAULT_STEP_TEXT}
         </TextBox>
         <SectionDivider/>
-        <PagingBar currentPage={currentPage}
-                   isNextEnabled={nextEnabled}
-                   isPrevEnabled={prevEnabled}
+        <PagingBar currentPage={props.pageControl.currentPage}
+                   isNextEnabled={props.pageControl.nextEnabled}
+                   isPrevEnabled={props.pageControl.prevEnabled}
                    handlePrevClick={handlePrev}
                    handleNextClick={handleNext}
-                   maxPage={maxPage}
+                   maxPage={props.pageControl.maxPage}
         />
     </ChartFrame>
 }

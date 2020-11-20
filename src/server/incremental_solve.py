@@ -2,9 +2,9 @@ import time
 
 from flask import request, Blueprint, jsonify
 
-from kcenter.constant.colour import Colour
-from server.graph_loader import GraphLoader
-from server.routes import k_center_algorithms, repackage_solution
+from src.kcenter.constant.colour import Colour
+from src.server.graph_loader import GraphLoader
+from src.server.routes import k_center_algorithms, repackage_solution
 
 step = Blueprint('step', __name__)
 
@@ -26,6 +26,7 @@ def start():
     instance = k_center_algorithms[algorithm](graph, k, constraints)
     generator = instance.generator()
     problem_instances[id] = {"instance": instance, "generator": generator, "name": graph_name}
+    return '', 204
 
 
 @step.route('/api/v1/step/next', methods=["POST"])

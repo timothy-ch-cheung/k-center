@@ -8,7 +8,7 @@ import InstanceStats from "../../components/stats/optimal/InstanceStats";
 import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Parameters from "../../components/stats/parameters/Parameters";
-import Step from "../../components/step/Step";
+import Step, {PageSetting, UpdatePageControl} from "../../components/step/Step";
 
 interface Props {
 
@@ -36,6 +36,13 @@ const ChartContainer = styled("div")`
     "bot-left middle right";
 `
 
+const DEFAULT_STEP_PAGE_SETTINGS = {
+    prevEnabled: false,
+    nextEnabled: true,
+    currentPage: 0,
+    maxPage: -1
+}
+
 
 export default function Steps(props: Props) {
     const history = useHistory();
@@ -43,6 +50,16 @@ export default function Steps(props: Props) {
     const [solutionHistory, setSolutionHistory] = useState<SolutionStep[]>([])
     const [solveRequestData, setSolveRequestData] = useState<StepSolveRequestData>()
     const [chartData, setChartData] = useState<SolutionStep>()
+    const [pageSetting, setPageSetting] = useState<PageSetting>(DEFAULT_STEP_PAGE_SETTINGS)
+
+    const updatePageControl = (update: UpdatePageControl) => {
+        setPageSetting({...pageSetting, ...update})
+    }
+
+    const resetPageControl = () => {
+        setPageSetting(DEFAULT_STEP_PAGE_SETTINGS)
+        setSolutionHistory([])
+    }
 
     const handleBackButtonClick = () => {
         history.push('/')
@@ -66,6 +83,7 @@ export default function Steps(props: Props) {
                 setChartData={setChartData}
                 setStepSolveRequestData={setSolveRequestData}
                 id={id}
+                resetSteps={resetPageControl}
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
@@ -77,6 +95,8 @@ export default function Steps(props: Props) {
                   setChartData={setChartData}
                   text={chartData?.step?.label}
                   id={id}
+                  algorithm={solveRequestData?.algorithm}
+                  pageControl={Object.assign(pageSetting, {updateControl: updatePageControl})}
             />
         </ChartContainer>
     </Container>
