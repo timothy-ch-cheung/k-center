@@ -3,6 +3,7 @@ import './App.css';
 import styled from '@emotion/styled';
 import Button from '@material-ui/core/Button';
 import {useHistory} from "react-router-dom";
+import Home from "@material-ui/icons/Home";
 
 const Heading = styled("h1")`
     text-align: center;
@@ -21,11 +22,19 @@ export const Container = styled("div")`
     height: 100vh;
 `
 
+export const HomeIcon = styled(Home)`
+    color: white;
+`
+
 function App() {
     const history = useHistory();
 
     const handleSolveButtonClick = () => {
         history.push('/solve')
+    }
+
+    const handleStepsButtonClick = () => {
+        history.push('/steps')
     }
 
     return (
@@ -41,7 +50,8 @@ function App() {
                 </PaddedButton>
                 <PaddedButton
                     variant="contained"
-                    size="large">
+                    size="large"
+                    onClick={handleStepsButtonClick}>
                     Visualise steps to a solution
                 </PaddedButton>
             </header>

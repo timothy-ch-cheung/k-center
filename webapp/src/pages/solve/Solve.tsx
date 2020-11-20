@@ -1,17 +1,13 @@
 import React, {useState} from "react";
 import Chart, {ChartData} from "../../components/chart/Chart";
-import {Container} from "../index/App";
+import {Container, HomeIcon} from "../index/App";
 import styled from '@emotion/styled';
-import Home from '@material-ui/icons/Home';
 import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
-import Configurator, {SolveRequestData} from "../../components/configuration/Configurator";
+import ConfigPanel, {SolveRequestData} from "../../components/configuration/ConfigPanel";
 import InstanceStats from "../../components/stats/optimal/InstanceStats";
 import SolutionStats from "../../components/stats/solution/SolutionStats";
 
-const HomeIcon = styled(Home)`
-    color: white;
-`
 
 const ChartContainer = styled("div")`
     display: grid;
@@ -41,7 +37,7 @@ function Solve() {
             </IconButton>
         </div>
         <ChartContainer>
-            <Configurator
+            <ConfigPanel
                 gridArea="left" width={350} height={455}
                 chartData={chartData}
                 setChartData={setChartData}

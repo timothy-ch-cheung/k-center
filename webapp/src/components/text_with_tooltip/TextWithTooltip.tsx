@@ -1,8 +1,8 @@
 import React from 'react';
 import {IconButton, Tooltip} from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
-import {HorizontalGroup} from "../configuration/Configurator";
 import styled from "@emotion/styled";
+import {HorizontalGroup} from "../configuration/Layout";
 
 interface Props {
     tooltipText: any
@@ -22,7 +22,7 @@ export const  ToolTipLine = styled("p")`
 
 export default function TextWithTooltip(props: Props): JSX.Element {
     return <HorizontalGroup>
-        <p style={{...{marginTop: "0px", marginBottom: "0px"}, ...props.style}}>{props.text}</p>
+        <p style={{...{marginTop: "0px", marginBottom: "0px", marginLeft: "10px"}, ...props.style}}>{props.text}</p>
         <Tooltip title={props.tooltipText}>
             <IconBtn aria-label="back">
                 <InfoIcon/>

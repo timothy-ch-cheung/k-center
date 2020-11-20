@@ -1,7 +1,8 @@
 import React from 'react';
 import {ChartData, ChartFrame, GraphPlaceHolder} from "../../chart/Chart";
-import {H3, SectionDivider} from "../../configuration/Configurator";
 import TextWithTooltip, {ToolTipLine} from "../../text_with_tooltip/TextWithTooltip";
+import {H3, SectionDivider} from "../../configuration/Layout";
+import {P} from "../Layout";
 
 interface Props {
     chart?: ChartData
@@ -30,19 +31,18 @@ function OptimalStats(props: DataProps) {
 
 
 export default function InstanceStats(props: Props): JSX.Element {
-    return <ChartFrame width={props.width} height={props.height}>
+    return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Problem Details</H3>
         <SectionDivider/>
         {!props.chart && <GraphPlaceHolder>N/A</GraphPlaceHolder>}
         {props.chart && <>
-            <p>Nodes: {props.chart.nodes}</p>
-            <p>Blue nodes: {props.chart.blue}</p>
-            <p>Red nodes: {props.chart.red}</p>
+            <P>Nodes: {props.chart.nodes}</P>
+            <P>Blue nodes: {props.chart.blue}</P>
+            <P>Red nodes: {props.chart.red}</P>
             <TextWithTooltip
                 text={`optimal cost: ${props.chart.optimalSolution.radius}`}
                 tooltipText={<OptimalStats chart={props.chart}/>}
             />
-
         </>}
     </ChartFrame>
 }
