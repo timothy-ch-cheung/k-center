@@ -34,6 +34,9 @@ def next_step():
     request_data = request.get_json()
     id = request_data["id"]
 
+    if id not in problem_instances:
+        return jsonify({"message": f"{id} is not an active problem instance"}), 404
+
     problem_instance = problem_instances[id]
     generator = problem_instance["generator"]
     graph = problem_instance["instance"].graph
@@ -46,5 +49,8 @@ def next_step():
     solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
     solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
     solution["step"] = {"label": label, "active": is_active}
+
+    if not is_active:
+        del problem_instances[id]
 
     return jsonify(solution)
