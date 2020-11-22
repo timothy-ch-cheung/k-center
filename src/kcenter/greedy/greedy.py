@@ -23,8 +23,9 @@ class GreedySteps:
         x = round(next_center["pos"][0], GreedySteps.DECIMAL_PLACES)
         y = round(next_center["pos"][1], GreedySteps.DECIMAL_PLACES)
         cost = round(cost, GreedySteps.DECIMAL_PLACES)
-        return f"We find the furthest point from our previous center, which is the point at ({x}, {y}). It is a " + \
-               f"{next_center['colour'].name.lower()} point {cost} distance away. This makes the current cost {cost}."
+        return "We find the point which has the maximum distance from its closest center, which is the point at " + \
+               f"({x}, {y}). It is a {next_center['colour'].name.lower()} point {cost} distance away. This makes " + \
+               f"the current cost {cost}."
 
     @staticmethod
     def final_cost(cost: float, k: int) -> str:
