@@ -18,6 +18,7 @@ k_center_algorithms = {
 
 @main.route("/")
 @main.route("/solve")
+@main.route("/steps")
 def index():
     return render_template('index.html')
 
