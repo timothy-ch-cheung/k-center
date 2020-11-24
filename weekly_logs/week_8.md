@@ -8,7 +8,7 @@ Summary: Created new page/UI that allows user to step through an algorithm and s
 
 ## Testing
 - Mostly manual testing of the UI (writing automated end-to-end tests in Cypress would be too time costly)
-- unit testing [repo now at 54 tests, 97% coverage]. Not much new tests needed as the server side generator algorithm was already unit tested in week 8
+- unit testing [repo now at 54 tests, 97% coverage]. Not much new tests needed as the server side generator algorithm was already unit tested in week 6
 
 ## Difficulties
 - Re-reading Colourful algorithm (Bandyapadhyay et al.) section 3.2, currently having a lot of difficulty understanding the concepts behind the algorithm for α-separated instances. For example several new concepts that I was not familiar with:
