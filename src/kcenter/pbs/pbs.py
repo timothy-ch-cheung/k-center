@@ -15,10 +15,10 @@ class Neighbour:
 
 
 class Individual:
-    def __init__(self, centers: Set[int]):
+    def __init__(self, centers: Set[int], cost=0, nearest_centers={}):
         self.centers = centers
-        self.cost = 0
-        self.nearest_centers = {}
+        self.cost = cost
+        self.nearest_centers = nearest_centers
 
     def init_nearest_centers(self, graph: nx.Graph):
         points = list(graph.nodes())
@@ -47,9 +47,13 @@ class Individual:
                 "nearest_center": nearest_center, "second_nearest_center": second_nearest_center
             }
 
+    def copy(self):
+        return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
+
 
 class PBS(AbstractSolver):
     POPULATION_SIZE = 8
+    GENERATIONS = 10
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
@@ -164,11 +168,87 @@ class PBS(AbstractSolver):
         termination_iterations_cost = 0.1 * (generation + 1) * self.graph.number_of_nodes()
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
+
+        optimised_individual = individual.copy()
         while iteration < termination_iterations_cost and iteration < termination_iterations_count:
-            furthest_point = self.get_furthest_point(individual)
-            point_to_remove, point_to_add = self.find_pair(furthest_point, individual)
-            self.remove_center(point_to_remove, individual)
-            self.add_center(point_to_add, individual)
+            furthest_point = self.get_furthest_point(optimised_individual)
+            point_to_remove, point_to_add = self.find_pair(furthest_point, optimised_individual)
+            self.remove_center(point_to_remove, optimised_individual)
+            self.add_center(point_to_add, optimised_individual)
+        furthest_point = self.get_furthest_point(individual)
+        optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
+        return optimised_individual
+
+    def mutation_random(self, individual: Individual):
+        q = random.randint(self.k // 2, self.k)
+        other_points = self.points.difference(individual.centers)
+        retained_centers = random.sample(individual.centers, q)
+        new_centers = random.sample(other_points, self.k - q)
+        child_solution = Individual(centers=set(retained_centers + new_centers))
+        child_solution.init_nearest_centers(self.graph)
+        furthest_point = self.get_furthest_point(child_solution)
+        child_solution.cost = child_solution.nearest_centers[furthest_point]["nearest_center"].cost
+        return child_solution
+
+    def mutation_directed(self, individual: Individual):
+        closest_centers = None
+        closest_distance = float("inf")
+        for center in individual.centers:
+            for other_center in individual.centers.difference(center):
+                if self.graph[center][other_center]["weight"] < closest_distance:
+                    closest_distance = self.graph[center][other_center]["weight"]
+                    closest_centers = (center, other_center)
+        new_centers = individual.centers.difference(closest_centers)
+        child_solution = Individual(centers=new_centers)
+        child_solution.init_nearest_centers(self.graph)
+        furthest_point = self.get_furthest_point(child_solution)
+        child_solution.cost = child_solution.nearest_centers[furthest_point]["nearest_center"].cost
+        return child_solution
+
+    def crossover_random(self, first_parent: Individual, second_parent: Individual):
+        new_centers = random.sample(first_parent.centers.union(second_parent.centers), self.k)
+        child_solution = Individual(centers=new_centers)
+        child_solution.init_nearest_centers(self.graph)
+        furthest_point = self.get_furthest_point(child_solution)
+        child_solution.cost = child_solution.nearest_centers[furthest_point]["nearest_center"].cost
+        return child_solution
+
+    def crossover_directed(self, first_parent: Individual, second_parent: Individual, generation: int):
+        def generate_child(pbs: PBS, centers: Set[int]):
+            child = Individual(centers=centers)
+            if len(child.centers) > pbs.k:
+                child.centers = set(random.sample(child.centers, pbs.k))
+                child.init_nearest_centers(pbs.graph)
+            elif len(child.centers) < pbs.k:
+                child.init_nearest_centers(pbs.graph)
+                pbs.local_search(child, generation)
+            else:
+                child.init_nearest_centers(pbs.graph)
+            furthest_point = self.get_furthest_point(child)
+            child.cost = child.nearest_centers[furthest_point]["nearest_center"].cost
+            return child
+
+        INTERVAL_START = 0.1
+        INTERVAL_END = 0.9
+        first_user = random.choice(tuple(self.points))
+        second_user = random.choice(tuple(self.points))
+        q = random.uniform(INTERVAL_START, INTERVAL_END)
+        first_child_centers = set()
+        second_child_centers = set()
+        for center in first_parent.centers:
+            if self.graph[center][first_user]["weight"] / self.graph[center][second_user]["weight"] <= q:
+                first_child_centers.add(center)
+            else:
+                second_child_centers.add(center)
+        for center in second_parent.centers:
+            if self.graph[center][first_user]["weight"] / self.graph[center][second_user]["weight"] <= q:
+                second_child_centers.add(center)
+            else:
+                first_child_centers.add(center)
+
+        first_child = generate_child(self, first_child_centers)
+        second_child = generate_child(self, second_child_centers)
+        return first_child, second_child
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
@@ -181,10 +261,23 @@ class PBS(AbstractSolver):
             individual.init_nearest_centers(self.graph)
             population.append(individual)
 
-        for individual in population:
-            self.local_search(individual)
+        for generation in range(PBS.GENERATIONS):
+            for i, individual in enumerate(population):
+                for j, sibling in enumerate(population):
+                    if i == j:
+                        continue
+                    population.append(self.local_search(self.mutation_random(individual), generation))
+                    population.append(
+                        self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
+                                          generation))
+                    first_child, second_child = self.crossover_directed(individual, sibling)
+                    population.append(self.local_search(self.mutation_directed(first_child), generation))
+                    population.append(self.local_search(self.mutation_directed(second_child), generation))
+            population = sorted(population, key=lambda x: x.cost)
 
         clusters = {}
-        for center in population[-1].centers:
+
+        fittest_individual = max(population, key=lambda x: x.cost)
+        for center in fittest_individual.centers:
             clusters[center] = set()
-        return clusters, set(), 0
+        return clusters, set(), fittest_individual.cost
