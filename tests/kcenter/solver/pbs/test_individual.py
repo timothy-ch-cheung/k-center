@@ -1,6 +1,6 @@
 import pytest
 
-from kcenter.pbs.pbs import Individual, Neighbour
+from src.kcenter.pbs.pbs import Individual, Neighbour
 from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.util.create_test_graph import basic_graph
 
@@ -36,13 +36,12 @@ def test_individual_init_centers():
     individual.init_nearest_centers(graph)
     assert individual.centers == {0, 4}
     assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
-    assert str(individual.nearest_centers[
-                   0]) == "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}"
-    assert str(individual.nearest_centers[
-                   1]) == "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}"
-    assert str(individual.nearest_centers[
-                   2]) == "{'nearest_center': {point: 0, cost: 0.854}, 'second_nearest_center': {point: 4, cost: 6.369}}"
-    assert str(individual.nearest_centers[
-                   3]) == "{'nearest_center': {point: 4, cost: 0.707}, 'second_nearest_center': {point: 0, cost: 5.284}}"
-    assert str(individual.nearest_centers[
-                   4]) == "{'nearest_center': {point: 4, cost: 0}, 'second_nearest_center': {point: 0, cost: 5.515}}"
+    expected_nearest_centers = [
+        "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}",
+        "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}",
+        "{'nearest_center': {point: 0, cost: 0.854}, 'second_nearest_center': {point: 4, cost: 6.369}}",
+        "{'nearest_center': {point: 4, cost: 0.707}, 'second_nearest_center': {point: 0, cost: 5.284}}",
+        "{'nearest_center': {point: 4, cost: 0}, 'second_nearest_center': {point: 0, cost: 5.515}}"
+    ]
+    for point,expected in enumerate(expected_nearest_centers):
+        assert str(individual.nearest_centers[point]) == expected

@@ -4,8 +4,8 @@ from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
 
-from kcenter.constant.colour import Colour
-from kcenter.solver.abstract_solver import AbstractSolver
+from src.kcenter.constant.colour import Colour
+from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
 class Neighbour:
@@ -58,17 +58,18 @@ class Individual:
                 "nearest_center": nearest_center, "second_nearest_center": second_nearest_center
             }
         furthest_point = max(points,
-                        key=lambda x: 0
-                        if self.nearest_centers[x]["nearest_center"] is None
-                        else self.nearest_centers[x]["nearest_center"].cost
-                        )
+                             key=lambda x: 0
+                             if self.nearest_centers[x]["nearest_center"] is None
+                             else self.nearest_centers[x]["nearest_center"].cost
+                             )
         self.cost = self.nearest_centers[furthest_point]["nearest_center"].cost
 
     def copy(self):
         return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
 
     def __str__(self):
-        return "{centers: " + str(list(self.centers)) + f", cost: {self.cost}, nearest_centers: {self.nearest_centers}" +"}"
+        return "{centers: " + str(
+            list(self.centers)) + f", cost: {self.cost}, nearest_centers: {self.nearest_centers}" + "}"
 
 
 class PBS(AbstractSolver):
@@ -76,8 +77,12 @@ class PBS(AbstractSolver):
     GENERATIONS = 10
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
         self.points = set(graph.nodes())
+        for i in self.points:
+            for j in self.points:
+                if i == j:
+                    graph.add_edge(i, j, weight=0)
+        super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
 
     @staticmethod
@@ -106,9 +111,6 @@ class PBS(AbstractSolver):
         max_center_cost = 0
         individual.centers.add(center)
         for p in self.points:
-            if p == center:
-                continue
-
             if self.graph[p][center]["weight"] < individual.nearest_centers[p]["nearest_center"].cost:
                 individual.nearest_centers[p]["second_nearest_center"] = individual.nearest_centers[p]["nearest_center"]
                 individual.nearest_centers[p]["nearest_center"] = Neighbour(point=center,
