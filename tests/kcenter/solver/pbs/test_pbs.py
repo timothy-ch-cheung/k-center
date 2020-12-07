@@ -8,7 +8,6 @@ STRICT_CONSTRAINTS = {Colour.BLUE: 3, Colour.RED: 2}
 K = 2
 
 
-@pytest.mark.skip(reason="not currently working")
 def test_pbs():
     graph = basic_graph()
     instance = PBS(graph, K, STRICT_CONSTRAINTS)

@@ -128,12 +128,15 @@ class PBS(AbstractSolver):
         min_center_cost = float("inf")
         min_center = None
         for center in individual.centers:
-            if center == closest or center == point:
+            if center == closest:
                 continue
             if min_center_cost > self.graph[point][center]["weight"]:
                 min_center_cost = self.graph[point][center]["weight"]
                 min_center = center
-        return Neighbour(min_center, min_center_cost)
+        if min_center is None:
+            return None
+        else:
+            return Neighbour(min_center, min_center_cost)
 
     def remove_center(self, center: int, individual: Individual):
         max_center_cost = 0
