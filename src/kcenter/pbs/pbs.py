@@ -90,21 +90,21 @@ class PBS(AbstractSolver):
         points = list(graph.nodes())
         for point in points:
             neighbours = [adj for (_, adj) in graph.edges(point)]
-            neighbours = [point] + sorted(neighbours, key=lambda x: graph[point][x]["weight"])
+            neighbours = sorted(neighbours, key=lambda x: graph[point][x]["weight"])
             graph.nodes()[point]["neighbours"] = neighbours
 
     @staticmethod
-    def binary_search(array: List[int], target: int):
-        i = bisect_left(array, target)
-        if i != len(array) and array[i] == target:
-            return i
-        else:
-            return -1
+    def linear_search(array: List[int], target: int):
+        for i in range(len(array)):
+            if array[i] == target:
+                return i
+        return -1
+
 
     @staticmethod
-    def get_nwk(graph: nx.Graph, w: int, k: int):
+    def get_nwk(graph: nx.Graph, w: int, k: int) -> List[int]:
         nw = graph.nodes()[w]["neighbours"]
-        k_index = PBS.binary_search(nw, k)
+        k_index = PBS.linear_search(nw, k)
         return nw[:k_index]
 
     def add_center(self, center: int, individual: Individual):
@@ -153,7 +153,7 @@ class PBS(AbstractSolver):
             if individual.nearest_centers[p]["nearest_center"].cost > max_center_cost:
                 max_center_cost = individual.nearest_centers[p]["nearest_center"].cost
 
-    def find_pair(self, w: int, individual: Individual):
+    def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
         C = max(nx.get_edge_attributes(self.graph, "weight").values())
         L = set()
         furthest_point_facility = individual.nearest_centers[w]["nearest_center"]

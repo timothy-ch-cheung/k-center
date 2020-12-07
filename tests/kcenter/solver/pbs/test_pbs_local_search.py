@@ -88,3 +88,16 @@ def test_remove_center():
     instance.remove_center(center=4, individual=individual)
     for point, expected in enumerate(expected_nearest_centers):
         assert str(individual.nearest_centers[point]) == expected
+
+
+def test_find_pair():
+    graph = basic_graph()
+    instance = PBS(graph, K, STRICT_CONSTRAINTS)
+
+    individual = Individual({0, 1})
+    individual.init_nearest_centers(graph)
+    assert individual.cost == pytest.approx(5.515, FLOAT_ERROR)
+
+    old_center, new_center = instance.find_pair(4, individual)
+    assert new_center == 3 or new_center == 4
+    assert old_center == 0 or old_center == 1

@@ -8,6 +8,18 @@ STRICT_CONSTRAINTS = {Colour.BLUE: 3, Colour.RED: 2}
 K = 2
 
 
+def test_linear_search():
+    pass
+
+
+def test_get_nwk():
+    graph = basic_graph()
+    instance = PBS(graph, K, STRICT_CONSTRAINTS)
+
+    nwk = instance.get_nwk(graph, 0, 3)
+    assert nwk == [0, 1, 2]
+
+
 def test_pbs():
     graph = basic_graph()
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
