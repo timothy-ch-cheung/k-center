@@ -106,7 +106,7 @@ def test_remove_center():
         assert str(individual.nearest_centers[point]) == expected
 
 
-def test_find_pair():
+def test_find_pair(seed_random):
     graph = basic_graph()
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
@@ -115,11 +115,11 @@ def test_find_pair():
     assert individual.cost == pytest.approx(5.515, FLOAT_ERROR)
 
     old_center, new_center = instance.find_pair(4, individual)
-    assert new_center == 3 or new_center == 4
-    assert old_center == 0 or old_center == 1
+    assert new_center == 4
+    assert old_center == 0
 
 
-def test_local_search():
+def test_local_search(seed_random):
     graph = basic_graph()
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
@@ -127,4 +127,4 @@ def test_local_search():
     individual.init_nearest_centers(graph)
 
     instance.local_search(individual, 0)
-    assert individual.centers == {1, 4} or individual.centers == {1, 3}
+    assert individual.centers == {1, 4}
