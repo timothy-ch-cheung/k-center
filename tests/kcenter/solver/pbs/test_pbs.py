@@ -1,5 +1,6 @@
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS
+from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.util.create_test_graph import basic_graph
 import pytest
 
@@ -25,4 +26,6 @@ def test_pbs():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
     clusters, outliers, radius = instance.solve()
 
-    assert len(clusters.keys()) == 2
+    assert clusters == {1: {0, 1, 2}, 3: {3, 4}} or clusters == {1: {0, 1, 2}, 4: {3, 4}}
+    assert outliers == set()
+    assert radius == pytest.approx(0.728, FLOAT_ERROR)
