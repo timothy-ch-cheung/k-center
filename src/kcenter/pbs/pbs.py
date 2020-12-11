@@ -1,5 +1,4 @@
 import random
-from bisect import bisect_left
 from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
