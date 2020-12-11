@@ -75,7 +75,7 @@ class Individual:
 
 class PBS(AbstractSolver):
     POPULATION_SIZE = 8
-    GENERATIONS = 10
+    GENERATIONS = 3
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         self.points = set(graph.nodes())
@@ -100,7 +100,6 @@ class PBS(AbstractSolver):
             if array[i] == target:
                 return i
         return -1
-
 
     @staticmethod
     def get_nwk(graph: nx.Graph, w: int, k: int) -> List[int]:
