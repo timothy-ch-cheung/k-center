@@ -242,7 +242,6 @@ class PBS(AbstractSolver):
         new_centers = individual.centers.difference(closest_centers)
         child_solution = Individual(centers=new_centers)
         child_solution.init_nearest_centers(self.graph)
-        furthest_point = self.get_furthest_point(child_solution)
         return child_solution
 
     def crossover_random(self, first_parent: Individual, second_parent: Individual):
@@ -278,14 +277,16 @@ class PBS(AbstractSolver):
         for center in first_parent.centers:
             if center == second_user:
                 continue
-            if self.graph[center][first_user]["weight"] / self.graph[center][second_user]["weight"] <= q:
+            d1 = self.graph[center][first_user]["weight"]
+            d2 = self.graph[center][second_user]["weight"]
+            if d1 / d2 <= q:
                 first_child_centers.add(center)
             else:
                 second_child_centers.add(center)
         for center in second_parent.centers:
             if center == second_user:
                 continue
-            if self.graph[center][first_user]["weight"] / self.graph[center][second_user]["weight"] <= q:
+            if d1 / d2 <= q:
                 second_child_centers.add(center)
             else:
                 first_child_centers.add(center)
