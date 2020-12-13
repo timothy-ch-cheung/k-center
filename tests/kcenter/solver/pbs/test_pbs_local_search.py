@@ -10,12 +10,9 @@ def test_find_next_second_nearest_to_none():
     graph = basic_graph()
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
-    individual = Individual({0, 4})
+    individual = Individual({0})
     individual.init_nearest_centers(graph)
 
-    assert str(individual.nearest_centers[
-                   0]) == "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}"
-    individual.centers = {0}
     assert instance.find_next(point=0, individual=individual) == None
 
 
