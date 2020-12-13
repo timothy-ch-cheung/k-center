@@ -294,8 +294,6 @@ class PBS(AbstractSolver):
         new_centers = random.sample(other_points, self.k - q)
         child_solution = Individual(centers=set(retained_centers + new_centers))
         child_solution.init_nearest_centers(self.graph)
-        furthest_point = self.get_furthest_point(child_solution)
-        child_solution.cost = child_solution.nearest_centers[furthest_point]["nearest_center"].cost
         return child_solution
 
     def mutation_directed(self, individual: Individual):
@@ -326,8 +324,6 @@ class PBS(AbstractSolver):
         new_centers = set(random.sample(first_parent.centers.union(second_parent.centers), self.k))
         child_solution = Individual(centers=new_centers)
         child_solution.init_nearest_centers(self.graph)
-        furthest_point = self.get_furthest_point(child_solution)
-        child_solution.cost = child_solution.nearest_centers[furthest_point]["nearest_center"].cost
         return child_solution
 
     def crossover_directed(self, first_parent: Individual, second_parent: Individual, generation: int):
@@ -358,11 +354,9 @@ class PBS(AbstractSolver):
                 child.init_nearest_centers(pbs.graph)
             elif len(child.centers) < pbs.k:
                 child.init_nearest_centers(pbs.graph)
-                pbs.local_search(child, generation)
+                child = pbs.local_search(child, generation)
             else:
                 child.init_nearest_centers(pbs.graph)
-            furthest_point = self.get_furthest_point(child)
-            child.cost = child.nearest_centers[furthest_point]["nearest_center"].cost
             return child
 
         INTERVAL_START = 0.1
