@@ -75,7 +75,7 @@ class GreedySolver(AbstractSolver):
             for node in nodes_moved:
                 cluster.remove(node)
 
-    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
+    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         clusters = {GreedySolver.INITIAL_HEAD: set(self.graph.nodes)}
 
         for i in range(1, self.k):

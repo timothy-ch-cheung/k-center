@@ -39,3 +39,19 @@ def basic_graph_with_outlier() -> nx.Graph:
     # max weight = 6.3695
     calculate_edges(G)
     return G
+
+def medium_graph() -> nx.Graph:
+    G = nx.Graph()
+    G.add_node(0, pos=numpy.array((1.3, 2.6)), colour=Colour.BLUE)
+    G.add_node(1, pos=numpy.array((1.2, 2.1)), colour=Colour.BLUE)
+    G.add_node(2, pos=numpy.array((0.5, 6.3)), colour=Colour.RED)
+    G.add_node(3, pos=numpy.array((5.9, 5.2)), colour=Colour.RED)
+    G.add_node(4, pos=numpy.array((6.4, 4.7)), colour=Colour.RED)
+    G.add_node(5, pos=numpy.array((1.4, 5.7)), colour=Colour.RED)
+    G.add_node(6, pos=numpy.array((1.2, 5.5)), colour=Colour.RED)
+    G.add_node(7, pos=numpy.array((1.5, 5.2)), colour=Colour.RED)
+    G.add_node(8, pos=numpy.array((1.4, 5.1)), colour=Colour.RED)
+    G.add_node(9, pos=numpy.array((1.6, 5.5)), colour=Colour.RED)
+
+    calculate_edges(G)
+    return G
