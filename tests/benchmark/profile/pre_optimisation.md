@@ -1,3 +1,8 @@
+# PBS runtime on medium graph
+
+## Analysis
+- Majority of time is taken by local search 2.422 seconds out of 2.567 [94.35% of the time]
+- Most of this is the find_pair function
 ```
   Ordered by: cumulative time
 
@@ -85,6 +90,4 @@
         3    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
         2    0.000    0.000    0.000    0.000 Python\Python36\lib\_collections_abc.py:392(__subclasshook__)
         1    0.000    0.000    0.000    0.000 Python\Python36\lib\_collections_abc.py:302(__subclasshook__)
-Process finished with exit code 0
-
 ```

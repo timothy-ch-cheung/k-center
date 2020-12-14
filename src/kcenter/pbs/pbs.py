@@ -1,4 +1,4 @@
-import random
+import random, math
 from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
@@ -266,17 +266,24 @@ class PBS(AbstractSolver):
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
 
-        termination_iterations_cost = 0.1 * (generation + 1) * self.graph.number_of_nodes()
+        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
-
+        stale_iterations = 0
         optimised_individual = individual.copy()
-        while iteration < termination_iterations_cost and iteration < termination_iterations_count:
+        while iteration < termination_iterations_cost and stale_iterations < termination_iterations_count:
+            prev_cost = optimised_individual.cost
             furthest_point = self.get_furthest_point(optimised_individual)
             point_to_remove, point_to_add = self.find_pair(furthest_point, optimised_individual)
             self.remove_center(point_to_remove, optimised_individual)
             self.add_center(point_to_add, optimised_individual)
             iteration += 1
+
+            if optimised_individual.cost < prev_cost:
+                stale_iterations = 0
+            else:
+                stale_iterations += 1
+
         furthest_point = self.get_furthest_point(individual)
         optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
         return optimised_individual
