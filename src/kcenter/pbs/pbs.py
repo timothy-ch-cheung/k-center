@@ -396,6 +396,44 @@ class PBS(AbstractSolver):
         second_child = generate_child(self, second_child_centers)
         return first_child, second_child
 
+    @staticmethod
+    def update_population(population: List[Individual], candidate: Individual):
+        """Add the candidate to the solution if the candidate improves the population
+
+        W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
+        is close (in cost or facilities) to any Pi in P"
+
+        We define diversity as follows:
+        - 75% of centers are the same any centers in P
+        - the cost is within 1% of any cost in P
+
+        :param population: population to be added to
+        :param candidate: potential individual to add to the population
+        """
+
+        def is_between(lower_bound: float, upper_bound: float, value: float):
+            return lower_bound <= value <= upper_bound
+
+        CENTER_THRESHHOLD = 0.75
+        COST_THRESHHOLD = 0.01
+        is_diverse = True
+        for individual in population:
+            if len(candidate.centers.intersection(individual.centers)) > len(individual.centers) * CENTER_THRESHHOLD:
+                is_diverse = False
+                break
+
+            lower = candidate.cost * (1 - COST_THRESHHOLD)
+            upper = candidate.cost * (1 + COST_THRESHHOLD)
+            if is_between(lower, upper, individual.cost):
+                is_diverse = False
+                break
+
+        if is_diverse:
+            index_min = min(range(len(population)), key=lambda x: population[x].cost)
+            population[index_min] = candidate
+
+        return population
+
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
 
@@ -412,19 +450,18 @@ class PBS(AbstractSolver):
             population.append(self.local_search(individual, 0))
 
         for generation in range(1, PBS.GENERATIONS + 1):
-            new_children = []
             for i, individual in enumerate(population):
                 for j, sibling in enumerate(population):
                     if i == j:
                         continue
-                    new_children.append(self.local_search(self.mutation_random(individual), generation))
-                    new_children.append(
-                        self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
-                                          generation))
+                    PBS.update_population(population, self.local_search(self.mutation_random(individual), generation))
+                    PBS.update_population(population,
+                                          self.local_search(
+                                              self.mutation_directed(self.crossover_random(individual, sibling)),
+                                              generation))
                     first_child, second_child = self.crossover_directed(individual, sibling, generation)
-                    new_children.append(self.local_search(self.mutation_directed(first_child), generation))
-                    new_children.append(self.local_search(self.mutation_directed(second_child), generation))
-            population = sorted(population + new_children, key=lambda x: x.cost)[:PBS.POPULATION_SIZE]
+                    PBS.update_population(population, self.local_search(self.mutation_directed(first_child), generation))
+                    PBS.update_population(population, self.local_search(self.mutation_directed(second_child), generation))
 
         clusters = {}
 
