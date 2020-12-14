@@ -271,7 +271,7 @@ class PBS(AbstractSolver):
         iteration = 0
         stale_iterations = 0
         optimised_individual = individual.copy()
-        while iteration < termination_iterations_cost and stale_iterations < termination_iterations_count:
+        while stale_iterations < termination_iterations_cost and iteration < termination_iterations_count:
             prev_cost = optimised_individual.cost
             furthest_point = self.get_furthest_point(optimised_individual)
             point_to_remove, point_to_add = self.find_pair(furthest_point, optimised_individual)
@@ -316,7 +316,9 @@ class PBS(AbstractSolver):
                 if self.graph[center][other_center]["weight"] < closest_distance:
                     closest_distance = self.graph[center][other_center]["weight"]
                     closest_centers = (center, other_center)
-        new_centers = individual.centers.difference(closest_centers)
+        new_centers = individual.centers
+        if closest_centers:
+            new_centers = new_centers.difference(closest_centers)
         child_solution = Individual(centers=new_centers)
         child_solution.init_nearest_centers(self.graph)
         return child_solution
