@@ -409,7 +409,7 @@ class PBS(AbstractSolver):
             individual.init_nearest_centers(self.graph)
             population.append(self.local_search(individual, 0))
 
-        for generation in range(PBS.GENERATIONS):
+        for generation in range(1, PBS.GENERATIONS + 1):
             new_children = []
             for i, individual in enumerate(population):
                 for j, sibling in enumerate(population):
