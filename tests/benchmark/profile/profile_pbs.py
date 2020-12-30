@@ -1,6 +1,6 @@
 import cProfile, pstats
 
-from kcenter.pbs.pbs import PBS
+from src.kcenter.pbs.pbs import PBS
 from tests.kcenter.solver.pbs.test_pbs import STRICT_CONSTRAINTS, K
 from tests.kcenter.util.create_test_graph import medium_graph
 
