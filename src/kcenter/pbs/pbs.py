@@ -248,13 +248,8 @@ class PBS(AbstractSolver):
                    else individual.nearest_centers[x]["nearest_center"].cost
                    )
 
-    def local_search(self, individual: Individual, generation: int):
-        """Local search on an individual in the population to find the locally optimise solution
 
-        :param individual: Individual in population
-        :param generation: Current generation number
-        :return: A new individual with optimised solution
-        """
+    def initilise_local_search(self, individual: Individual):
         while len(individual.centers) < self.k:
             furthest_point = self.get_furthest_point(individual)
             furthest_point_facility = individual.nearest_centers[furthest_point]["nearest_center"]
@@ -265,6 +260,16 @@ class PBS(AbstractSolver):
                 nwk = PBS.get_nwk(self.graph, furthest_point, k)
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
+
+
+    def local_search(self, individual: Individual, generation: int):
+        """Local search on an individual in the population to find the locally optimise solution
+
+        :param individual: Individual in population
+        :param generation: Current generation number
+        :return: A new individual with optimised solution
+        """
+        self.initilise_local_search(individual)
 
         termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
