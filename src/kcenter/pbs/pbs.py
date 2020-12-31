@@ -6,6 +6,7 @@ import networkx as nx
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
+
 class Neighbour:
     """
     Data structure to store a neighbour to a point and the distance to it.
@@ -143,18 +144,15 @@ class PBS(AbstractSolver):
         individual.centers.add(center)
         for p in self.points:
             cost = self.graph[p][center]["weight"]
-            if individual.nearest_centers[p]["nearest_center"] is None or \
-                    cost < individual.nearest_centers[p]["nearest_center"].cost:
-                individual.nearest_centers[p]["second_nearest_center"] = individual.nearest_centers[p]["nearest_center"]
-                individual.nearest_centers[p]["nearest_center"] = Neighbour(point=center,
-                                                                            cost=cost)
-            elif individual.nearest_centers[p]["second_nearest_center"] is None or \
-                    cost < individual.nearest_centers[p]["second_nearest_center"].cost:
-                individual.nearest_centers[p]["second_nearest_center"] = Neighbour(point=center,
-                                                                                   cost=cost)
+            nearest = individual.nearest_centers[p]
+            if nearest["nearest_center"] is None or cost < nearest["nearest_center"].cost:
+                nearest["second_nearest_center"] = nearest["nearest_center"]
+                nearest["nearest_center"] = Neighbour(point=center, cost=cost)
+            elif nearest["second_nearest_center"] is None or cost < nearest["second_nearest_center"].cost:
+                nearest["second_nearest_center"] = Neighbour(point=center, cost=cost)
 
-            if individual.nearest_centers[p]["nearest_center"].cost > max_center_cost:
-                max_center_cost = individual.nearest_centers[p]["nearest_center"].cost
+            if nearest["nearest_center"].cost > max_center_cost:
+                max_center_cost = nearest["nearest_center"].cost
 
     def find_next(self, point: int, individual: Individual):
         """Find second nearest center
@@ -166,10 +164,11 @@ class PBS(AbstractSolver):
         closest = individual.nearest_centers[point]["nearest_center"].point
         min_center_cost = float("inf")
         min_center = None
+        point_node = self.graph[point]
         for center in individual.centers:
             if center == closest:
                 continue
-            cost = self.graph[point][center]["weight"]
+            cost = point_node[center]["weight"]
             if min_center_cost > cost:
                 min_center_cost = cost
                 min_center = center
@@ -188,15 +187,16 @@ class PBS(AbstractSolver):
         individual.centers.remove(center)
 
         for p in self.points:
-            if individual.nearest_centers[p]["nearest_center"].point == center:
-                individual.nearest_centers[p]["nearest_center"] = individual.nearest_centers[p]["second_nearest_center"]
-                individual.nearest_centers[p]["second_nearest_center"] = self.find_next(p, individual)
-            elif individual.nearest_centers[p]["second_nearest_center"] is None \
-                    or individual.nearest_centers[p]["second_nearest_center"].point == center:
-                individual.nearest_centers[p]["second_nearest_center"] = self.find_next(p, individual)
+            nearest = individual.nearest_centers[p]
+            if nearest["nearest_center"].point == center:
+                nearest["nearest_center"] = nearest["second_nearest_center"]
+                nearest["second_nearest_center"] = self.find_next(p, individual)
+            elif nearest["second_nearest_center"] is None \
+                    or nearest["second_nearest_center"].point == center:
+                nearest["second_nearest_center"] = self.find_next(p, individual)
 
-            if individual.nearest_centers[p]["nearest_center"].cost > max_center_cost:
-                max_center_cost = individual.nearest_centers[p]["nearest_center"].cost
+            if nearest["nearest_center"].cost > max_center_cost:
+                max_center_cost = nearest["nearest_center"].cost
 
     def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
         """Find the optimal center and vertex pair to swap to reduce cost
@@ -215,6 +215,8 @@ class PBS(AbstractSolver):
             M = {}
             for center in individual.centers:
                 M[center] = 0
+
+            point_node = self.graph[i]
             for point in self.points:
                 if i == point:
                     continue
@@ -222,7 +224,7 @@ class PBS(AbstractSolver):
                 second_nearest = individual.nearest_centers[point]["second_nearest_center"]
                 nearest = individual.nearest_centers[point]["nearest_center"]
 
-                min_dist = min(self.graph[i][point]["weight"], second_nearest.cost)
+                min_dist = min(point_node[point]["weight"], second_nearest.cost)
                 if min_dist > M[nearest.point]:
                     M[nearest.point] = min_dist
 
@@ -315,9 +317,10 @@ class PBS(AbstractSolver):
         closest_centers = None
         closest_distance = float("inf")
         for center in individual.centers:
+            center_node = self.graph[center]
             for other_center in individual.centers.difference({center}):
-                if self.graph[center][other_center]["weight"] < closest_distance:
-                    closest_distance = self.graph[center][other_center]["weight"]
+                if center_node[other_center]["weight"] < closest_distance:
+                    closest_distance = center_node[other_center]["weight"]
                     closest_centers = (center, other_center)
         new_centers = individual.centers
         if closest_centers:
@@ -381,8 +384,9 @@ class PBS(AbstractSolver):
         for center in first_parent.centers:
             if center == second_user:
                 continue
-            d1 = self.graph[center][first_user]["weight"]
-            d2 = self.graph[center][second_user]["weight"]
+            center_node = self.graph[center]
+            d1 = center_node[first_user]["weight"]
+            d2 = center_node[second_user]["weight"]
             if d1 / d2 <= q:
                 first_child_centers.add(center)
             else:
