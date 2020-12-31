@@ -8,7 +8,6 @@ from tests.kcenter.util.create_test_graph import medium_graph
 
 # graph = medium_graph()
 graph = GraphLoader.get_graph("k_center")
-#instance = PBS(graph, 5, {Colour.BLUE: 0, Colour.RED: 20})
 instance = PBS(graph, 5, {Colour.BLUE: 0, Colour.RED: 20})
 
 profiler = cProfile.Profile()

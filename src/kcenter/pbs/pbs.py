@@ -6,7 +6,6 @@ import networkx as nx
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
-
 class Neighbour:
     """
     Data structure to store a neighbour to a point and the distance to it.
@@ -143,15 +142,16 @@ class PBS(AbstractSolver):
         max_center_cost = 0
         individual.centers.add(center)
         for p in self.points:
+            cost = self.graph[p][center]["weight"]
             if individual.nearest_centers[p]["nearest_center"] is None or \
-                    self.graph[p][center]["weight"] < individual.nearest_centers[p]["nearest_center"].cost:
+                    cost < individual.nearest_centers[p]["nearest_center"].cost:
                 individual.nearest_centers[p]["second_nearest_center"] = individual.nearest_centers[p]["nearest_center"]
                 individual.nearest_centers[p]["nearest_center"] = Neighbour(point=center,
-                                                                            cost=self.graph[p][center]["weight"])
+                                                                            cost=cost)
             elif individual.nearest_centers[p]["second_nearest_center"] is None or \
-                    self.graph[p][center]["weight"] < individual.nearest_centers[p]["second_nearest_center"].cost:
+                    cost < individual.nearest_centers[p]["second_nearest_center"].cost:
                 individual.nearest_centers[p]["second_nearest_center"] = Neighbour(point=center,
-                                                                                   cost=self.graph[p][center]["weight"])
+                                                                                   cost=cost)
 
             if individual.nearest_centers[p]["nearest_center"].cost > max_center_cost:
                 max_center_cost = individual.nearest_centers[p]["nearest_center"].cost
@@ -169,8 +169,9 @@ class PBS(AbstractSolver):
         for center in individual.centers:
             if center == closest:
                 continue
-            if min_center_cost > self.graph[point][center]["weight"]:
-                min_center_cost = self.graph[point][center]["weight"]
+            cost = self.graph[point][center]["weight"]
+            if min_center_cost > cost:
+                min_center_cost = cost
                 min_center = center
         if min_center is None:
             return None
@@ -248,7 +249,6 @@ class PBS(AbstractSolver):
                    else individual.nearest_centers[x]["nearest_center"].cost
                    )
 
-
     def initilise_local_search(self, individual: Individual):
         while len(individual.centers) < self.k:
             furthest_point = self.get_furthest_point(individual)
@@ -260,7 +260,6 @@ class PBS(AbstractSolver):
                 nwk = PBS.get_nwk(self.graph, furthest_point, k)
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
-
 
     def local_search(self, individual: Individual, generation: int):
         """Local search on an individual in the population to find the locally optimise solution
@@ -288,7 +287,6 @@ class PBS(AbstractSolver):
                 stale_iterations = 0
             else:
                 stale_iterations += 1
-
         furthest_point = self.get_furthest_point(individual)
         optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
         return optimised_individual
@@ -465,8 +463,10 @@ class PBS(AbstractSolver):
                                               self.mutation_directed(self.crossover_random(individual, sibling)),
                                               generation))
                     first_child, second_child = self.crossover_directed(individual, sibling, generation)
-                    PBS.update_population(population, self.local_search(self.mutation_directed(first_child), generation))
-                    PBS.update_population(population, self.local_search(self.mutation_directed(second_child), generation))
+                    PBS.update_population(population,
+                                          self.local_search(self.mutation_directed(first_child), generation))
+                    PBS.update_population(population,
+                                          self.local_search(self.mutation_directed(second_child), generation))
 
         clusters = {}
 
