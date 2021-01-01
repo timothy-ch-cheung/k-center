@@ -16,5 +16,7 @@ clusters, outliers, radius = instance.solve()
 profiler.disable()
 stats = pstats.Stats(profiler).sort_stats('cumtime')
 stats.print_stats()
+stats = pstats.Stats(profiler).sort_stats('tottime')
+stats.print_stats()
 
 print("cost", radius)

@@ -35,7 +35,6 @@ def test_crossover_directed(seed_random):
 
     first_child, second_child = instance.crossover_directed(first_parent, second_parent, 3)
 
-    assert first_child.centers == {1, 4}
-    assert first_child.cost == pytest.approx(0.728, FLOAT_ERROR)
+    assert first_child.centers == {1}
     assert second_child.centers == {0, 4}
     assert second_child.cost == pytest.approx(0.854, FLOAT_ERROR)

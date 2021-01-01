@@ -290,10 +290,9 @@ class PBS(AbstractSolver):
                 swapped.add((point_to_remove, point_to_add))
 
             iteration += 1
-            if optimised_individual.cost < prev_cost:
-                stale_iterations = 0
-            else:
+            if optimised_individual.cost >= prev_cost:
                 stale_iterations += 1
+
         furthest_point = self.get_furthest_point(individual)
         optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
         return optimised_individual
@@ -372,9 +371,6 @@ class PBS(AbstractSolver):
             if len(child.centers) > pbs.k:
                 child.centers = set(random.sample(child.centers, pbs.k))
                 child.init_nearest_centers(pbs.graph)
-            elif len(child.centers) < pbs.k:
-                child.init_nearest_centers(pbs.graph)
-                child = pbs.local_search(child, generation)
             else:
                 child.init_nearest_centers(pbs.graph)
             return child
