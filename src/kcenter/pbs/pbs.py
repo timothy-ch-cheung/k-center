@@ -142,8 +142,9 @@ class PBS(AbstractSolver):
         """
         max_center_cost = 0
         individual.centers.add(center)
+        center_node = self.graph[center]
         for p in self.points:
-            cost = self.graph[p][center]["weight"]
+            cost = center_node[p]["weight"]
             nearest = individual.nearest_centers[p]
             if nearest["nearest_center"] is None or cost < nearest["nearest_center"].cost:
                 nearest["second_nearest_center"] = nearest["nearest_center"]
