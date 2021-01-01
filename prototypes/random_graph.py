@@ -4,8 +4,8 @@ from typing import Tuple, Set
 
 import numpy as np
 
-from kcenter.constant.colour import Colour
-from server.graph_loader import GraphLoader
+from src.kcenter.constant.colour import Colour
+from src.server.graph_loader import GraphLoader
 
 
 class GraphGenerator:
@@ -101,7 +101,7 @@ class GraphGenerator:
             points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
 
         # Generate outlier points
-        blue_outliers = np.random.randint(0, num_outliers)
+        blue_outliers = np.random.randint(0, num_outliers) if num_outliers != 0 else 0
         red_outliers = num_outliers - blue_outliers
         colours = GraphGenerator.generate_colour_queue(blue_outliers, red_outliers)
 
@@ -128,12 +128,12 @@ class GraphGenerator:
         return graph
 
 
-gen = GraphGenerator(min_x=2000, min_y=2000, max_x=20000, max_y=20000)
-b = 2500
-r = 2500
-k = 75
-opt = 145.5
-graph = gen.generate(b, r, k, opt, 200, center_seperation=1, outlier_seperation=10)
+gen = GraphGenerator(min_x=20, min_y=20, max_x=200, max_y=200)
+b = 0
+r = 20
+k = 5
+opt = 5
+graph = gen.generate(b, r, k, opt, 0, center_seperation=1, outlier_seperation=10)
 print(graph)
 
-GraphLoader.save_json(graph, "five_thousand")
+GraphLoader.save_json(graph, "k_center")

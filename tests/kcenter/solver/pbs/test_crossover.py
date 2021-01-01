@@ -33,7 +33,7 @@ def test_crossover_directed(seed_random):
     second_parent = Individual({1, 3})
     second_parent.init_nearest_centers(graph)
 
-    first_child, second_child = instance.crossover_directed(first_parent, second_parent, 1)
+    first_child, second_child = instance.crossover_directed(first_parent, second_parent, 3)
 
     assert first_child.centers == {1, 4}
     assert first_child.cost == pytest.approx(0.728, FLOAT_ERROR)

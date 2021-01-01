@@ -123,5 +123,5 @@ def test_local_search(seed_random):
     individual = Individual({0, 1})
     individual.init_nearest_centers(graph)
 
-    instance.local_search(individual, 1)
+    instance.local_search(individual, 3)
     assert individual.centers == {1, 4}

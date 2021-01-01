@@ -277,14 +277,19 @@ class PBS(AbstractSolver):
         iteration = 0
         stale_iterations = 0
         optimised_individual = individual.copy()
+        swapped = set()
         while stale_iterations < termination_iterations_cost and iteration < termination_iterations_count:
             prev_cost = optimised_individual.cost
             furthest_point = self.get_furthest_point(optimised_individual)
             point_to_remove, point_to_add = self.find_pair(furthest_point, optimised_individual)
-            self.remove_center(point_to_remove, optimised_individual)
-            self.add_center(point_to_add, optimised_individual)
-            iteration += 1
+            if (point_to_remove, point_to_add) not in swapped:
+                self.remove_center(point_to_remove, optimised_individual)
+                self.add_center(point_to_add, optimised_individual)
+                furthest_point = self.get_furthest_point(optimised_individual)
+                optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
+                swapped.add((point_to_remove, point_to_add))
 
+            iteration += 1
             if optimised_individual.cost < prev_cost:
                 stale_iterations = 0
             else:
