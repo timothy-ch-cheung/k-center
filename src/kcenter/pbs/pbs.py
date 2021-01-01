@@ -98,6 +98,7 @@ class PBS(AbstractSolver):
             for j in self.points:
                 if i == j:
                     graph.add_edge(i, j, weight=0)
+        self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
 
@@ -187,8 +188,7 @@ class PBS(AbstractSolver):
         max_center_cost = 0
         individual.centers.remove(center)
 
-        for p in self.points:
-            nearest = individual.nearest_centers[p]
+        for p, nearest in individual.nearest_centers.items():
             if nearest["nearest_center"].point == center:
                 nearest["nearest_center"] = nearest["second_nearest_center"]
                 nearest["second_nearest_center"] = self.find_next(p, individual)
@@ -206,7 +206,7 @@ class PBS(AbstractSolver):
         :param individual: Individual in population
         :return: (center, vertex) pair to swap
         """
-        C = max(nx.get_edge_attributes(self.graph, "weight").values())
+        C = self.MAX_WEIGHT
         L = set()
         furthest_point_facility = individual.nearest_centers[w]["nearest_center"]
         k = PBS.linear_search(self.graph.nodes()[w]["neighbours"], furthest_point_facility.point)
