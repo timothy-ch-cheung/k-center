@@ -192,8 +192,7 @@ class PBS(AbstractSolver):
             if nearest["nearest_center"].point == center:
                 nearest["nearest_center"] = nearest["second_nearest_center"]
                 nearest["second_nearest_center"] = self.find_next(p, individual)
-            elif nearest["second_nearest_center"] is None \
-                    or nearest["second_nearest_center"].point == center:
+            elif nearest["second_nearest_center"] is None or nearest["second_nearest_center"].point == center:
                 nearest["second_nearest_center"] = self.find_next(p, individual)
 
             if nearest["nearest_center"].cost > max_center_cost:
@@ -212,6 +211,9 @@ class PBS(AbstractSolver):
         k = PBS.linear_search(self.graph.nodes()[w]["neighbours"], furthest_point_facility.point)
         nwk = PBS.get_nwk(self.graph, w, k)
         for i in nwk:
+            if i in individual.centers:
+                continue
+
             self.add_center(i, individual)
             M = {}
             for center in individual.centers:
