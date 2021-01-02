@@ -16,6 +16,9 @@ class Neighbour:
         self.point = point
         self.cost = cost
 
+    def copy(self):
+        return Neighbour(self.point, self.cost)
+
     def __eq__(self, other):
         if isinstance(other, Neighbour):
             return self.point == other.point and self.cost == other.cost
@@ -188,7 +191,8 @@ class PBS(AbstractSolver):
         max_center_cost = 0
         individual.centers.remove(center)
 
-        for p, nearest in individual.nearest_centers.items():
+        for p in self.points:
+            nearest = individual.nearest_centers[p]
             if nearest["nearest_center"].point == center:
                 nearest["nearest_center"] = nearest["second_nearest_center"]
                 nearest["second_nearest_center"] = self.find_next(p, individual)
