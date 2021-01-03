@@ -138,7 +138,7 @@ class PBS(AbstractSolver):
         nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
 
-    def add_center(self, center: int, individual: Individual):
+    def add_center(self, center: int, individual: Individual, center_node=None):
         """Add a center to the individual and update neighbours
 
         :param center: Center to add
@@ -146,7 +146,9 @@ class PBS(AbstractSolver):
         """
         max_center_cost = 0
         individual.centers.add(center)
-        center_node = self.graph[center]
+        if center_node is None:
+            center_node = self.graph[center]
+
         for p in self.points:
             cost = center_node[p]["weight"]
             nearest = individual.nearest_centers[p]
@@ -170,6 +172,7 @@ class PBS(AbstractSolver):
         min_center_cost = float("inf")
         min_center = None
         point_node = self.graph[point]
+
         for center in individual.centers:
             if center == closest:
                 continue
@@ -218,12 +221,12 @@ class PBS(AbstractSolver):
             if i in individual.centers:
                 continue
 
-            self.add_center(i, individual)
+            point_node = self.graph[i]
+            self.add_center(i, individual, point_node)
             M = {}
             for center in individual.centers:
                 M[center] = 0
 
-            point_node = self.graph[i]
             for point in self.points:
                 if i == point:
                     continue
