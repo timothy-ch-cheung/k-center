@@ -166,6 +166,8 @@ class PBS(AbstractSolver):
             if nearest["nearest_center"].cost > max_center_cost:
                 max_center_cost = nearest["nearest_center"].cost
 
+        individual.cost = max_center_cost
+
     def find_next(self, point: int, individual: Individual):
         """Find second nearest center
 
@@ -209,6 +211,8 @@ class PBS(AbstractSolver):
 
             if nearest["nearest_center"].cost > max_center_cost:
                 max_center_cost = nearest["nearest_center"].cost
+
+        individual.cost = max_center_cost
 
     def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
         """Find the optimal center and vertex pair to swap to reduce cost
@@ -301,8 +305,6 @@ class PBS(AbstractSolver):
             if (point_to_remove, point_to_add) not in swapped:
                 self.remove_center(point_to_remove, optimised_individual)
                 self.add_center(point_to_add, optimised_individual)
-                furthest_point = self.get_furthest_point(optimised_individual)
-                optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
                 swapped.add((point_to_remove, point_to_add))
 
             iteration += 1
