@@ -31,9 +31,14 @@ def test_individual_str():
 
 
 def test_individual_init_centers():
-    graph = basic_graph()
     individual = Individual(centers={0, 4})
-    individual.init_nearest_centers(graph)
+    individual.init_nearest_centers([0, 1, 2, 3, 4], {
+        (0, 0): 0, (0, 1): 0.5099, (0, 2): 0.8544, (0, 3): 5.2839, (0, 4): 5.5154,
+        (1, 0): 0.5099, (1, 1): 0, (1, 2): 0.728, (1, 3): 5.6303, (1, 4): 5.8138,
+        (2, 0): 0.8544, (2, 1): 0.728, (2, 2): 0, (2, 3): 6.1294, (2, 4): 6.3694,
+        (3, 0): 5.2839, (3, 1): 5.6303, (3, 2): 6.1294, (3, 3): 0, (3, 4): 0.7071,
+        (4, 0): 5.5154, (4, 1): 5.8138, (4, 2): 6.3694, (4, 3): 0.7071, (4, 4): 0
+    })
     assert individual.centers == {0, 4}
     assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
     expected_nearest_centers = [
@@ -43,5 +48,5 @@ def test_individual_init_centers():
         "{'nearest_center': {point: 4, cost: 0.707}, 'second_nearest_center': {point: 0, cost: 5.284}}",
         "{'nearest_center': {point: 4, cost: 0}, 'second_nearest_center': {point: 0, cost: 5.515}}"
     ]
-    for point,expected in enumerate(expected_nearest_centers):
+    for point, expected in enumerate(expected_nearest_centers):
         assert str(individual.nearest_centers[point]) == expected

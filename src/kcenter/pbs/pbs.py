@@ -41,20 +41,18 @@ class Individual:
         self.cost = cost
         self.nearest_centers = nearest_centers
 
-    def init_nearest_centers(self, graph: nx.Graph):
+    def init_nearest_centers(self, points, weights):
         """
         Calculates closest and second closest centers of every point for this individuals centers.
         :param graph: Graph in metric space containing weights between points
         """
-        points = list(graph.nodes())
         for point in points:
             nearest_center = None
             second_nearest_center = None
-            point_node = graph[point]
             for center in self.centers:
                 if center == point:
                     continue
-                cost = point_node[center]["weight"]
+                cost = weights[(point, center)]
                 if nearest_center is None:
                     nearest_center = Neighbour(point=center, cost=cost)
                 elif cost <= nearest_center.cost:
@@ -98,14 +96,13 @@ class PBS(AbstractSolver):
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         self.points = set(graph.nodes())
+        self.weights = {}
         for i in self.points:
             for j in self.points:
                 if i == j:
                     graph.add_edge(i, j, weight=0)
+                self.weights[(i, j)] = graph[i][j]["weight"]
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
-        self.point_cache = {}
-        for p in self.points:
-            self.point_cache[p] = graph[p]
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
 
@@ -143,7 +140,7 @@ class PBS(AbstractSolver):
             nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
 
-    def add_center(self, center: int, individual: Individual, center_node=None):
+    def add_center(self, center: int, individual: Individual):
         """Add a center to the individual and update neighbours
 
         :param center: Center to add
@@ -151,11 +148,9 @@ class PBS(AbstractSolver):
         """
         max_center_cost = 0
         individual.centers.add(center)
-        if center_node is None:
-            center_node = self.point_cache[center]
 
         for p in self.points:
-            cost = center_node[p]["weight"]
+            cost = self.weights[(center, p)]
             nearest = individual.nearest_centers[p]
             if nearest["nearest_center"] is None or cost < nearest["nearest_center"].cost:
                 nearest["second_nearest_center"] = nearest["nearest_center"]
@@ -178,12 +173,11 @@ class PBS(AbstractSolver):
         closest = individual.nearest_centers[point]["nearest_center"].point
         min_center_cost = float("inf")
         min_center = None
-        point_node = self.point_cache[point]
 
         for center in individual.centers:
             if center == closest:
                 continue
-            cost = point_node[center]["weight"]
+            cost = self.weights[(point, center)]
             if min_center_cost > cost:
                 min_center_cost = cost
                 min_center = center
@@ -231,8 +225,7 @@ class PBS(AbstractSolver):
             if i in individual.centers:
                 continue
 
-            point_node = self.point_cache[i]
-            self.add_center(i, individual, point_node)
+            self.add_center(i, individual)
             M = {}
             for center in individual.centers:
                 M[center] = 0
@@ -244,7 +237,7 @@ class PBS(AbstractSolver):
                 second_nearest = individual.nearest_centers[point]["second_nearest_center"]
                 nearest = individual.nearest_centers[point]["nearest_center"]
 
-                min_dist = min(point_node[point]["weight"], second_nearest.cost)
+                min_dist = min(self.weights[(point, i)], second_nearest.cost)
                 if min_dist > M[nearest.point]:
                     M[nearest.point] = min_dist
 
@@ -327,7 +320,7 @@ class PBS(AbstractSolver):
         retained_centers = random.sample(individual.centers, q)
         new_centers = random.sample(other_points, self.k - q)
         child_solution = Individual(centers=set(retained_centers + new_centers))
-        child_solution.init_nearest_centers(self.graph)
+        child_solution.init_nearest_centers(self.points, self.weights)
         return child_solution
 
     def mutation_directed(self, individual: Individual):
@@ -339,16 +332,16 @@ class PBS(AbstractSolver):
         closest_centers = None
         closest_distance = float("inf")
         for center in individual.centers:
-            center_node = self.graph[center]
             for other_center in individual.centers.difference({center}):
-                if center_node[other_center]["weight"] < closest_distance:
-                    closest_distance = center_node[other_center]["weight"]
+                weight = self.weights[(center, other_center)]
+                if weight < closest_distance:
+                    closest_distance = weight
                     closest_centers = (center, other_center)
         new_centers = individual.centers
         if closest_centers:
             new_centers = new_centers.difference(closest_centers)
         child_solution = Individual(centers=new_centers)
-        child_solution.init_nearest_centers(self.graph)
+        child_solution.init_nearest_centers(self.points, self.weights)
         return child_solution
 
     def crossover_random(self, first_parent: Individual, second_parent: Individual):
@@ -360,7 +353,7 @@ class PBS(AbstractSolver):
         """
         new_centers = set(random.sample(first_parent.centers.union(second_parent.centers), self.k))
         child_solution = Individual(centers=new_centers)
-        child_solution.init_nearest_centers(self.graph)
+        child_solution.init_nearest_centers(self.points, self.weights)
         return child_solution
 
     def crossover_directed(self, first_parent: Individual, second_parent: Individual, generation: int):
@@ -388,9 +381,9 @@ class PBS(AbstractSolver):
             child = Individual(centers=centers)
             if len(child.centers) > pbs.k:
                 child.centers = set(random.sample(child.centers, pbs.k))
-                child.init_nearest_centers(pbs.graph)
+                child.init_nearest_centers(pbs.points, pbs.weights)
             else:
-                child.init_nearest_centers(pbs.graph)
+                child.init_nearest_centers(pbs.points, pbs.weights)
             return child
 
         INTERVAL_START = 0.1
@@ -403,9 +396,8 @@ class PBS(AbstractSolver):
         for center in first_parent.centers:
             if center == second_user:
                 continue
-            center_node = self.graph[center]
-            d1 = center_node[first_user]["weight"]
-            d2 = center_node[second_user]["weight"]
+            d1 = self.weights[(center, first_user)]
+            d2 = self.weights[(center, second_user)]
             if d1 / d2 <= q:
                 first_child_centers.add(center)
             else:
@@ -465,7 +457,7 @@ class PBS(AbstractSolver):
         for i in range(PBS.POPULATION_SIZE):
             init_center = {random.choice(tuple(self.points))}
             individual = Individual(init_center)
-            individual.init_nearest_centers(self.graph)
+            individual.init_nearest_centers(self.points, self.weights)
             population.append(self.local_search(individual, 0))
         return population
 
