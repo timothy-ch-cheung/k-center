@@ -50,19 +50,20 @@ class Individual:
         for point in points:
             nearest_center = None
             second_nearest_center = None
+            point_node = graph[point]
             for center in self.centers:
                 if center == point:
                     continue
-
+                cost = point_node[center]["weight"]
                 if nearest_center is None:
-                    nearest_center = Neighbour(point=center, cost=graph[point][center]["weight"])
-                elif graph[point][center]["weight"] <= nearest_center.cost:
+                    nearest_center = Neighbour(point=center, cost=cost)
+                elif cost <= nearest_center.cost:
                     second_nearest_center = nearest_center
-                    nearest_center = Neighbour(point=center, cost=graph[point][center]["weight"])
+                    nearest_center = Neighbour(point=center, cost=cost)
                 elif second_nearest_center is None:
-                    second_nearest_center = Neighbour(point=center, cost=graph[point][center]["weight"])
-                elif graph[point][center]["weight"] <= second_nearest_center.cost:
-                    Neighbour(point=center, cost=graph[point][center]["weight"])
+                    second_nearest_center = Neighbour(point=center, cost=cost)
+                elif cost <= second_nearest_center.cost:
+                    Neighbour(point=center, cost=cost)
 
             if point in self.centers:
                 second_nearest_center = nearest_center
@@ -452,7 +453,7 @@ class PBS(AbstractSolver):
 
         return population
 
-    def generate_population(self) -> Set[Individual]:
+    def generate_population(self) -> List[Individual]:
         population = []
         for i in range(PBS.POPULATION_SIZE):
             init_center = {random.choice(tuple(self.points))}
