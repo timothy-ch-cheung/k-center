@@ -452,6 +452,15 @@ class PBS(AbstractSolver):
 
         return population
 
+    def generate_population(self) -> Set[Individual]:
+        population = []
+        for i in range(PBS.POPULATION_SIZE):
+            init_center = {random.choice(tuple(self.points))}
+            individual = Individual(init_center)
+            individual.init_nearest_centers(self.graph)
+            population.append(self.local_search(individual, 0))
+        return population
+
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
 
@@ -460,12 +469,7 @@ class PBS(AbstractSolver):
 
         Uses two mutation operators, two crossover operators and a local search.
         """
-        population = []
-        for i in range(PBS.POPULATION_SIZE):
-            init_center = {random.choice(tuple(self.points))}
-            individual = Individual(init_center)
-            individual.init_nearest_centers(self.graph)
-            population.append(self.local_search(individual, 0))
+        population = self.generate_population()
 
         for generation in range(1, PBS.GENERATIONS + 1):
             for i, individual in enumerate(population):
