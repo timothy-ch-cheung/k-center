@@ -103,6 +103,9 @@ class PBS(AbstractSolver):
                 if i == j:
                     graph.add_edge(i, j, weight=0)
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
+        self.point_cache = {}
+        for p in self.points:
+            self.point_cache[p] = graph[p]
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
 
@@ -129,14 +132,15 @@ class PBS(AbstractSolver):
         return -1
 
     @staticmethod
-    def get_nwk(graph: nx.Graph, w: int, k: int) -> List[int]:
+    def get_nwk(graph: nx.Graph, w: int, k: int, nw=None) -> List[int]:
         """Get a sublist of k edges from a point w
 
         :param w: point to get neighbours from
         :param k: number of points to return
         :return: k neighbours from point w
         """
-        nw = graph.nodes()[w]["neighbours"]
+        if nw is None:
+            nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
 
     def add_center(self, center: int, individual: Individual, center_node=None):
@@ -148,7 +152,7 @@ class PBS(AbstractSolver):
         max_center_cost = 0
         individual.centers.add(center)
         if center_node is None:
-            center_node = self.graph[center]
+            center_node = self.point_cache[center]
 
         for p in self.points:
             cost = center_node[p]["weight"]
@@ -172,7 +176,7 @@ class PBS(AbstractSolver):
         closest = individual.nearest_centers[point]["nearest_center"].point
         min_center_cost = float("inf")
         min_center = None
-        point_node = self.graph[point]
+        point_node = self.point_cache[point]
 
         for center in individual.centers:
             if center == closest:
@@ -216,13 +220,14 @@ class PBS(AbstractSolver):
         C = self.MAX_WEIGHT
         L = set()
         furthest_point_facility = individual.nearest_centers[w]["nearest_center"]
-        k = PBS.linear_search(self.graph.nodes()[w]["neighbours"], furthest_point_facility.point)
-        nwk = PBS.get_nwk(self.graph, w, k)
+        neighbours = self.graph.nodes()[w]["neighbours"]
+        k = PBS.linear_search(neighbours, furthest_point_facility.point)
+        nwk = PBS.get_nwk(self.graph, w, k, neighbours)
         for i in nwk:
             if i in individual.centers:
                 continue
 
-            point_node = self.graph[i]
+            point_node = self.point_cache[i]
             self.add_center(i, individual, point_node)
             M = {}
             for center in individual.centers:
