@@ -33,7 +33,7 @@ def test_crossover_directed(seed_random):
     second_parent = Individual({1, 3})
     second_parent.init_nearest_centers(instance.points, instance.weights)
 
-    first_child, second_child = instance.crossover_directed(first_parent, second_parent, 3)
+    first_child, second_child = instance.crossover_directed(first_parent, second_parent)
 
     assert first_child.centers == {1}
     assert second_child.centers == {0, 4}

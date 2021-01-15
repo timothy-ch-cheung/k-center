@@ -258,11 +258,17 @@ class PBS(AbstractSolver):
         :param individual: Individual in population
         :return: The point which is furthest from its nearest center
         """
-        return max(self.points,
-                   key=lambda x: 0
-                   if individual.nearest_centers[x]["nearest_center"] is None
-                   else individual.nearest_centers[x]["nearest_center"].cost
-                   )
+        max_cost = 0
+        max_point = 0
+        for p in self.points:
+            nearest = individual.nearest_centers[p]["nearest_center"]
+            if nearest is not None:
+                if max_cost < nearest.cost:
+                    max_point = p
+                    max_cost = nearest.cost
+                if nearest.cost == individual.cost:
+                    return p
+        return max_point
 
     def initilise_local_search(self, individual: Individual):
         while len(individual.centers) < self.k:
@@ -284,8 +290,7 @@ class PBS(AbstractSolver):
         :return: A new individual with optimised solution
         """
         self.initilise_local_search(individual)
-
-        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
+        termination_iterations_cost = math.floor(0.1 * generation * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
         stale_iterations = 0
@@ -356,7 +361,7 @@ class PBS(AbstractSolver):
         child_solution.init_nearest_centers(self.points, self.weights)
         return child_solution
 
-    def crossover_directed(self, first_parent: Individual, second_parent: Individual, generation: int):
+    def crossover_directed(self, first_parent: Individual, second_parent: Individual):
         """Crossover two parents by selecting two random points and splitting the centers of the parents by calculating
         the ratio of distance between those points and the centers.
 
@@ -373,7 +378,6 @@ class PBS(AbstractSolver):
 
         :param first_parent: An individual from the population
         :param second_parent: An individual from the population
-        :param generation: Current generation number
         :return: Two child solutions
         """
 
@@ -445,7 +449,6 @@ class PBS(AbstractSolver):
             if is_between(lower, upper, individual.cost):
                 is_diverse = False
                 break
-
         if is_diverse:
             index_min = min(range(len(population)), key=lambda x: population[x].cost)
             population[index_min] = candidate
@@ -481,7 +484,7 @@ class PBS(AbstractSolver):
                                           self.local_search(
                                               self.mutation_directed(self.crossover_random(individual, sibling)),
                                               generation))
-                    first_child, second_child = self.crossover_directed(individual, sibling, generation)
+                    first_child, second_child = self.crossover_directed(individual, sibling)
                     PBS.update_population(population,
                                           self.local_search(self.mutation_directed(first_child), generation))
                     PBS.update_population(population,
