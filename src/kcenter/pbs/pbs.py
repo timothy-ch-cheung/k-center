@@ -31,6 +31,27 @@ class Neighbour:
         return self.__str__()
 
 
+class NearestCenters:
+    """
+    Data structure to store the nearest and second nearest centers to a given point
+    """
+
+    def __init__(self, nearest: Neighbour, second_nearest: Neighbour):
+        self.nearest = nearest
+        self.second_nearest = second_nearest
+
+    def __eq__(self, other):
+        if isinstance(other, NearestCenters):
+            return self.nearest == other.nearest and self.second_nearest == other.second_nearest
+        return False
+
+    def __str__(self):
+        return f'{{\'nearest_center\': {self.nearest}, \'second_nearest_center\': {self.second_nearest}}}'
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class Individual:
     """
     An individual in the population, storing centers that form a solution and the cost of the solution.
@@ -67,16 +88,14 @@ class Individual:
                 second_nearest_center = nearest_center
                 nearest_center = Neighbour(point=point, cost=0)
 
-            self.nearest_centers[point] = {
-                "nearest_center": nearest_center, "second_nearest_center": second_nearest_center
-            }
+            self.nearest_centers[point] = NearestCenters(nearest_center, second_nearest_center)
         furthest_point = max(points,
                              key=lambda x: 0
-                             if self.nearest_centers[x]["nearest_center"] is None
-                             else self.nearest_centers[x]["nearest_center"].cost
+                             if self.nearest_centers[x].nearest is None
+                             else self.nearest_centers[x].nearest.cost
                              )
-        if self.nearest_centers[furthest_point]["nearest_center"] is not None:
-            self.cost = self.nearest_centers[furthest_point]["nearest_center"].cost
+        if self.nearest_centers[furthest_point].nearest is not None:
+            self.cost = self.nearest_centers[furthest_point].nearest.cost
 
     def copy(self):
         return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
@@ -151,15 +170,15 @@ class PBS(AbstractSolver):
 
         for p in self.points:
             cost = self.weights[(center, p)]
-            nearest = individual.nearest_centers[p]
-            if nearest["nearest_center"] is None or cost < nearest["nearest_center"].cost:
-                nearest["second_nearest_center"] = nearest["nearest_center"]
-                nearest["nearest_center"] = Neighbour(point=center, cost=cost)
-            elif nearest["second_nearest_center"] is None or cost < nearest["second_nearest_center"].cost:
-                nearest["second_nearest_center"] = Neighbour(point=center, cost=cost)
+            nearest_centers = individual.nearest_centers[p]
+            if nearest_centers.nearest is None or cost < nearest_centers.nearest.cost:
+                nearest_centers.second_nearest = nearest_centers.nearest
+                nearest_centers.nearest = Neighbour(point=center, cost=cost)
+            elif nearest_centers.second_nearest is None or cost < nearest_centers.second_nearest.cost:
+                nearest_centers.second_nearest = Neighbour(point=center, cost=cost)
 
-            if nearest["nearest_center"].cost > max_center_cost:
-                max_center_cost = nearest["nearest_center"].cost
+            if nearest_centers.nearest.cost > max_center_cost:
+                max_center_cost = nearest_centers.nearest.cost
 
         individual.cost = max_center_cost
 
@@ -170,7 +189,7 @@ class PBS(AbstractSolver):
         :param individual: Individual in population
         :return: Second nearest neighbouring center to a point
         """
-        closest = individual.nearest_centers[point]["nearest_center"].point
+        closest = individual.nearest_centers[point].nearest.point
         min_center_cost = float("inf")
         min_center = None
 
@@ -196,15 +215,15 @@ class PBS(AbstractSolver):
         individual.centers.remove(center)
 
         for p in self.points:
-            nearest = individual.nearest_centers[p]
-            if nearest["nearest_center"].point == center:
-                nearest["nearest_center"] = nearest["second_nearest_center"]
-                nearest["second_nearest_center"] = self.find_next(p, individual)
-            elif nearest["second_nearest_center"] is None or nearest["second_nearest_center"].point == center:
-                nearest["second_nearest_center"] = self.find_next(p, individual)
+            nearest_centers = individual.nearest_centers[p]
+            if nearest_centers.nearest.point == center:
+                nearest_centers.nearest = nearest_centers.second_nearest
+                nearest_centers.second_nearest = self.find_next(p, individual)
+            elif nearest_centers.second_nearest is None or nearest_centers.second_nearest.point == center:
+                nearest_centers.second_nearest = self.find_next(p, individual)
 
-            if nearest["nearest_center"].cost > max_center_cost:
-                max_center_cost = nearest["nearest_center"].cost
+            if nearest_centers.nearest.cost > max_center_cost:
+                max_center_cost = nearest_centers.nearest.cost
 
         individual.cost = max_center_cost
 
@@ -217,7 +236,7 @@ class PBS(AbstractSolver):
         """
         C = self.MAX_WEIGHT
         L = set()
-        furthest_point_facility = individual.nearest_centers[w]["nearest_center"]
+        furthest_point_facility = individual.nearest_centers[w].nearest
         neighbours = self.graph.nodes()[w]["neighbours"]
         k = PBS.linear_search(neighbours, furthest_point_facility.point)
         nwk = PBS.get_nwk(self.graph, w, k, neighbours)
@@ -234,8 +253,8 @@ class PBS(AbstractSolver):
                 if i == point:
                     continue
 
-                second_nearest = individual.nearest_centers[point]["second_nearest_center"]
-                nearest = individual.nearest_centers[point]["nearest_center"]
+                second_nearest = individual.nearest_centers[point].second_nearest
+                nearest = individual.nearest_centers[point].nearest
 
                 min_dist = min(self.weights[(point, i)], second_nearest.cost)
                 if min_dist > M[nearest.point]:
@@ -261,7 +280,7 @@ class PBS(AbstractSolver):
         max_cost = 0
         max_point = 0
         for p in self.points:
-            nearest = individual.nearest_centers[p]["nearest_center"]
+            nearest = individual.nearest_centers[p].nearest
             if nearest is not None:
                 if max_cost < nearest.cost:
                     max_point = p
@@ -273,7 +292,7 @@ class PBS(AbstractSolver):
     def initilise_local_search(self, individual: Individual):
         while len(individual.centers) < self.k:
             furthest_point = self.get_furthest_point(individual)
-            furthest_point_facility = individual.nearest_centers[furthest_point]["nearest_center"]
+            furthest_point_facility = individual.nearest_centers[furthest_point].nearest
             if furthest_point_facility is None:
                 nwk = list(self.graph.nodes())
             else:
@@ -310,7 +329,7 @@ class PBS(AbstractSolver):
                 stale_iterations += 1
 
         furthest_point = self.get_furthest_point(individual)
-        optimised_individual.cost = optimised_individual.nearest_centers[furthest_point]["nearest_center"].cost
+        optimised_individual.cost = optimised_individual.nearest_centers[furthest_point].nearest.cost
         return optimised_individual
 
     def mutation_random(self, individual: Individual):
