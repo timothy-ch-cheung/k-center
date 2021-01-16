@@ -116,6 +116,8 @@ class PBS(AbstractSolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         self.points = set(graph.nodes())
         self.weights = {}
+        self.population = []
+        self.no_update_count = 0
         for i in self.points:
             for j in self.points:
                 if i == j:
@@ -437,8 +439,7 @@ class PBS(AbstractSolver):
         second_child = generate_child(self, second_child_centers)
         return first_child, second_child
 
-    @staticmethod
-    def update_population(population: List[Individual], candidate: Individual):
+    def update_population(self, candidate: Individual):
         """Add the candidate to the solution if the candidate improves the population
 
         W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
@@ -448,7 +449,6 @@ class PBS(AbstractSolver):
         - 75% of centers are the same any centers in P
         - the cost is within 1% of any cost in P
 
-        :param population: population to be added to
         :param candidate: potential individual to add to the population
         """
 
@@ -458,7 +458,7 @@ class PBS(AbstractSolver):
         CENTER_THRESHHOLD = 0.75
         COST_THRESHHOLD = 0.01
         is_diverse = True
-        for individual in population:
+        for individual in self.population:
             if len(candidate.centers.intersection(individual.centers)) > len(individual.centers) * CENTER_THRESHHOLD:
                 is_diverse = False
                 break
@@ -469,10 +469,13 @@ class PBS(AbstractSolver):
                 is_diverse = False
                 break
         if is_diverse:
-            index_min = min(range(len(population)), key=lambda x: population[x].cost)
-            population[index_min] = candidate
+            index_max = max(range(len(self.population)), key=lambda x: self.population[x].cost)
+            self.population[index_max] = candidate
+            self.no_update_count = 0
+        else:
+            self.no_update_count += 1
 
-        return population
+        return self.population
 
     def generate_population(self) -> List[Individual]:
         population = []
@@ -486,32 +489,33 @@ class PBS(AbstractSolver):
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         pass
 
+    def evolve(self):
+        self.population = self.generate_population()
+        self.no_update_count = 0
+
+        for generation in range(1, PBS.GENERATIONS + 1):
+            for i, individual in enumerate(self.population):
+                for j, sibling in enumerate(self.population):
+                    if i == j:
+                        continue
+                    self.update_population(self.local_search(self.mutation_random(individual), generation))
+                    self.update_population(
+                        self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
+                                          generation))
+
+                    first_child, second_child = self.crossover_directed(individual, sibling)
+                    self.update_population(self.local_search(self.mutation_directed(first_child), generation))
+                    self.update_population(self.local_search(self.mutation_directed(second_child), generation))
+
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         """Solves the K-Center problem using the genetic algorithm created by W. Pullan.
 
         Uses two mutation operators, two crossover operators and a local search.
         """
-        population = self.generate_population()
-
-        for generation in range(1, PBS.GENERATIONS + 1):
-            for i, individual in enumerate(population):
-                for j, sibling in enumerate(population):
-                    if i == j:
-                        continue
-                    PBS.update_population(population, self.local_search(self.mutation_random(individual), generation))
-                    PBS.update_population(population,
-                                          self.local_search(
-                                              self.mutation_directed(self.crossover_random(individual, sibling)),
-                                              generation))
-                    first_child, second_child = self.crossover_directed(individual, sibling)
-                    PBS.update_population(population,
-                                          self.local_search(self.mutation_directed(first_child), generation))
-                    PBS.update_population(population,
-                                          self.local_search(self.mutation_directed(second_child), generation))
-
+        self.evolve()
         clusters = {}
 
-        fittest_individual = min(population, key=lambda x: x.cost)
+        fittest_individual = min(self.population, key=lambda x: x.cost)
         for center in fittest_individual.centers:
             points_in_cluster = set()
             for point in self.points:
