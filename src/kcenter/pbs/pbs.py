@@ -176,14 +176,18 @@ class PBS(AbstractSolver):
         for p in self.points:
             cost = self.weights[(center, p)]
             nearest_centers = individual.nearest_centers[p]
-            if nearest_centers.nearest is None or cost < nearest_centers.nearest.cost:
-                nearest_centers.second_nearest = nearest_centers.nearest
+            nearest = nearest_centers.nearest
+            second_nearest = nearest_centers.second_nearest
+
+            if nearest is None or cost < nearest.cost:
+                nearest_centers.second_nearest = nearest
                 nearest_centers.nearest = Neighbour(point=center, cost=cost)
-            elif nearest_centers.second_nearest is None or cost < nearest_centers.second_nearest.cost:
+            elif second_nearest is None or cost < second_nearest.cost:
                 nearest_centers.second_nearest = Neighbour(point=center, cost=cost)
 
-            if cost > max_center_cost:
-                max_center_cost = cost
+            nearest = nearest_centers.nearest
+            if nearest.cost > max_center_cost:
+                max_center_cost = nearest.cost
 
         individual.cost = max_center_cost
 
@@ -497,6 +501,10 @@ class PBS(AbstractSolver):
         pass
 
     def evolve(self):
+        """Solves the K-Center problem using the genetic algorithm created by W. Pullan.
+
+                Uses two mutation operators, two crossover operators and a local search.
+        """
         self.population = self.generate_population()
         self.no_update_count = 0
 
@@ -515,10 +523,6 @@ class PBS(AbstractSolver):
                     self.update_population(self.local_search(self.mutation_directed(second_child), generation))
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
-        """Solves the K-Center problem using the genetic algorithm created by W. Pullan.
-
-        Uses two mutation operators, two crossover operators and a local search.
-        """
         self.evolve()
         clusters = {}
 
