@@ -124,4 +124,4 @@ def test_local_search(seed_random):
     individual.init_nearest_centers(instance.points, instance.weights)
 
     instance.local_search(individual, 3)
-    assert individual.centers == {2, 4}
+    assert individual.centers == {1, 4}

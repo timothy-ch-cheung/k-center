@@ -161,6 +161,9 @@ class PBS(AbstractSolver):
             nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
 
+    def get_weight(self, center, p):
+        return self.weights[(center, p)]
+
     def add_center(self, center: int, individual: Individual):
         """Add a center to the individual and update neighbours
 
@@ -179,8 +182,8 @@ class PBS(AbstractSolver):
             elif nearest_centers.second_nearest is None or cost < nearest_centers.second_nearest.cost:
                 nearest_centers.second_nearest = Neighbour(point=center, cost=cost)
 
-            if nearest_centers.nearest.cost > max_center_cost:
-                max_center_cost = nearest_centers.nearest.cost
+            if cost > max_center_cost:
+                max_center_cost = cost
 
         individual.cost = max_center_cost
 
@@ -218,14 +221,17 @@ class PBS(AbstractSolver):
 
         for p in self.points:
             nearest_centers = individual.nearest_centers[p]
-            if nearest_centers.nearest.point == center:
-                nearest_centers.nearest = nearest_centers.second_nearest
+            nearest = nearest_centers.nearest
+            second_nearest = nearest_centers.second_nearest
+            if nearest.point == center:
+                nearest_centers.nearest = second_nearest
                 nearest_centers.second_nearest = self.find_next(p, individual)
-            elif nearest_centers.second_nearest is None or nearest_centers.second_nearest.point == center:
+            elif second_nearest is None or second_nearest.point == center:
                 nearest_centers.second_nearest = self.find_next(p, individual)
 
-            if nearest_centers.nearest.cost > max_center_cost:
-                max_center_cost = nearest_centers.nearest.cost
+            nearest = nearest_centers.nearest
+            if nearest.cost > max_center_cost:
+                max_center_cost = nearest.cost
 
         individual.cost = max_center_cost
 
@@ -255,8 +261,9 @@ class PBS(AbstractSolver):
                 if i == point:
                     continue
 
-                second_nearest = individual.nearest_centers[point].second_nearest
-                nearest = individual.nearest_centers[point].nearest
+                nearest_centers = individual.nearest_centers[point]
+                second_nearest = nearest_centers.second_nearest
+                nearest = nearest_centers.nearest
 
                 min_dist = min(self.weights[(point, i)], second_nearest.cost)
                 if min_dist > M[nearest.point]:
