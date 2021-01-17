@@ -7,6 +7,12 @@ from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
+def min2(a: float, b: float) -> float:
+    if a < b:
+        return a
+    return b
+
+
 class Neighbour:
     """
     Data structure to store a neighbour to a point and the distance to it.
@@ -269,7 +275,7 @@ class PBS(AbstractSolver):
                 second_nearest = nearest_centers.second_nearest
                 nearest = nearest_centers.nearest
 
-                min_dist = min(self.weights[(point, i)], second_nearest.cost)
+                min_dist = min2(self.weights[(point, i)], second_nearest.cost)
                 if min_dist > M[nearest.point]:
                     M[nearest.point] = min_dist
 
