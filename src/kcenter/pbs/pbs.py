@@ -68,10 +68,11 @@ class Individual:
         self.cost = cost
         self.nearest_centers = nearest_centers
 
-    def init_nearest_centers(self, points, weights):
+    def init_nearest_centers(self, points: Set[int], weights: Dict[Tuple[int, int], float]):
         """
         Calculates closest and second closest centers of every point for this individuals centers.
-        :param graph: Graph in metric space containing weights between points
+        :param points: nodes in a graph
+        :param weights: the weight between any two given points
         """
         for point in points:
             nearest_center = None
@@ -159,6 +160,8 @@ class PBS(AbstractSolver):
     def get_nwk(graph: nx.Graph, w: int, k: int, nw=None) -> List[int]:
         """Get a sublist of k edges from a point w
 
+        :param graph: graph containing points and their neighbours ordered by cost (low-high)
+        :param nw: neighbours (optional)
         :param w: point to get neighbours from
         :param k: number of points to return
         :return: k neighbours from point w
@@ -166,9 +169,6 @@ class PBS(AbstractSolver):
         if nw is None:
             nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
-
-    def get_weight(self, center, p):
-        return self.weights[(center, p)]
 
     def add_center(self, center: int, individual: Individual):
         """Add a center to the individual and update neighbours

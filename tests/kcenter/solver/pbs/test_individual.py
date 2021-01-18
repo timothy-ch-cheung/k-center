@@ -17,6 +17,17 @@ def test_neighbour_inequality():
     assert first_neighbour != second_neighbour
 
 
+def test_neighbour_inequality_different_type():
+    first_neighbour = Neighbour(2, 2.1)
+    assert first_neighbour != float(100)
+
+
+def test_neighbour_copy():
+    neighbour = Neighbour(2, 2.1)
+    copy_neighbour = neighbour.copy()
+    assert neighbour == copy_neighbour
+
+
 def test_neighbour_str():
     neighbour = Neighbour(2, 2.1)
     assert str(neighbour) == "{point: 2, cost: 2.1}"
@@ -28,6 +39,27 @@ def test_individual_str():
                                              1: {"nearest_center": Neighbour(0, 1.5), "second_nearest_center": None}})
     assert str(
         individual) == "{centers: [0], cost: 2.1, nearest_centers: {0: {'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': None}, 1: {'nearest_center': {point: 0, cost: 1.5}, 'second_nearest_center': None}}}"
+
+
+def test_nearest_centers_equality():
+    first_neighbour = Neighbour(2, 2.1)
+    second_neighbour = Neighbour(1, 1.1)
+    nearest = NearestCenters(first_neighbour, second_neighbour)
+    assert nearest == NearestCenters(Neighbour(2, 2.1), Neighbour(1, 1.1))
+
+
+def test_nearest_centers_inequality():
+    first_neighbour = Neighbour(2, 2.1)
+    second_neighbour = Neighbour(1, 1.1)
+    nearest = NearestCenters(first_neighbour, second_neighbour)
+    assert nearest == NearestCenters(Neighbour(5, 3), Neighbour(2, 9))
+
+
+def test_nearest_centers_inequality_different_type():
+    first_neighbour = Neighbour(2, 2.1)
+    second_neighbour = Neighbour(1, 1.1)
+    nearest = NearestCenters(first_neighbour, second_neighbour)
+    assert nearest != float(100)
 
 
 def test_individual_init_centers():
