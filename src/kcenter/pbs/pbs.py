@@ -267,10 +267,7 @@ class PBS(AbstractSolver):
             for center in individual.centers:
                 M[center] = 0
 
-            for point in self.points:
-                if i == point:
-                    continue
-
+            for point in self.points.difference(individual.centers):
                 nearest_centers = individual.nearest_centers[point]
                 second_nearest = nearest_centers.second_nearest
                 nearest = nearest_centers.nearest

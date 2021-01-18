@@ -269,7 +269,7 @@ def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier):
             {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 6.3},
-            {"center": True, "colour": "red", "x": 5.9, "y": 5.2},
-            {"colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 5.9, "y": 5.2},
+            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
