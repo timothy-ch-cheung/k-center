@@ -14,7 +14,7 @@ def test_random_mutation():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 4})
-    individual.init_nearest_centers(graph)
+    individual.init_nearest_centers(instance.points, instance.weights)
 
     individual = instance.mutation_random(individual)
 
@@ -27,7 +27,7 @@ def test_mutation_directed(seed_random):
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 4})
-    individual.init_nearest_centers(graph)
+    individual.init_nearest_centers(instance.points, instance.weights)
 
     individual = instance.mutation_directed(individual)
 
@@ -39,7 +39,7 @@ def test_mutation_directed_deletes_closest_centers(seed_random):
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 4, 3})
-    individual.init_nearest_centers(graph)
+    individual.init_nearest_centers(instance.points, instance.weights)
 
     individual = instance.mutation_directed(individual)
 
