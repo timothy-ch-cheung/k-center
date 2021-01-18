@@ -52,7 +52,7 @@ def test_nearest_centers_inequality():
     first_neighbour = Neighbour(2, 2.1)
     second_neighbour = Neighbour(1, 1.1)
     nearest = NearestCenters(first_neighbour, second_neighbour)
-    assert nearest == NearestCenters(Neighbour(5, 3), Neighbour(2, 9))
+    assert nearest != NearestCenters(Neighbour(5, 3), Neighbour(2, 9))
 
 
 def test_nearest_centers_inequality_different_type():
