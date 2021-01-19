@@ -18,7 +18,7 @@ class GraphGenerator:
         :param point: point to generate new point around
         :return:
         """
-        length = np.sqrt(np.random.uniform(0, opt))
+        length = np.sqrt(np.random.uniform(0, pow(opt,2)))
         return GraphGenerator.get_random_point_around_circumference(length, point)
 
     @staticmethod
@@ -34,6 +34,10 @@ class GraphGenerator:
         x = dist * np.cos(angle)
         y = dist * np.sin(angle)
         return point[0] + x, point[1] + y
+
+    @staticmethod
+    def get_endpoint_of_diameter(point: Tuple[float, float], center: Tuple[float, float]):
+        return 2 * center[0] - point[0], (2 * center[1] - point[1])
 
     @staticmethod
     def generate_colour_queue(blue: int, red: int) -> deque:
@@ -90,10 +94,13 @@ class GraphGenerator:
             centers.add(center)
             points.append({"x": center[0], "y": center[1], "colour": colours.pop().name.lower()})
 
-        # Generate a single point [opt] away from each center (ensures opt is indeed the optimal solution)
+        # Generate a two points 2*opt distance, connected by diameter of circle centered at generated center
+        # (ensures opt is indeed the optimal solution)
         for center in centers:
-            edge_point = GraphGenerator.get_random_point_around_circumference(opt, center)
-            points.append({"x": edge_point[0], "y": edge_point[1], "colour": colours.pop().name.lower()})
+            first_edge_point = GraphGenerator.get_random_point_around_circumference(opt, center)
+            points.append({"x": first_edge_point[0], "y": first_edge_point[1], "colour": colours.pop().name.lower()})
+            second_edge_point = GraphGenerator.get_endpoint_of_diameter(first_edge_point, center)
+            points.append({"x": second_edge_point[0], "y": second_edge_point[1], "colour": colours.pop().name.lower()})
 
         # Generate remaining points belonging to clusters
         for i in range(len(colours)):
@@ -127,13 +134,13 @@ class GraphGenerator:
         }
         return graph
 
+if __name__ == "__main__":
+    gen = GraphGenerator(min_x=20, min_y=20, max_x=200, max_y=200)
+    b = 0
+    r = 100
+    k = 5
+    opt = 15
+    graph = gen.generate(b, r, k, opt, 0, center_seperation=3, outlier_seperation=10)
+    print(graph)
 
-gen = GraphGenerator(min_x=20, min_y=20, max_x=200, max_y=200)
-b = 0
-r = 20
-k = 5
-opt = 5
-graph = gen.generate(b, r, k, opt, 0, center_seperation=1, outlier_seperation=10)
-print(graph)
-
-GraphLoader.save_json(graph, "k_center")
+    GraphLoader.save_json(graph, "k_center_large")

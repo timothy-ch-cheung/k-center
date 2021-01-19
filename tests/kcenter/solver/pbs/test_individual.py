@@ -2,7 +2,6 @@ import pytest
 
 from src.kcenter.pbs.pbs import Individual, Neighbour, NearestCenters
 from tests.kcenter.constant.consts import FLOAT_ERROR
-from tests.kcenter.util.create_test_graph import basic_graph
 
 
 def test_neighbour_equality():
