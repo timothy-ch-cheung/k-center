@@ -37,7 +37,7 @@ class GraphGenerator:
 
     @staticmethod
     def get_endpoint_of_diameter(point: Tuple[float, float], center: Tuple[float, float]):
-        return 2 * center[0] - point[0], (2 * center[1] - point[1])
+        return (2 * center[0] - point[0]), (2 * center[1] - point[1])
 
     @staticmethod
     def generate_colour_queue(blue: int, red: int) -> deque:
