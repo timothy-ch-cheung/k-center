@@ -50,9 +50,12 @@ class GraphGenerator:
     def generate_point(self):
         return random.uniform(self.min_x, self.max_x), random.uniform(self.min_y, self.max_y)
 
-    def get_random_distanced_point(self, dist: float, points: Set[Tuple[float, float]]) -> Tuple[float, float]:
+    def get_random_distanced_point(self, dist: float, points: Set[Tuple[float, float]], outliers: Set[Tuple[float, float]] = set()) -> Tuple[float, float]:
         def is_point_distanced(potential_point: Tuple[float, float]):
             for p in points:
+                if np.linalg.norm(np.array(p) - np.array(potential_point)) < dist:
+                    return False
+            for p in outliers:
                 if np.linalg.norm(np.array(p) - np.array(potential_point)) < dist:
                     return False
             return True
@@ -112,9 +115,12 @@ class GraphGenerator:
         red_outliers = num_outliers - blue_outliers
         colours = GraphGenerator.generate_colour_queue(blue_outliers, red_outliers)
 
+        outliers = set()
         for i in range(len(colours)):
-            cluster_point = self.get_random_distanced_point(outlier_seperation*opt, centers)
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
+            cluster_point = self.get_random_distanced_point(outlier_seperation*opt, centers, outliers)
+            outlier_point = {"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()}
+            outliers.add((outlier_point["x"], outlier_point["y"]))
+            points.append(outlier_point)
 
         total_blue_points = b + blue_outliers
         total_red_points = r + red_outliers
@@ -135,12 +141,12 @@ class GraphGenerator:
         return graph
 
 if __name__ == "__main__":
-    gen = GraphGenerator(min_x=20, min_y=20, max_x=200, max_y=200)
-    b = 0
-    r = 100
+    gen = GraphGenerator(min_x=100, min_y=100, max_x=30000, max_y=30000)
+    b = 50
+    r = 50
     k = 5
-    opt = 15
-    graph = gen.generate(b, r, k, opt, 0, center_seperation=3, outlier_seperation=10)
+    opt = 15.5
+    graph = gen.generate(b, r, k, opt, 200, center_seperation=3, outlier_seperation=1)
     print(graph)
 
-    GraphLoader.save_json(graph, "k_center_large")
+    GraphLoader.save_json(graph, "large")
