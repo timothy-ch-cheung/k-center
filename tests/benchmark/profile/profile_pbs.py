@@ -24,3 +24,6 @@ stats.print_stats()
 # stats.print_stats()
 
 print("cost", radius)
+print("centers", set(clusters.keys()))
+print("clusters", clusters)
+print("outliers", outliers)
