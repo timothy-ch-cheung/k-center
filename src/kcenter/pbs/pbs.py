@@ -527,13 +527,25 @@ class PBS(AbstractSolver):
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         self.evolve()
-        clusters = {}
 
         fittest_individual = min(self.population, key=lambda x: x.cost)
-        for center in fittest_individual.centers:
-            points_in_cluster = set()
-            for point in self.points:
-                if self.graph[center][point]["weight"] <= fittest_individual.cost:
-                    points_in_cluster.add(point)
-            clusters[center] = points_in_cluster
-        return clusters, set(), fittest_individual.cost
+        clusters = {center: set() for center in fittest_individual.centers}
+        outliers = set()
+
+        for point in self.points:
+            min_dist = float("inf")
+            nearest_center = None
+            for center in fittest_individual.centers:
+                if point == center:
+                    nearest_center = center
+                    break
+                cost = self.weights[(point, center)]
+                if cost <= min_dist and cost <= fittest_individual.cost:
+                    min_dist = cost
+                    nearest_center = center
+            if nearest_center is not None:
+                clusters[nearest_center].add(point)
+            else:
+                outliers.add(point)
+
+        return clusters, outliers, fittest_individual.cost
