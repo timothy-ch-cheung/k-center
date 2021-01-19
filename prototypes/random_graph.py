@@ -18,7 +18,7 @@ class GraphGenerator:
         :param point: point to generate new point around
         :return:
         """
-        length = np.sqrt(np.random.uniform(0, opt))
+        length = np.sqrt(np.random.uniform(0, pow(opt,2)))
         return GraphGenerator.get_random_point_around_circumference(length, point)
 
     @staticmethod
@@ -36,6 +36,10 @@ class GraphGenerator:
         return point[0] + x, point[1] + y
 
     @staticmethod
+    def get_endpoint_of_diameter(point: Tuple[float, float], center: Tuple[float, float]):
+        return (2 * center[0] - point[0]), (2 * center[1] - point[1])
+
+    @staticmethod
     def generate_colour_queue(blue: int, red: int) -> deque:
         """Generates a randomly shuffled deque of colours
         """
@@ -46,9 +50,12 @@ class GraphGenerator:
     def generate_point(self):
         return random.uniform(self.min_x, self.max_x), random.uniform(self.min_y, self.max_y)
 
-    def get_random_distanced_point(self, dist: float, points: Set[Tuple[float, float]]) -> Tuple[float, float]:
+    def get_random_distanced_point(self, dist: float, points: Set[Tuple[float, float]], outliers: Set[Tuple[float, float]] = set()) -> Tuple[float, float]:
         def is_point_distanced(potential_point: Tuple[float, float]):
             for p in points:
+                if np.linalg.norm(np.array(p) - np.array(potential_point)) < dist:
+                    return False
+            for p in outliers:
                 if np.linalg.norm(np.array(p) - np.array(potential_point)) < dist:
                     return False
             return True
@@ -90,10 +97,13 @@ class GraphGenerator:
             centers.add(center)
             points.append({"x": center[0], "y": center[1], "colour": colours.pop().name.lower()})
 
-        # Generate a single point [opt] away from each center (ensures opt is indeed the optimal solution)
+        # Generate a two points 2*opt distance, connected by diameter of circle centered at generated center
+        # (ensures opt is indeed the optimal solution)
         for center in centers:
-            edge_point = GraphGenerator.get_random_point_around_circumference(opt, center)
-            points.append({"x": edge_point[0], "y": edge_point[1], "colour": colours.pop().name.lower()})
+            first_edge_point = GraphGenerator.get_random_point_around_circumference(opt, center)
+            points.append({"x": first_edge_point[0], "y": first_edge_point[1], "colour": colours.pop().name.lower()})
+            second_edge_point = GraphGenerator.get_endpoint_of_diameter(first_edge_point, center)
+            points.append({"x": second_edge_point[0], "y": second_edge_point[1], "colour": colours.pop().name.lower()})
 
         # Generate remaining points belonging to clusters
         for i in range(len(colours)):
@@ -105,9 +115,12 @@ class GraphGenerator:
         red_outliers = num_outliers - blue_outliers
         colours = GraphGenerator.generate_colour_queue(blue_outliers, red_outliers)
 
+        outliers = set()
         for i in range(len(colours)):
-            cluster_point = self.get_random_distanced_point(outlier_seperation*opt, centers)
-            points.append({"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()})
+            cluster_point = self.get_random_distanced_point(outlier_seperation*opt, centers, outliers)
+            outlier_point = {"x": cluster_point[0], "y": cluster_point[1], "colour": colours.pop().name.lower()}
+            outliers.add((outlier_point["x"], outlier_point["y"]))
+            points.append(outlier_point)
 
         total_blue_points = b + blue_outliers
         total_red_points = r + red_outliers
@@ -127,13 +140,13 @@ class GraphGenerator:
         }
         return graph
 
+if __name__ == "__main__":
+    gen = GraphGenerator(min_x=100, min_y=100, max_x=30000, max_y=30000)
+    b = 50
+    r = 50
+    k = 5
+    opt = 15.5
+    graph = gen.generate(b, r, k, opt, 200, center_seperation=3, outlier_seperation=1)
+    print(graph)
 
-gen = GraphGenerator(min_x=20, min_y=20, max_x=200, max_y=200)
-b = 0
-r = 20
-k = 5
-opt = 5
-graph = gen.generate(b, r, k, opt, 0, center_seperation=1, outlier_seperation=10)
-print(graph)
-
-GraphLoader.save_json(graph, "k_center")
+    GraphLoader.save_json(graph, "large")
