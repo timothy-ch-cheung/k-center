@@ -10,8 +10,8 @@ k = 2
 centers = {0, 3}
 radius = 0.86
 
-valid_radii = [0.86, 1.0, 6.37]
-invalid_radii = [0.73, 0.71, 0.51]
+valid_radii = [0.855, 1.0, 6.37]
+invalid_radii = [0.702, 0.65, 0.51]
 invalid_constraints = [
     {Colour.BLUE: 4, Colour.RED: 2},
     {Colour.BLUE: 3, Colour.RED: 3},
