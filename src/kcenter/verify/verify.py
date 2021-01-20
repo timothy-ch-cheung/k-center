@@ -12,8 +12,10 @@ def cluster(graph: nx.Graph, centers: Set[int], radius: float):
         nearest_center = None
         min_dist = float("inf")
         for center in centers:
-            if node not in graph[center]:
-                continue
+            if node == center:
+                nearest_center = center
+                min_dist = 0
+                break
             edge = graph[center][node]
             weight = edge["weight"] if edge is not None else float("inf")
             if weight < min_dist:

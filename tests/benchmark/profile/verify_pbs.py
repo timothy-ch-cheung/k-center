@@ -4,8 +4,9 @@ from server.graph_loader import GraphLoader
 
 graph = GraphLoader.get_graph("large")
 
-centers = {4, 68, 72, 11, 76, 34, 108, 111, 113, 61}
-cost = 34.182478925582565
+centers = {97, 99, 101, 106, 111, 50, 54, 56, 28, 61}
+cost = 36.18065589367729
+
 constraints = {Colour.BLUE: 50, Colour.RED: 50}
 k = 10
 

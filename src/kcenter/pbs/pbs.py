@@ -344,8 +344,6 @@ class PBS(AbstractSolver):
             if optimised_individual.cost >= prev_cost:
                 stale_iterations += 1
 
-        furthest_point = self.get_furthest_point(individual)
-        optimised_individual.cost = optimised_individual.nearest_centers[furthest_point].nearest.cost
         return optimised_individual
 
     def mutation_random(self, individual: Individual):
