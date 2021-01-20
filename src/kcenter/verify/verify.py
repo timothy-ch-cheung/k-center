@@ -11,11 +11,11 @@ def cluster(graph: nx.Graph, centers: Set[int], radius: float):
     for node in graph.nodes():
         nearest_center = None
         min_dist = float("inf")
+        if node in centers:
+            clusters[node].add(node)
+            continue
+
         for center in centers:
-            if node == center:
-                nearest_center = center
-                min_dist = 0
-                break
             edge = graph[center][node]
             weight = edge["weight"] if edge is not None else float("inf")
             if weight < min_dist:
@@ -35,7 +35,6 @@ def verify_solution(graph: nx.Graph, constraints: Dict[Colour, int], k: int, rad
     coverage = {k: 0 for (k, v) in constraints.items()}
 
     for (center, members) in clusters.items():
-        coverage[graph.nodes[center]["colour"]] += 1
         for member in members:
             coverage[graph.nodes[member]["colour"]] += 1
 

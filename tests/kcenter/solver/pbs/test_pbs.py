@@ -7,7 +7,7 @@ from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier, medium_graph
 
 FLOAT_ERROR_MARGIN = 0.001
-STRICT_CONSTRAINTS = {Colour.BLUE: 3, Colour.RED: 2}
+STRICT_CONSTRAINTS = {Colour.BLUE: 2, Colour.RED: 3}
 K = 2
 
 
@@ -24,14 +24,15 @@ def test_get_nwk():
 
 
 def test_pbs_basic_graph(seed_random):
+    constraints = {Colour.BLUE: 3, Colour.RED: 2}
     graph = basic_graph()
-    instance = PBS(graph, K, STRICT_CONSTRAINTS)
+    instance = PBS(graph, K, constraints)
     clusters, outliers, radius = instance.solve()
 
     assert clusters == {1: {0, 1, 2}, 3: {3, 4}}
     assert outliers == set()
     assert radius == pytest.approx(0.728, FLOAT_ERROR)
-    assert verify_solution(graph, STRICT_CONSTRAINTS, K, radius, set(clusters.keys())) is True
+    assert verify_solution(graph, constraints, K, radius, set(clusters.keys())) is True
 
 
 def test_pbs_basic_graph_with_outlier(seed_random):
