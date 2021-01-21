@@ -317,7 +317,7 @@ class PBS(AbstractSolver):
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
 
-    def local_search(self, individual: Individual, generation: int):
+    def local_search(self, individual: Individual, generation: int) -> Individual:
         """Local search on an individual in the population to find the locally optimise solution
 
         :param individual: Individual in population
