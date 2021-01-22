@@ -10,15 +10,18 @@ class ColourfulPBS(PBS):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def local_search(self, individual: Individual, generation: int) -> Individual:
-        optimised_individual = super().local_search(individual, generation)
+    def find_colourful_cost(self, optimised_individual: Individual) -> Individual:
+        """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
+
+        :param optimised_individual: individual after being optimised by PBS local search
+        """
         clustered_points = set()
         total = {Colour.BLUE: 0, Colour.RED: 0}
-        current_indexes = {x: 0 for x in individual.centers}
+        current_indexes = {x: 0 for x in optimised_individual.centers}
         colourful_cost = 0
         for i in range(len(self.graph.nodes())):
             finished = False
-            for center in individual.centers:
+            for center in optimised_individual.centers:
                 new_point = self.graph.nodes()[center]["neighbours"][current_indexes[center]]
                 if new_point not in clustered_points:
                     clustered_points.add(new_point)
@@ -39,3 +42,7 @@ class ColourfulPBS(PBS):
 
         optimised_individual.cost = colourful_cost
         return optimised_individual
+
+    def local_search(self, individual: Individual, generation: int) -> Individual:
+        optimised_individual = super().local_search(individual, generation)
+        return self.find_colourful_cost(optimised_individual)
