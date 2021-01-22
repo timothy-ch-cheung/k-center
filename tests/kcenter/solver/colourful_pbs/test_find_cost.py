@@ -1,5 +1,6 @@
 import pytest
 
+from server.graph_loader import GraphLoader
 from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import Individual, NearestCenters, Neighbour
@@ -7,7 +8,7 @@ from tests.kcenter.solver.pbs.test_pbs import FLOAT_ERROR_MARGIN
 from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 
 
-def test_pbs_colourful_basic_graph_outlier(seed_random):
+def test_find_cost_basic_graph_outlier(seed_random):
     constraints = {Colour.BLUE: 2, Colour.RED: 2}
     k = 2
     graph = basic_graph_with_outlier()
@@ -23,3 +24,17 @@ def test_pbs_colourful_basic_graph_outlier(seed_random):
     optimised_individual = Individual({0, 3}, 0.7071, nearest_centers)
     optimised_individual = instance.find_colourful_cost(optimised_individual)
     assert optimised_individual.cost == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
+
+
+def test_find_cost_large_graph(seed_random):
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 2
+    graph = GraphLoader.get_graph("large")
+    instance = ColourfulPBS(graph, k, constraints)
+
+    optimised_individual = Individual({0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 46.0624)
+    optimised_individual.init_nearest_centers(instance.points, instance.weights)
+
+    optimised_individual = instance.find_colourful_cost(optimised_individual)
+    # TODO: cost should be optimised to 12.5
+    assert optimised_individual.cost == pytest.approx(41.535, FLOAT_ERROR_MARGIN)
