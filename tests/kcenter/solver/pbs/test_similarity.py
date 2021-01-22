@@ -1,6 +1,6 @@
 import pytest
 
-from kcenter.pbs.similarity import normalise, sim
+from src.kcenter.pbs.similarity import CompareSolution
 from tests.kcenter.util.create_test_graph import grid_graph
 from tests.server.test_app_solve import FLOAT_ERROR_MARGIN
 
@@ -17,7 +17,8 @@ non_normalised_test_data = [
 @pytest.mark.parametrize("S,expected", non_normalised_test_data)
 def test_normalise(S, expected):
     graph = grid_graph()
-    assert normalise(S, graph, MIN, MAX) == expected
+    comp = CompareSolution(graph, min_value=MIN, max_value=MAX)
+    assert comp.normalise(S) == expected
 
 
 similarity_test_data = [
@@ -33,5 +34,6 @@ similarity_test_data = [
 @pytest.mark.parametrize("S,expected", similarity_test_data)
 def test_sim(S, expected):
     graph = grid_graph()
+    comp = CompareSolution(graph, min_value=MIN, max_value=MAX)
     center_set = {1, 2, 3}
-    assert sim(center_set, S, graph, MIN, MAX) == expected
+    assert comp.sim(center_set, S) == expected
