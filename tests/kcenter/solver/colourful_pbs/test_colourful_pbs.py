@@ -1,9 +1,9 @@
 import pytest
 
-from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
-from kcenter.constant.colour import Colour
-from kcenter.verify.verify import verify_solution
-from prototypes.Bandyapadhyay_Clustering import basic_graph_with_outlier
+from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
+from src.kcenter.constant.colour import Colour
+from src.kcenter.verify.verify import verify_solution
+from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 from tests.server.test_app_solve import FLOAT_ERROR_MARGIN
 
 
