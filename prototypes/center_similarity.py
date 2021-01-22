@@ -24,6 +24,13 @@ n = (1, 0)
 o = (2, 0)
 p = (3, 0)
 
+grid = [
+    [a, e, i, m],
+    [b, f, j, n],
+    [c, g, k, o],
+    [m, n, o, p]
+]
+
 
 # a = (0, 300)
 # b = (100, 300)
@@ -65,6 +72,8 @@ def normalise(A, B):
 
     max_value = max_point(A.union(B))
     min_value = min_point(A.union(B))
+    max_value = (3, 3)
+    min_value = (0, 0)
 
     A = apply_normalise(A)
     B = apply_normalise(B)
@@ -85,18 +94,15 @@ def sim(A, B):
                 min_dist = d
         B.remove(min_center)
         score += min_dist
-    return round(score, 2)
+    return round((score/(len(A))/math.sqrt(2)), 2)
 
 
 sol_one = {a, b}
-sol_two = {a, c}
-sol_three = {a, e}
-sol_four = {a, n}
-sol_five = {a, f}
-sol_six = {b, e}
+sol_two = {c, d}
+sol_three = {m, n}
+sol_four = {o, p}
 
-print(sim(sol_one, sol_one))
-print(sim(sol_one, sol_two))
-print(sim(sol_one, sol_three))
-print(sim(sol_one, sol_four))
-print(sim(sol_five, sol_six))
+for i in range(len(grid)):
+    for j in range(len(grid)-1):
+        compared_set = {grid[i][j], grid[i][j + 1]}
+        print(sim(sol_one, compared_set), f"[{grid[i][j]}, {grid[i][j + 1]}]")
