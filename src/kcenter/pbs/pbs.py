@@ -3,6 +3,7 @@ from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
 
+from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
@@ -131,6 +132,11 @@ class PBS(AbstractSolver):
                     graph.add_edge(i, j, weight=0)
                 self.weights[(i, j)] = graph[i][j]["weight"]
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
+
+        min_point = min(graph.nodes()[x]["pos"][0] for x in self.points), min(graph.nodes()[x]["pos"][1] for x in self.points)
+        max_point = max(graph.nodes()[x]["pos"][0] for x in self.points), max(graph.nodes()[x]["pos"][1] for x in self.points)
+        self.compare = CompareSolution(graph, min_value=min_point, max_value=max_point)
+
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
 
@@ -467,11 +473,11 @@ class PBS(AbstractSolver):
         def is_between(lower_bound: float, upper_bound: float, value: float):
             return lower_bound <= value <= upper_bound
 
-        CENTER_THRESHHOLD = 0.75
+        CENTER_THRESHHOLD = 0.2
         COST_THRESHHOLD = 0.01
         is_diverse = True
         for individual in self.population:
-            if len(candidate.centers.intersection(individual.centers)) > len(individual.centers) * CENTER_THRESHHOLD:
+            if self.compare.sim(candidate.centers, individual.centers) < CENTER_THRESHHOLD:
                 is_diverse = False
                 break
 
