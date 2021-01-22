@@ -27,7 +27,7 @@ class CompareSolution:
         S = apply_normalise(S)
         return S
 
-    def sim(self, A: Set[Tuple[float, float]], B: Set[Tuple[float, float]]):
+    def sim(self, A: Set[int], B: Set[int]):
         A = self.normalise(A)
         B = self.normalise(B)
 

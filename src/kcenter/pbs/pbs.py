@@ -488,11 +488,12 @@ class PBS(AbstractSolver):
                 break
         if is_diverse:
             index_max = max(range(len(self.population)), key=lambda x: self.population[x].cost)
-            self.population[index_max] = candidate
-            self.no_update_count = 0
-        else:
-            self.no_update_count += 1
+            if self.population[index_max].cost > candidate.cost:
+                self.population[index_max] = candidate
+                self.no_update_count = 0
+                return self.population
 
+        self.no_update_count += 1
         return self.population
 
     def generate_population(self) -> List[Individual]:
