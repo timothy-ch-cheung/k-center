@@ -87,6 +87,7 @@ export default function (props: Props) {
                 <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
                 <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
                 <MenuItem value={"pbs"}>PBS (Pullan 2008)</MenuItem>
+                <MenuItem value={"colourful_pbs"}>Colourful PBS</MenuItem>
             </Select>
         </FormControlNoWrap>
         <Spacer/>
