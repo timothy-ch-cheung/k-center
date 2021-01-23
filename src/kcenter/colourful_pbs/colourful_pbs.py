@@ -18,27 +18,27 @@ class ColourfulPBS(PBS):
         clustered_points = set()
         total = {Colour.BLUE: 0, Colour.RED: 0}
         current_indexes = {x: 0 for x in optimised_individual.centers}
-        colourful_cost = 0
-        for i in range(len(self.graph.nodes())):
-            finished = False
+        colourful_cost = self.MAX_WEIGHT
+        while total[Colour.BLUE] < self.constraints[Colour.BLUE] or total[Colour.RED] < self.constraints[Colour.RED]:
+            min_cost = float("inf")
+            min_point = None
+            min_center = None
             for center in optimised_individual.centers:
                 new_point = self.graph.nodes()[center]["neighbours"][current_indexes[center]]
                 if new_point not in clustered_points:
-                    clustered_points.add(new_point)
                     cost = self.weights[(center, new_point)]
-                    total[self.graph.nodes()[new_point]["colour"]] += 1
-                    if cost > colourful_cost:
-                        colourful_cost = cost
-
-                current_indexes[center] += 1
-
-                if total[Colour.BLUE] >= self.constraints[Colour.BLUE] and total[Colour.RED] >= self.constraints[
-                    Colour.RED]:
-                    finished = True
-                    break
-
-            if finished:
-                break
+                    if cost < min_cost:
+                        min_cost = cost
+                        min_point = new_point
+                        min_center = center
+                else:
+                    current_indexes[center] += 1
+            if min_center is None:
+                continue
+            current_indexes[min_center] += 1
+            total[self.graph.nodes()[min_point]["colour"]] += 1
+            clustered_points.add(min_point)
+            colourful_cost = min_cost
 
         optimised_individual.cost = colourful_cost
         return optimised_individual
