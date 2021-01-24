@@ -269,6 +269,8 @@ class PBS(AbstractSolver):
                 continue
 
             self.add_center(i, individual)
+
+            # M stores the cost of remove facility f from the solution
             M = {}
             for center in individual.centers:
                 M[center] = 0

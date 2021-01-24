@@ -1,4 +1,5 @@
-from typing import Dict
+import random
+from typing import Dict, Tuple
 
 import networkx as nx
 
@@ -42,6 +43,42 @@ class ColourfulPBS(PBS):
 
         optimised_individual.cost = colourful_cost
         return optimised_individual
+
+    def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
+        """Find the optimal center and vertex pair to swap to reduce cost
+
+        :param w: point to get neighbours from
+        :param individual: Individual in population
+        :return: (center, vertex) pair to swap
+        """
+        C = self.MAX_WEIGHT
+        L = set()
+        furthest_point_facility = individual.nearest_centers[w].nearest
+        neighbours = self.graph.nodes()[w]["neighbours"]
+        k = PBS.linear_search(neighbours, furthest_point_facility.point)
+        nwk = PBS.get_nwk(self.graph, w, k, neighbours)
+        for i in nwk:
+            if i in individual.centers:
+                continue
+
+            self.add_center(i, individual)
+            M = {}
+            for center in individual.centers:
+                centers = set(individual.centers).difference([center])
+                removed_individual = Individual(centers, 0)
+                removed_individual = self.find_colourful_cost(removed_individual)
+                M[center] = removed_individual.cost
+
+            for center in individual.centers:
+                if center == i:
+                    continue
+                if M[center] == C:
+                    L.add((center, i))
+                elif M[center] < C:
+                    L = {(center, i)}
+                    C = M[center]
+            self.remove_center(i, individual)
+        return random.choice(tuple(L))
 
     def local_search(self, individual: Individual, generation: int) -> Individual:
         optimised_individual = super().local_search(individual, generation)
