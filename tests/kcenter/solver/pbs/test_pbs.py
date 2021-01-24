@@ -1,8 +1,8 @@
 import pytest
 
-from src.kcenter.verify.verify import verify_solution
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS
+from src.kcenter.verify.verify import verify_solution
 from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier, medium_graph
 
@@ -20,6 +20,7 @@ def test_get_nwk():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     nwk = instance.get_nwk(graph, 0, 3)
+    assert nwk == [0, 1, 2]
     assert nwk == [0, 1, 2]
 
 
