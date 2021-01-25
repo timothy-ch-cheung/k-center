@@ -22,7 +22,7 @@ expected_population = [
     {0, 18, 3, 13}
 ]
 
-first_individual = 3
+first_individual = 1
 x += [graph.nodes()[i]["pos"][0] for i in expected_population[first_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[first_individual]]
 color_indices += [1 for x in range(4)]

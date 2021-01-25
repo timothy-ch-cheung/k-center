@@ -28,15 +28,19 @@ class CompareSolution:
         return S
 
     def sim(self, A: Set[int], B: Set[int]):
+        def find_min_distances(X, Y):
+            min_distances = []
+            for x in X:
+                min_dist = float("inf")
+                for y in Y:
+                    d = np.linalg.norm(np.array(x) - np.array(y))
+                    if d < min_dist:
+                        min_dist = d
+                min_distances.append(min_dist)
+            return min_distances
+
         A = self.normalise(A)
         B = self.normalise(B)
 
-        min_distances = []
-        for x in A:
-            min_dist = float("inf")
-            for y in B:
-                d = np.linalg.norm(np.array(x) - np.array(y))
-                if d < min_dist:
-                    min_dist = d
-            min_distances.append(min_dist)
+        min_distances = find_min_distances(A, B) + find_min_distances(B, A)
         return max(min_distances)/CompareSolution.ROOT_TWO
