@@ -31,15 +31,12 @@ class CompareSolution:
         A = self.normalise(A)
         B = self.normalise(B)
 
-        score = 0
+        min_distances = []
         for x in A:
-            min_center = None
             min_dist = float("inf")
             for y in B:
                 d = np.linalg.norm(np.array(x) - np.array(y))
                 if d < min_dist:
-                    min_center = y
                     min_dist = d
-            B.remove(min_center)
-            score += min_dist
-        return score / (len(A) * CompareSolution.ROOT_TWO)
+            min_distances.append(min_dist)
+        return max(min_distances)/CompareSolution.ROOT_TWO

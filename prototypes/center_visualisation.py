@@ -27,7 +27,7 @@ x += [graph.nodes()[i]["pos"][0] for i in expected_population[first_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[first_individual]]
 color_indices += [1 for x in range(4)]
 
-second_individual = 7
+second_individual = 0
 x += [graph.nodes()[i]["pos"][0] for i in expected_population[second_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[second_individual]]
 color_indices += [2 for x in range(4)]
