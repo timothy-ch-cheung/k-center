@@ -133,8 +133,10 @@ class PBS(AbstractSolver):
                 self.weights[(i, j)] = graph[i][j]["weight"]
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
 
-        min_point = min(graph.nodes()[x]["pos"][0] for x in self.points), min(graph.nodes()[x]["pos"][1] for x in self.points)
-        max_point = max(graph.nodes()[x]["pos"][0] for x in self.points), max(graph.nodes()[x]["pos"][1] for x in self.points)
+        min_point = min(graph.nodes()[x]["pos"][0] for x in self.points), min(
+            graph.nodes()[x]["pos"][1] for x in self.points)
+        max_point = max(graph.nodes()[x]["pos"][0] for x in self.points), max(
+            graph.nodes()[x]["pos"][1] for x in self.points)
         self.compare = CompareSolution(graph, min_value=min_point, max_value=max_point)
 
         super().__init__(graph, k, constraints)
@@ -457,19 +459,7 @@ class PBS(AbstractSolver):
         second_child = generate_child(self, second_child_centers)
         return first_child, second_child
 
-    def update_population(self, candidate: Individual):
-        """Add the candidate to the solution if the candidate improves the population
-
-        W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
-        is close (in cost or facilities) to any Pi in P"
-
-        We define diversity as follows:
-        - 75% of centers are the same any centers in P
-        - the cost is within 1% of any cost in P
-
-        :param candidate: potential individual to add to the population
-        """
-
+    def is_diverse(self, candidate: Individual):
         def is_between(lower_bound: float, upper_bound: float, value: float):
             return lower_bound <= value <= upper_bound
 
@@ -486,7 +476,17 @@ class PBS(AbstractSolver):
             if is_between(lower, upper, individual.cost):
                 is_diverse = False
                 break
-        if is_diverse:
+        return is_diverse
+
+    def update_population(self, candidate: Individual):
+        """Add the candidate to the solution if the candidate improves the population
+
+        W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
+        is close (in cost or facilities) to any Pi in P"
+
+        :param candidate: potential individual to add to the population
+        """
+        if self.is_diverse(candidate):
             index_max = max(range(len(self.population)), key=lambda x: self.population[x].cost)
             if self.population[index_max].cost > candidate.cost:
                 self.population[index_max] = candidate
@@ -498,11 +498,12 @@ class PBS(AbstractSolver):
 
     def generate_population(self) -> List[Individual]:
         population = []
-        for i in range(PBS.POPULATION_SIZE):
+        while len(population) < PBS.POPULATION_SIZE:
             init_center = {random.choice(tuple(self.points))}
-            individual = Individual(init_center)
-            individual.init_nearest_centers(self.points, self.weights)
-            population.append(self.local_search(individual, 0))
+            candidate = Individual(init_center)
+            candidate.init_nearest_centers(self.points, self.weights)
+            if self.is_diverse(candidate):
+                population.append(self.local_search(candidate, 0))
         return population
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
@@ -511,7 +512,7 @@ class PBS(AbstractSolver):
     def evolve(self):
         """Solves the K-Center problem using the genetic algorithm created by W. Pullan.
 
-                Uses two mutation operators, two crossover operators and a local search.
+        Uses two mutation operators, two crossover operators and a local search.
         """
         self.population = self.generate_population()
         self.no_update_count = 0
