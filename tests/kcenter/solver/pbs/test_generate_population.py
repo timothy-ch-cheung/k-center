@@ -1,11 +1,9 @@
-import pytest
 import numpy as np
 
-from kcenter.constant.colour import Colour
-from kcenter.pbs.pbs import PBS
-from kcenter.pbs.similarity import CompareSolution
-from server.graph_loader import GraphLoader
-from tests.kcenter.solver.pbs.test_pbs import FLOAT_ERROR_MARGIN
+from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.pbs import PBS
+from src.kcenter.pbs.similarity import CompareSolution
+from src.server.graph_loader import GraphLoader
 
 
 def test_generate_population_medium_graph(seed_random):
@@ -45,13 +43,13 @@ def test_generate_population_medium_graph_is_diverse(seed_random):
 
     expected_similarity = {
         0: [0.5493, 0.5778, 0.3579, 0.2306, 0.2306, 0.4006, 0.5963],
-        1: [0.2306, 0.3475, 0.2306, 0.2032, 0.2340, 0.3888, 0.3739],
-        2: [0.2140, 0.5511, 0.3614, 0.0458, 0.0278, 0.3739, 0.0278],
-        3: [0.1958, 0.2306, 0.5778, 0.2306, 0.2340, 0.3475, 0.5963],
+        1: [0.5493, 0.5511, 0.2306, 0.5369, 0.5369, 0.5511, 0.5532],
+        2: [0.5778, 0.5511, 0.5778, 0.3475, 0.3475, 0.5778, 0.2121],
+        3: [0.3579, 0.2306, 0.5778, 0.3482, 0.3482, 0.3614, 0.5963],
         4: [0.2306, 0.5369, 0.3475, 0.3482, 0.0348, 0.3839, 0.3739],
         5: [0.2306, 0.5369, 0.3475, 0.3482, 0.0348, 0.3739, 0.3739],
-        6: [0.2306, 0.5511, 0.5778, 0.3614, 0.2306, 0.2306, 0.5963],
-        7: [0.1958, 0.5532, 0.2121, 0.3580, 0.1832, 0.2121, 0.3739]
+        6: [0.4006, 0.5511, 0.5778, 0.3614, 0.3839, 0.3739, 0.5963],
+        7: [0.5963, 0.5532, 0.2121, 0.5963, 0.3739, 0.3739, 0.5963]
     }
     comp.sim(generated_centers[3], generated_centers[0])
     for i, actual_similarity in similarity.items():

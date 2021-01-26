@@ -1,6 +1,6 @@
-from kcenter.constant.colour import Colour
-from kcenter.pbs.pbs import PBS
-from server.graph_loader import GraphLoader
+from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.pbs import PBS
+from src.server.graph_loader import GraphLoader
 import time
 import numpy as np
 
