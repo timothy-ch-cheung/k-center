@@ -25,9 +25,9 @@ similarity_test_data = [
     ({1, 2, 3}, 0),
     ({2, 3, 4}, pytest.approx(0.1767, FLOAT_ERROR_MARGIN)),
     ({21, 22, 23}, pytest.approx(0.7071, FLOAT_ERROR_MARGIN)),
-    ({22, 23, 24}, pytest.approx(0.7421, FLOAT_ERROR_MARGIN)),
-    ({14, 19, 24}, pytest.approx(0.6596, FLOAT_ERROR_MARGIN)),
-    ({1, 7, 13}, pytest.approx(0.1767, FLOAT_ERROR_MARGIN))
+    ({22, 23, 24}, pytest.approx(0.7288, FLOAT_ERROR_MARGIN)),
+    ({14, 19, 24}, pytest.approx(0.7288, FLOAT_ERROR_MARGIN)),
+    ({1, 7, 13}, pytest.approx(0.3535, FLOAT_ERROR_MARGIN))
 ]
 
 

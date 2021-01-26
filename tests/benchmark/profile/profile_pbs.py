@@ -13,7 +13,7 @@ from src.server.graph_loader import GraphLoader
 
 # graph = GraphLoader.get_graph("large")
 # constraints = {Colour.BLUE: 50, Colour.RED: 50}
-# k = 10
+# k = 5
 
 graph = GraphLoader.get_graph("medium")
 constraints = {Colour.BLUE: 10, Colour.RED: 10}
