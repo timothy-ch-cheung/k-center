@@ -32,7 +32,8 @@ expected_population = [
     {64, 108, 22, 60, 29},
     {106, 44, 52, 89, 92},
     {106, 16, 22, 27, 29},
-    {70, 42, 106, 45, 24}
+    {70, 42, 106, 45, 24},
+    {42, 106, 77, 89, 92}
 ]
 
 first_individual = 1
@@ -40,7 +41,7 @@ x += [graph.nodes()[i]["pos"][0] for i in expected_population[first_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[first_individual]]
 color_indices += [1 for x in range(5)]
 
-second_individual = 0
+second_individual = 8
 x += [graph.nodes()[i]["pos"][0] for i in expected_population[second_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[second_individual]]
 color_indices += [2 for x in range(5)]
