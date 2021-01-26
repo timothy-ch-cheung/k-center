@@ -59,7 +59,7 @@ def test_pbs_medium_graph(seed_random):
     assert verify_solution(graph, STRICT_CONSTRAINTS, 3, radius, set(clusters.keys())) is True
 
 
-# @pytest.mark.skip(reason="Takes too long to run")
+@pytest.mark.skip(reason="Takes too long to run")
 def test_pbs_large_graph(seed_random):
     constraints = {Colour.BLUE: 50, Colour.RED: 50}
     k = 10
