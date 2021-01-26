@@ -97,13 +97,6 @@ class Individual:
                 nearest_center = Neighbour(point=point, cost=0)
 
             self.nearest_centers[point] = NearestCenters(nearest_center, second_nearest_center)
-        furthest_point = max(points,
-                             key=lambda x: 0
-                             if self.nearest_centers[x].nearest is None
-                             else self.nearest_centers[x].nearest.cost
-                             )
-        if self.nearest_centers[furthest_point].nearest is not None:
-            self.cost = self.nearest_centers[furthest_point].nearest.cost
 
     def copy(self):
         return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
@@ -182,6 +175,23 @@ class PBS(AbstractSolver):
         if nw is None:
             nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
+
+    def find_cost(self, individual: Individual) -> Individual:
+        furthest_point = max(self.points,
+                             key=lambda x: 0
+                             if individual.nearest_centers[x].nearest is None
+                             else individual.nearest_centers[x].nearest.cost
+                             )
+        if individual.nearest_centers[furthest_point].nearest is not None:
+            individual.cost = individual.nearest_centers[furthest_point].nearest.cost
+        else:
+            individual.cost = 0
+
+        return individual
+
+    def init_individual(self, individual: Individual):
+        individual.init_nearest_centers(self.points, self.weights)
+        self.find_cost(individual)
 
     def add_center(self, center: int, individual: Individual):
         """Add a center to the individual and update neighbours
@@ -373,7 +383,7 @@ class PBS(AbstractSolver):
         retained_centers = random.sample(individual.centers, q)
         new_centers = random.sample(other_points, self.k - q)
         child_solution = Individual(centers=set(retained_centers + new_centers))
-        child_solution.init_nearest_centers(self.points, self.weights)
+        self.init_individual(child_solution)
         return child_solution
 
     def mutation_directed(self, individual: Individual):
@@ -394,7 +404,7 @@ class PBS(AbstractSolver):
         if closest_centers:
             new_centers = new_centers.difference(closest_centers)
         child_solution = Individual(centers=new_centers)
-        child_solution.init_nearest_centers(self.points, self.weights)
+        self.init_individual(child_solution)
         return child_solution
 
     def crossover_random(self, first_parent: Individual, second_parent: Individual):
@@ -406,7 +416,7 @@ class PBS(AbstractSolver):
         """
         new_centers = set(random.sample(first_parent.centers.union(second_parent.centers), self.k))
         child_solution = Individual(centers=new_centers)
-        child_solution.init_nearest_centers(self.points, self.weights)
+        self.init_individual(child_solution)
         return child_solution
 
     def crossover_directed(self, first_parent: Individual, second_parent: Individual):
@@ -433,9 +443,9 @@ class PBS(AbstractSolver):
             child = Individual(centers=centers)
             if len(child.centers) > pbs.k:
                 child.centers = set(random.sample(child.centers, pbs.k))
-                child.init_nearest_centers(pbs.points, pbs.weights)
+                pbs.init_individual(child)
             else:
-                child.init_nearest_centers(pbs.points, pbs.weights)
+                pbs.init_individual(child)
             return child
 
         INTERVAL_START = 0.1
@@ -503,7 +513,7 @@ class PBS(AbstractSolver):
         while len(population) < PBS.POPULATION_SIZE:
             init_center = {random.choice(tuple(self.points))}
             candidate = Individual(init_center)
-            candidate.init_nearest_centers(self.points, self.weights)
+            self.init_individual(candidate)
             self.local_search(candidate, 0)
             if self.is_diverse(candidate):
                 population.append(candidate)
@@ -533,6 +543,7 @@ class PBS(AbstractSolver):
                     first_child, second_child = self.crossover_directed(individual, sibling)
                     self.update_population(self.local_search(self.mutation_directed(first_child), generation))
                     self.update_population(self.local_search(self.mutation_directed(second_child), generation))
+                    print()
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         self.evolve()

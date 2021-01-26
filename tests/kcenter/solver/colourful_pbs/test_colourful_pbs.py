@@ -1,6 +1,6 @@
 import pytest
 
-from kcenter.pbs.pbs import Individual
+from src.kcenter.pbs.pbs import Individual
 from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.verify.verify import verify_solution

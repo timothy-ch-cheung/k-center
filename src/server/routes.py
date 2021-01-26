@@ -2,7 +2,7 @@ import time
 
 from flask import render_template, request, jsonify, Blueprint
 
-from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
+from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.pbs.pbs import PBS
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour

@@ -22,7 +22,7 @@ def test_find_cost_basic_graph_outlier(seed_random):
         4: NearestCenters(Neighbour(3, 0.7071), Neighbour(0, 5.5154))
     }
     optimised_individual = Individual({0, 3}, 0.7071, nearest_centers)
-    optimised_individual = instance.find_colourful_cost(optimised_individual)
+    optimised_individual = instance.find_cost(optimised_individual)
     assert optimised_individual.cost == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
 
 
@@ -41,7 +41,7 @@ def test_find_cost_large_graph_bad_centers(seed_random):
     }
     optimised_individual = Individual({3, 4}, 5.6303, nearest_centers)
 
-    optimised_individual = instance.find_colourful_cost(optimised_individual)
+    optimised_individual = instance.find_cost(optimised_individual)
     assert optimised_individual.cost == pytest.approx(5.511, FLOAT_ERROR_MARGIN)
 
 
@@ -54,5 +54,5 @@ def test_find_cost_large_graph(seed_random):
     optimised_individual = Individual({0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 46.0624)
     optimised_individual.init_nearest_centers(instance.points, instance.weights)
 
-    optimised_individual = instance.find_colourful_cost(optimised_individual)
+    optimised_individual = instance.find_cost(optimised_individual)
     assert optimised_individual.cost == pytest.approx(12.5, FLOAT_ERROR_MARGIN)

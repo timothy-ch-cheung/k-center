@@ -88,7 +88,6 @@ def test_individual_init_centers():
         (4, 0): 5.5154, (4, 1): 5.8138, (4, 2): 6.3694, (4, 3): 0.7071, (4, 4): 0
     })
     assert individual.centers == {0, 4}
-    assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
     expected_nearest_centers = [
         NearestCenters(Neighbour(0, 0), Neighbour(4, 5.515)),
         NearestCenters(Neighbour(0, 0.5099), Neighbour(4, 5.8138)),

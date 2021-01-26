@@ -1,5 +1,7 @@
 import pytest
 
+from src.kcenter.constant.colour import Colour
+from src.server.graph_loader import GraphLoader
 from src.kcenter.pbs.pbs import PBS, Individual
 from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.solver.pbs.test_pbs import K, STRICT_CONSTRAINTS
@@ -22,7 +24,6 @@ def test_add_center():
 
     individual = Individual({0, 4})
     individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}",
         "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}",
@@ -80,7 +81,6 @@ def test_remove_center():
 
     individual = Individual({0, 4})
     individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}",
         "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}",
@@ -109,11 +109,24 @@ def test_find_pair(seed_random):
 
     individual = Individual({0, 1})
     individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(5.515, FLOAT_ERROR)
 
     old_center, new_center = instance.find_pair(4, individual)
     assert new_center == 4
     assert old_center == 0
+
+
+def test_find_pair_large_graph(seed_random):
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 5
+    graph = GraphLoader.get_graph("large")
+    instance = PBS(graph, k, constraints)
+
+    individual = Individual({32, 77, 89, 92, 106})
+    individual.init_nearest_centers(instance.points, instance.weights)
+
+    old_center, new_center = instance.find_pair(4, individual)
+    assert new_center == 38
+    assert old_center == 106
 
 
 def test_local_search(seed_random):
@@ -122,6 +135,7 @@ def test_local_search(seed_random):
 
     individual = Individual({0, 1})
     individual.init_nearest_centers(instance.points, instance.weights)
+    individual.cost = instance.find_cost(individual).cost
 
     instance.local_search(individual, 3)
     assert individual.centers == {2, 4}
