@@ -4,6 +4,23 @@ from src.kcenter.pbs.pbs import Individual, Neighbour, NearestCenters
 from tests.kcenter.constant.consts import FLOAT_ERROR
 
 
+def test_inividual_equality():
+    first_individual = Individual({0, 1, 2, 3})
+    second_individual = Individual({0, 1, 2, 3})
+    assert first_individual == second_individual
+
+
+def test_inividual_inquality():
+    first_individual = Individual({0, 1, 2, 3})
+    second_individual = Individual({0, 1, 4, 5})
+    assert first_individual != second_individual
+
+
+def test_inividual_inquality_different_type():
+    first_individual = Individual({0, 1, 2, 3})
+    assert first_individual != float(100)
+
+
 def test_neighbour_equality():
     first_neighbour = Neighbour(1, 2.1)
     second_neighbour = Neighbour(1, 2.1)
