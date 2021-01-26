@@ -502,8 +502,9 @@ class PBS(AbstractSolver):
             init_center = {random.choice(tuple(self.points))}
             candidate = Individual(init_center)
             candidate.init_nearest_centers(self.points, self.weights)
+            self.local_search(candidate, 0)
             if self.is_diverse(candidate):
-                population.append(self.local_search(candidate, 0))
+                population.append(candidate)
         return population
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:

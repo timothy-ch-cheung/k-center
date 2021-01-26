@@ -24,6 +24,8 @@ color_indices = [0 for i in range(len(x))]
 #     {0, 18, 3, 13}
 # ]
 
+# 8: cost=51
+# 9: cost=45.407
 expected_population = [
     {103, 106, 12, 15, 91},
     {106, 108, 51, 60, 29},
@@ -33,15 +35,16 @@ expected_population = [
     {106, 44, 52, 89, 92},
     {106, 16, 22, 27, 29},
     {70, 42, 106, 45, 24},
-    {42, 106, 77, 89, 92}
+    {42, 106, 77, 89, 92},
+    {35, 69, 106, 12, 113}
 ]
 
-first_individual = 1
+first_individual = 8
 x += [graph.nodes()[i]["pos"][0] for i in expected_population[first_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[first_individual]]
 color_indices += [1 for x in range(5)]
 
-second_individual = 8
+second_individual = 9
 x += [graph.nodes()[i]["pos"][0] for i in expected_population[second_individual]]
 y += [graph.nodes()[i]["pos"][1] for i in expected_population[second_individual]]
 color_indices += [2 for x in range(5)]
