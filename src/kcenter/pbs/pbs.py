@@ -463,7 +463,7 @@ class PBS(AbstractSolver):
         def is_between(lower_bound: float, upper_bound: float, value: float):
             return lower_bound <= value <= upper_bound
 
-        CENTER_THRESHHOLD = 0.2
+        CENTER_THRESHHOLD = 0.01
         COST_THRESHHOLD = 0.01
         is_diverse = True
         for individual in self.population:
