@@ -1,6 +1,6 @@
 import pytest
 
-from server.graph_loader import GraphLoader
+from src.server.graph_loader import GraphLoader
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS
 from src.kcenter.verify.verify import verify_solution
@@ -62,7 +62,7 @@ def test_pbs_medium_graph(seed_random):
 @pytest.mark.skip(reason="Takes too long to run")
 def test_pbs_large_graph(seed_random):
     constraints = {Colour.BLUE: 50, Colour.RED: 50}
-    k = 10
+    k = 5
     graph = GraphLoader.get_graph("large")
     instance = PBS(graph, 10, constraints)
     clusters, outliers, radius = instance.solve()

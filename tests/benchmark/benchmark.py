@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 graph = GraphLoader.get_graph("large")
-instance = PBS(graph, 10, {Colour.BLUE: 50, Colour.RED: 50})
+instance = PBS(graph, 5, {Colour.BLUE: 50, Colour.RED: 50})
 
 TRIALS = 100
 costs = []

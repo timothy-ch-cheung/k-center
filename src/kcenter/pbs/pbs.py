@@ -112,6 +112,11 @@ class Individual:
         return "{centers: " + str(
             list(self.centers)) + f", cost: {self.cost}, nearest_centers: {self.nearest_centers}" + "}"
 
+    def __eq__(self, other):
+        if isinstance(other, Individual):
+            return self.cost == other.centers
+        return False
+
 
 class PBS(AbstractSolver):
     """
@@ -513,9 +518,9 @@ class PBS(AbstractSolver):
         self.no_update_count = 0
 
         for generation in range(1, PBS.GENERATIONS + 1):
-            for i, individual in enumerate(self.population):
-                for j, sibling in enumerate(self.population):
-                    if i == j:
+            for individual in self.population:
+                for sibling in self.population:
+                    if individual == sibling:
                         continue
                     self.update_population(self.local_search(self.mutation_random(individual), generation))
                     self.update_population(

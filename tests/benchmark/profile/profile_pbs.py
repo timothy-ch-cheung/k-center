@@ -8,11 +8,11 @@ from src.server.graph_loader import GraphLoader
 # graph = GraphLoader.get_graph("k_center")
 # instance = PBS(graph, 5, {Colour.BLUE: 0, Colour.RED: 20})
 
-# graph = GraphLoader.get_graph("large")
-# instance = PBS(graph, 10, {Colour.BLUE: 50, Colour.RED: 50})
+graph = GraphLoader.get_graph("large")
+instance = PBS(graph, 5, {Colour.BLUE: 50, Colour.RED: 50})
 
-graph = GraphLoader.get_graph("medium")
-instance = PBS(graph, 4, {Colour.BLUE: 10, Colour.RED: 10})
+# graph = GraphLoader.get_graph("medium")
+# instance = PBS(graph, 4, {Colour.BLUE: 10, Colour.RED: 10})
 
 # graph = GraphLoader.get_graph("thousand")
 # instance = PBS(graph, 50, {Colour.BLUE: 500, Colour.RED: 500})
