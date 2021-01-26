@@ -114,7 +114,7 @@ class Individual:
 
     def __eq__(self, other):
         if isinstance(other, Individual):
-            return self.cost == other.centers
+            return self.centers == other.centers
         return False
 
 
