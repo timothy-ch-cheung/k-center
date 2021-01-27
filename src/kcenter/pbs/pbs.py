@@ -66,11 +66,9 @@ class Individual:
     """
 
     def __init__(self, centers: Set[int], cost=0, nearest_centers=None):
-        if nearest_centers is None:
-            nearest_centers = {}
         self.centers = centers
         self.cost = cost
-        self.nearest_centers = nearest_centers
+        self.nearest_centers = nearest_centers or {}
 
     def init_nearest_centers(self, points: Set[int], weights: Dict[Tuple[int, int], float]):
         """

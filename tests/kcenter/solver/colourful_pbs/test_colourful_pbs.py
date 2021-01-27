@@ -14,15 +14,24 @@ def test_colourful_pbs_find_pair(seed_random):
     k = 2
     graph = basic_graph_with_outlier()
     instance = ColourfulPBS(graph, k, constraints)
-    individual = Individual({16, 19, 6, 23}, 35.7436)
+
+    individual = Individual({1, 2})
     instance.init_individual(individual)
+    assert individual.cost == pytest.approx(5.5108, FLOAT_ERROR_MARGIN)
+
     furthest_point = instance.get_furthest_point(individual)
     point_to_remove, point_to_add = instance.find_pair(furthest_point, individual)
     assert point_to_remove == 2
-    assert point_to_add == 4
+    assert point_to_add == 3
+
+    instance.remove_center(point_to_remove, individual)
+    instance.add_center(point_to_add, individual)
+    instance.find_cost(individual)
+
+    assert individual.cost == pytest.approx(0.7071, FLOAT_ERROR_MARGIN)
 
 
-def test_colourful_pbs_find_pair(seed_random):
+def test_colourful_pbs_find_pair_medium(seed_random):
     constraints = {Colour.BLUE: 10, Colour.RED: 10}
     k = 4
     graph = GraphLoader.get_graph("medium")
@@ -30,12 +39,38 @@ def test_colourful_pbs_find_pair(seed_random):
 
     individual = Individual({0, 1, 5, 3})
     instance.init_individual(individual)
-    assert individual.cost == pytest.approx(11.0000)
+    assert individual.cost == pytest.approx(11.0000, FLOAT_ERROR_MARGIN)
 
     furthest_point = instance.get_furthest_point(individual)
     assert furthest_point == 4
-    instance.local_search(individual, 3)
-    assert True
+
+    point_to_remove, point_to_add = instance.find_pair(4, individual)
+    instance.remove_center(point_to_remove, individual)
+    instance.add_center(point_to_add, individual)
+    instance.find_cost(individual)
+
+    assert individual.cost == pytest.approx(6.6930, FLOAT_ERROR_MARGIN)
+
+
+def test_colourful_pbs_find_pair_large(seed_random):
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 5
+    graph = GraphLoader.get_graph("large")
+    instance = ColourfulPBS(graph, k, constraints)
+
+    individual = Individual({1, 2, 3, 107, 5})
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(26.5988, FLOAT_ERROR_MARGIN)
+
+    furthest_point = instance.get_furthest_point(individual)
+    assert furthest_point == 45
+
+    point_to_remove, point_to_add = instance.find_pair(45, individual)
+    instance.remove_center(point_to_remove, individual)
+    instance.add_center(point_to_add, individual)
+    instance.find_cost(individual)
+
+    assert individual.cost == pytest.approx(23.3164, FLOAT_ERROR_MARGIN)
 
 
 def test_pbs_colourful_basic_graph_outlier(seed_random):
