@@ -26,6 +26,19 @@ def test_find_cost_basic_graph_outlier(seed_random):
     assert optimised_individual.cost == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
 
 
+def test_find_cost_basic_graph_outlier_non_optimal(seed_random):
+    constraints = {Colour.BLUE: 2, Colour.RED: 2}
+    k = 2
+    graph = basic_graph_with_outlier()
+    instance = ColourfulPBS(graph, k, constraints)
+
+    optimised_individual = Individual({1, 2}, 5.8138)
+    optimised_individual.init_nearest_centers(instance.points, instance.weights)
+
+    optimised_individual = instance.find_cost(optimised_individual)
+    assert optimised_individual.cost == pytest.approx(5.5109, FLOAT_ERROR_MARGIN)
+
+
 def test_find_cost_large_graph_bad_centers(seed_random):
     constraints = {Colour.BLUE: 2, Colour.RED: 2}
     k = 2

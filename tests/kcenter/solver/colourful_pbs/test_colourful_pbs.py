@@ -14,7 +14,7 @@ def test_colourful_pbs_find_pair(seed_random):
     graph = basic_graph_with_outlier()
     instance = ColourfulPBS(graph, k, constraints)
     individual = Individual({0, 2}, 5.5154)
-    individual.init_nearest_centers(instance.points, instance.weights)
+    instance.init_individual(individual)
     furthest_point = instance.get_furthest_point(individual)
     point_to_remove, point_to_add = instance.find_pair(furthest_point, individual)
     assert point_to_remove == 2

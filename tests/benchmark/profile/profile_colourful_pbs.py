@@ -12,7 +12,7 @@ from src.server.graph_loader import GraphLoader
 
 graph = GraphLoader.get_graph("large")
 constraints = {Colour.BLUE: 50, Colour.RED: 50}
-k = 10
+k = 5
 
 # graph = GraphLoader.get_graph("basic")
 # constraints = {Colour.BLUE: 2, Colour.RED: 2}
@@ -22,7 +22,7 @@ k = 10
 # constraints = {Colour.BLUE: 500, Colour.RED: 500}
 # k = 50
 
-instance = ColourfulPBS(graph, 10, constraints)
+instance = ColourfulPBS(graph, 5, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()
