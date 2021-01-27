@@ -1,10 +1,11 @@
-import random, math
+import math
+import random
 from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
 
-from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
@@ -64,7 +65,9 @@ class Individual:
     An individual in the population, storing centers that form a solution and the cost of the solution.
     """
 
-    def __init__(self, centers: Set[int], cost=0, nearest_centers={}):
+    def __init__(self, centers: Set[int], cost=0, nearest_centers=None):
+        if nearest_centers is None:
+            nearest_centers = {}
         self.centers = centers
         self.cost = cost
         self.nearest_centers = nearest_centers

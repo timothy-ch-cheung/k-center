@@ -14,6 +14,10 @@ graph = GraphLoader.get_graph("large")
 constraints = {Colour.BLUE: 50, Colour.RED: 50}
 k = 5
 
+# graph = GraphLoader.get_graph("medium")
+# constraints = {Colour.BLUE: 10, Colour.RED: 10}
+# k = 4
+
 # graph = GraphLoader.get_graph("basic")
 # constraints = {Colour.BLUE: 2, Colour.RED: 2}
 # k = 2
@@ -22,7 +26,7 @@ k = 5
 # constraints = {Colour.BLUE: 500, Colour.RED: 500}
 # k = 50
 
-instance = ColourfulPBS(graph, 5, constraints)
+instance = ColourfulPBS(graph, k, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()
