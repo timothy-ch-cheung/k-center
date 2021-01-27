@@ -344,9 +344,6 @@ class PBS(AbstractSolver):
             self.add_center(new_center, individual)
         self.find_cost(individual)
 
-    def update_cost_after_search_iteration(self, individual: Individual):
-        pass
-
     def local_search(self, individual: Individual, generation: int) -> Individual:
         """Local search on an individual in the population to find the locally optimise solution
 
@@ -368,7 +365,6 @@ class PBS(AbstractSolver):
             if (point_to_remove, point_to_add) not in swapped:
                 self.remove_center(point_to_remove, optimised_individual)
                 self.add_center(point_to_add, optimised_individual)
-                # self.update_cost_after_search_iteration(optimised_individual)
                 swapped.add((point_to_remove, point_to_add))
 
             iteration += 1

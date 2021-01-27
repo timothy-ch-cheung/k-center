@@ -37,13 +37,12 @@ class ColourfulPBS(PBS):
         individual.cost = colourful_cost
         return individual
 
-    # def get_furthest_point(self, individual: Individual):
-    #     if len(individual.centers) == 0:
-    #         return 0
-    #     for point in self.points:
-    #         if individual.nearest_centers[point].nearest.cost == individual.cost:
-    #             return point
-    #     return None
+    def get_furthest_point(self, individual: Individual):
+        if len(individual.centers) == 0:
+            return next(iter(self.points))
+        for point in self.points:
+            if individual.nearest_centers[point].nearest.cost == individual.cost:
+                return point
 
     def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
         """Find the optimal center and vertex pair to swap to reduce cost
