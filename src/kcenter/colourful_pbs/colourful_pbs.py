@@ -38,18 +38,25 @@ class ColourfulPBS(PBS):
         individual.cost = colourful_cost
         return colourful_cost
 
-    # def get_furthest_point(self, individual: Individual) -> int:
-    #     """Calculates the point that is the furthest point covered the current K-Center Colourful cost of the individual
-    #
-    #     :param individual: individual in the population with nearest_centers
-    #     return: point which is furthest away from a center, if there are no centers the first point in the graph is
-    #     returned
-    #     """
-    #     if len(individual.centers) == 0:
-    #         return next(iter(self.points))
-    #     for point in self.points:
-    #         if individual.nearest_centers[point].nearest.cost == individual.cost:
-    #             return point
+    def get_furthest_point(self, individual: Individual) -> int:
+        """Calculates the point that is the furthest point covered the current K-Center Colourful cost of the individual
+
+        :param individual: individual in the population with nearest_centers
+        return: point which is furthest away from a center, if there are no centers the first point in the graph is
+        returned
+        """
+        max_cost = 0
+        max_point = 0
+        for p in self.points:
+            nearest = individual.nearest_centers[p].nearest
+            if nearest is not None:
+                if max_cost < nearest.cost <= individual.cost:
+                    max_point = p
+                    max_cost = nearest.cost
+        return max_point
+
+    def get_next_point(self, individual: Individual):
+        return super().get_furthest_point(individual)
 
     def add_center(self, center: int, individual: Individual):
         """Add a center to the individual and update neighbours
