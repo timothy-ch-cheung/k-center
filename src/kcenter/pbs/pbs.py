@@ -289,9 +289,7 @@ class PBS(AbstractSolver):
             self.add_center(i, individual)
 
             # M stores the cost of remove facility f from the solution
-            M = {}
-            for center in individual.centers:
-                M[center] = 0
+            M = {center: 0 for center in individual.centers}
 
             for point in self.points.difference(individual.centers):
                 nearest_centers = individual.nearest_centers[point]

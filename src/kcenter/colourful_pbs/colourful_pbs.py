@@ -64,9 +64,7 @@ class ColourfulPBS(PBS):
             self.add_center(i, individual)
 
             # M stores the cost of remove facility f from the solution
-            M = {}
-            for center in individual.centers:
-                M[center] = 0
+            M = {center: 0 for center in individual.centers}
 
             for point in self.points.difference(individual.centers):
                 nearest_centers = individual.nearest_centers[point]
@@ -77,7 +75,9 @@ class ColourfulPBS(PBS):
                 if min_dist < individual.cost:
                     M[nearest.point] += 1
 
-            for center in individual.centers.difference({i}):
+            for center in individual.centers:
+                if center == i:
+                    continue
                 if M[center] == C:
                     L.add((center, i))
                 elif M[center] < C:
