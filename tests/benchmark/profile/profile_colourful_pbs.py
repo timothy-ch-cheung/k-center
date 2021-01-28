@@ -4,7 +4,6 @@ import pstats
 from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from kcenter.verify.verify import verify_solution
 from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.pbs import PBS
 from src.server.graph_loader import GraphLoader
 
 # graph = GraphLoader.get_graph("k_center")
@@ -27,8 +26,7 @@ k = 5
 # constraints = {Colour.BLUE: 500, Colour.RED: 500}
 # k = 50
 
-# instance = PBS(graph, k, constraints)
-instance = PBS(graph, k, constraints)
+instance = ColourfulPBS(graph, k, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()

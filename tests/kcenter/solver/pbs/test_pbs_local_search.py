@@ -1,5 +1,7 @@
 import pytest
 
+from src.kcenter.constant.colour import Colour
+from src.server.graph_loader import GraphLoader
 from src.kcenter.pbs.pbs import PBS, Individual
 from tests.kcenter.constant.consts import FLOAT_ERROR
 from tests.kcenter.solver.pbs.test_pbs import K, STRICT_CONSTRAINTS
@@ -11,7 +13,8 @@ def test_find_next_second_nearest_to_none():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0})
-    individual.init_nearest_centers(instance.points, instance.weights)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
 
     assert instance.find_next(point=0, individual=individual) == None
 
@@ -21,8 +24,8 @@ def test_add_center():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 4})
-    individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(0.8544, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}",
         "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}",
@@ -50,8 +53,8 @@ def test_add_center_empty_centers():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual(set())
-    individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(0, FLOAT_ERROR)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(6.3694, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': None, 'second_nearest_center': None}",
         "{'nearest_center': None, 'second_nearest_center': None}",
@@ -79,8 +82,8 @@ def test_remove_center():
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 4})
-    individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(0.854, FLOAT_ERROR)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(0.8544, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': {point: 4, cost: 5.515}}",
         "{'nearest_center': {point: 0, cost: 0.51}, 'second_nearest_center': {point: 4, cost: 5.814}}",
@@ -108,12 +111,33 @@ def test_find_pair(seed_random):
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 1})
-    individual.init_nearest_centers(instance.points, instance.weights)
-    assert individual.cost == pytest.approx(5.515, FLOAT_ERROR)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
 
     old_center, new_center = instance.find_pair(4, individual)
     assert new_center == 4
     assert old_center == 0
+    instance.remove_center(old_center, individual)
+    instance.add_center(new_center, individual)
+    assert individual.cost == pytest.approx(0.7280, FLOAT_ERROR)
+
+
+def test_find_pair_large_graph(seed_random):
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 5
+    graph = GraphLoader.get_graph("large")
+    instance = PBS(graph, k, constraints)
+
+    individual = Individual({32, 77, 89, 92, 106})
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(130.6105, FLOAT_ERROR)
+
+    old_center, new_center = instance.find_pair(4, individual)
+    assert new_center == 38
+    assert old_center == 106
+    instance.remove_center(old_center, individual)
+    instance.add_center(new_center, individual)
+    assert individual.cost == pytest.approx(117.7075, FLOAT_ERROR)
 
 
 def test_local_search(seed_random):
@@ -121,7 +145,9 @@ def test_local_search(seed_random):
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 1})
-    individual.init_nearest_centers(instance.points, instance.weights)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
 
-    instance.local_search(individual, 3)
+    individual = instance.local_search(individual, 3)
     assert individual.centers == {2, 4}
+    assert individual.cost == pytest.approx(0.8544, FLOAT_ERROR)

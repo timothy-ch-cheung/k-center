@@ -2,6 +2,7 @@ import time
 
 from flask import render_template, request, jsonify, Blueprint
 
+from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.pbs.pbs import PBS
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
@@ -14,7 +15,8 @@ k_center_algorithms = {
     "greedy": GreedySolver,
     "greedy_reduce": GreedyReduceSolver,
     "colourful_bandyapadhyay": ConstantColourfulKCenterSolver,
-    "pbs": PBS
+    "pbs": PBS,
+    "colourful_pbs": ColourfulPBS
 }
 
 
