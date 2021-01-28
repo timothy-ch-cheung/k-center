@@ -15,6 +15,7 @@ class ColourfulPBS(PBS):
         """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
 
         :param individual: individual after being optimised by PBS local search
+        return: cost of meeting the coverage constraints given the centers
         """
         if len(individual.centers) == 0:
             individual.cost = self.MAX_WEIGHT
@@ -37,7 +38,12 @@ class ColourfulPBS(PBS):
         individual.cost = colourful_cost
         return colourful_cost
 
-    def get_furthest_point(self, individual: Individual):
+    def get_furthest_point(self, individual: Individual) -> int:
+        """Calculates the point that is the furthest point covered the current K-Center Colourful cost of the individual
+
+        :param individual: individual in the population with nearest_centers
+        return: point which is furthest away
+        """
         if len(individual.centers) == 0:
             return next(iter(self.points))
         for point in self.points:
@@ -46,6 +52,9 @@ class ColourfulPBS(PBS):
 
     def find_pair(self, w: int, individual: Individual) -> Tuple[int, int]:
         """Find the optimal center and vertex pair to swap to reduce cost
+
+        Finds a swap between a center which covers the smallest number of points and a vertex not in the current
+        solution
 
         :param w: point to get neighbours from
         :param individual: Individual in population
