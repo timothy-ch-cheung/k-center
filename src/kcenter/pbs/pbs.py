@@ -177,7 +177,7 @@ class PBS(AbstractSolver):
             nw = graph.nodes()[w]["neighbours"]
         return nw[:k]
 
-    def find_cost(self, individual: Individual) -> Individual:
+    def find_cost(self, individual: Individual) -> float:
         furthest_point = max(self.points,
                              key=lambda x: 0
                              if individual.nearest_centers[x].nearest is None
@@ -186,9 +186,8 @@ class PBS(AbstractSolver):
         if individual.nearest_centers[furthest_point].nearest is not None:
             individual.cost = individual.nearest_centers[furthest_point].nearest.cost
         else:
-            individual.cost = 0
-
-        return individual
+            individual.cost = self.MAX_WEIGHT
+        return individual.cost
 
     def init_individual(self, individual: Individual):
         individual.init_nearest_centers(self.points, self.weights)

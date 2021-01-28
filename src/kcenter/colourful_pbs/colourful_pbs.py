@@ -11,14 +11,14 @@ class ColourfulPBS(PBS):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def find_cost(self, individual: Individual) -> Individual:
+    def find_cost(self, individual: Individual) -> float:
         """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
 
         :param individual: individual after being optimised by PBS local search
         """
         if len(individual.centers) == 0:
             individual.cost = self.MAX_WEIGHT
-            return individual
+            return individual.cost
 
         clustered_points = set()
         total = {Colour.BLUE: 0, Colour.RED: 0}
@@ -35,7 +35,7 @@ class ColourfulPBS(PBS):
                 colourful_cost = nearest.cost
 
         individual.cost = colourful_cost
-        return individual
+        return colourful_cost
 
     def get_furthest_point(self, individual: Individual):
         if len(individual.centers) == 0:
@@ -88,4 +88,5 @@ class ColourfulPBS(PBS):
 
     def local_search(self, individual: Individual, generation: int) -> Individual:
         optimised_individual = super().local_search(individual, generation)
-        return self.find_cost(optimised_individual)
+        optimised_individual.cost = self.find_cost(optimised_individual)
+        return optimised_individual

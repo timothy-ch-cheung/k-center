@@ -54,7 +54,7 @@ def test_add_center_empty_centers():
 
     individual = Individual(set())
     instance.init_individual(individual)
-    assert individual.cost == pytest.approx(0.0000, FLOAT_ERROR)
+    assert individual.cost == pytest.approx(6.3694, FLOAT_ERROR)
     expected_nearest_centers = [
         "{'nearest_center': None, 'second_nearest_center': None}",
         "{'nearest_center': None, 'second_nearest_center': None}",
