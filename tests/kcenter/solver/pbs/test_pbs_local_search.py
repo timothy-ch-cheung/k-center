@@ -108,11 +108,15 @@ def test_find_pair(seed_random):
     instance = PBS(graph, K, STRICT_CONSTRAINTS)
 
     individual = Individual({0, 1})
-    individual.init_nearest_centers(instance.points, instance.weights)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
 
     old_center, new_center = instance.find_pair(4, individual)
     assert new_center == 4
     assert old_center == 0
+    instance.remove_center(old_center, individual)
+    instance.add_center(new_center, individual)
+    assert individual.cost == pytest.approx(0.7280, FLOAT_ERROR)
 
 
 def test_find_pair_large_graph(seed_random):
@@ -122,11 +126,15 @@ def test_find_pair_large_graph(seed_random):
     instance = PBS(graph, k, constraints)
 
     individual = Individual({32, 77, 89, 92, 106})
-    individual.init_nearest_centers(instance.points, instance.weights)
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(130.6105, FLOAT_ERROR)
 
     old_center, new_center = instance.find_pair(4, individual)
     assert new_center == 38
     assert old_center == 106
+    instance.remove_center(old_center, individual)
+    instance.add_center(new_center, individual)
+    assert individual.cost == pytest.approx(117.7075, FLOAT_ERROR)
 
 
 def test_local_search(seed_random):
