@@ -147,8 +147,7 @@ def test_local_search(seed_random):
     individual = Individual({0, 1})
     instance.init_individual(individual)
     assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
-    individual.cost = instance.find_cost(individual).cost
 
-    instance.local_search(individual, 3)
+    individual = instance.local_search(individual, 3)
     assert individual.centers == {2, 4}
-    assert individual.cost == pytest.approx(5.5154, FLOAT_ERROR)
+    assert individual.cost == pytest.approx(0.8544, FLOAT_ERROR)

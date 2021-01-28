@@ -514,7 +514,7 @@ class PBS(AbstractSolver):
             init_center = {random.choice(tuple(self.points))}
             candidate = Individual(init_center)
             self.init_individual(candidate)
-            self.local_search(candidate, 0)
+            candidate = self.local_search(candidate, 0)
             if self.is_diverse(candidate):
                 population.append(candidate)
         return population

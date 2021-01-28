@@ -26,7 +26,6 @@ def test_find_cost_basic_graph_outlier(seed_random):
     assert optimised_individual.cost == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
 
 
-# TODO: fails for some reason
 def test_find_cost_basic_graph_outlier_non_optimal(seed_random):
     constraints = {Colour.BLUE: 2, Colour.RED: 2}
     k = 2
