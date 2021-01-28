@@ -42,7 +42,8 @@ class ColourfulPBS(PBS):
         """Calculates the point that is the furthest point covered the current K-Center Colourful cost of the individual
 
         :param individual: individual in the population with nearest_centers
-        return: point which is furthest away
+        return: point which is furthest away from a center, if there are no centers the first point in the graph is
+        returned
         """
         if len(individual.centers) == 0:
             return next(iter(self.points))
