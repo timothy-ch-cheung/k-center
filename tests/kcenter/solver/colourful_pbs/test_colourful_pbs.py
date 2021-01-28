@@ -49,7 +49,7 @@ def test_colourful_pbs_find_pair_medium(seed_random):
     instance.add_center(point_to_add, individual)
     instance.find_cost(individual)
 
-    assert individual.cost == pytest.approx(6.6930, FLOAT_ERROR_MARGIN)
+    assert individual.cost == pytest.approx(5.5, FLOAT_ERROR_MARGIN)
 
 
 def test_colourful_pbs_find_pair_large(seed_random):
@@ -70,7 +70,29 @@ def test_colourful_pbs_find_pair_large(seed_random):
     instance.add_center(point_to_add, individual)
     instance.find_cost(individual)
 
-    assert individual.cost == pytest.approx(23.3164, FLOAT_ERROR_MARGIN)
+    assert individual.cost == pytest.approx(24.3196, FLOAT_ERROR_MARGIN)
+
+
+def test_colourful_pbs_find_pair_large_almost_solved(seed_random):
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 5
+    graph = GraphLoader.get_graph("large")
+    instance = ColourfulPBS(graph, k, constraints)
+
+    individual = Individual({0, 1, 2, 3, 90})
+    instance.init_individual(individual)
+    assert individual.cost == pytest.approx(18.2266, FLOAT_ERROR_MARGIN)
+
+    furthest_point = instance.get_furthest_point(individual)
+    assert furthest_point == 107
+
+    point_to_remove, point_to_add = instance.find_pair(107, individual)
+    instance.remove_center(point_to_remove, individual)
+    instance.add_center(point_to_add, individual)
+    instance.find_cost(individual)
+    # TODO: this should return a swap for 90 with 4
+    assert individual.cost == pytest.approx(16.62087, FLOAT_ERROR_MARGIN)
+
 
 
 def test_pbs_colourful_basic_graph_outlier(seed_random):
