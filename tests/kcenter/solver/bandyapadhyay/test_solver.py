@@ -1,17 +1,22 @@
 import pytest
 
+from kcenter.verify.verify import verify_solution
+from prototypes.Bandyapadhyay_Clustering import basic_graph_with_outlier
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenter
 from src.kcenter.constant.colour import Colour
-from src.server.graph_loader import GraphLoader
 from tests.kcenter.solver.greedy.test_greedy import FLOAT_ERROR_MARGIN
 
 
-@pytest.mark.skip(reason="LP currently uses POSITIVE_INTEGERS which does not include 0")
-def test_constant_colourful_extreme_point():
-    k = 1
-    constraint = {Colour.BLUE: 5, Colour.RED: 5}
-    graph = GraphLoader.get_graph("extreme_point")
-    solver = ConstantColourfulKCenter(graph, k, constraint)
+def test_greedy_basic_graph_with_outlier_clustering():
+    graph = basic_graph_with_outlier()
+    instance = ConstantColourfulKCenter(graph, 2, {Colour.BLUE: 2, Colour.RED: 2})
 
-    clusters, outliers, radius = solver.solve()
-    assert radius == pytest.approx(1.456, FLOAT_ERROR_MARGIN)
+    clusters, outliers, radius = instance.solve()
+    assert radius == pytest.approx(1.414, FLOAT_ERROR_MARGIN)
+    assert clusters == {
+        0: {0, 1},
+        3: {3, 4}
+    }
+    assert outliers == {2}
+    assert verify_solution(graph, {Colour.BLUE: 2, Colour.RED: 2}, k=2, radius=radius,
+                           centers=set(clusters.keys())) is True
