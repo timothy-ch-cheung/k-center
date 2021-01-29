@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
+from src.kcenter.bandyapadhyay_pseudo.radius_checker import RadiusChecker
 from tests.kcenter.util.create_test_graph import basic_graph
 
 graph = basic_graph()

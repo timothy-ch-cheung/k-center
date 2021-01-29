@@ -2,7 +2,7 @@ import cProfile
 import pstats
 
 from kcenter.verify.verify import verify_solution
-from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
+from src.kcenter.bandyapadhyay_pseudo.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
 from src.server.graph_loader import GraphLoader
 

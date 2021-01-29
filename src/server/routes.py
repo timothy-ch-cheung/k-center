@@ -4,7 +4,7 @@ from flask import render_template, request, jsonify, Blueprint
 
 from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.pbs.pbs import PBS
-from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
+from src.kcenter.bandyapadhyay_pseudo.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy import GreedySolver
 from src.kcenter.greedy.greedy_reduce import GreedyReduceSolver

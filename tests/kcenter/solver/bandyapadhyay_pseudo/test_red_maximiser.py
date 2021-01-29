@@ -1,4 +1,4 @@
-from src.kcenter.bandyapadhyay.red_maximiser import RedMaximiser
+from src.kcenter.bandyapadhyay_pseudo.red_maximiser import RedMaximiser
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
 

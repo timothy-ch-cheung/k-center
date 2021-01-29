@@ -1,6 +1,6 @@
 import pytest
 
-from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
+from src.kcenter.bandyapadhyay_pseudo.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
 from src.kcenter.verify.verify import verify_solution
 from tests.kcenter.solver.greedy.test_greedy import FLOAT_ERROR_MARGIN

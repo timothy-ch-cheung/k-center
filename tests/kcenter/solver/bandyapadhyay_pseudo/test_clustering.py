@@ -1,6 +1,6 @@
 import networkx as nx
 
-from src.kcenter.bandyapadhyay.clustering import cluster
+from src.kcenter.bandyapadhyay_pseudo.clustering import cluster
 from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_outlier
 
 

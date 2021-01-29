@@ -3,9 +3,9 @@ from typing import Tuple, Set, Generator, Dict, List
 
 import networkx as nx
 
-from src.kcenter.bandyapadhyay.clustering import cluster
-from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
-from src.kcenter.bandyapadhyay.red_maximiser import RedMaximiser
+from src.kcenter.bandyapadhyay_pseudo.clustering import cluster
+from src.kcenter.bandyapadhyay_pseudo.radius_checker import RadiusChecker
+from src.kcenter.bandyapadhyay_pseudo.red_maximiser import RedMaximiser
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
@@ -13,6 +13,8 @@ from src.kcenter.solver.abstract_solver import AbstractSolver
 class ConstantColourfulKCenterSolver(AbstractSolver):
     """Implementation based on the algorithm by Bandyapadhyay et al. from
     'A Constant Approximation for Colorful k-Center (2019)'
+
+    produces a pseudo approximation which opens at most k+1 centers with a 1
     """
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
