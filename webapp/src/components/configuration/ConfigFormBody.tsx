@@ -85,7 +85,8 @@ export default function (props: Props) {
             <Select onChange={handleAlgorithmSelectChange}>
                 <MenuItem value={"greedy"}>greedy</MenuItem>
                 <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
+                <MenuItem value={"colourful_bandyapadhyay_pseudo"}>O(1)-colourful (Pseudo approximation, Bandyapadhyay et al. 2019)</MenuItem>
+                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (17-approximation, Bandyapadhyay et al. 2019)</MenuItem>
                 <MenuItem value={"pbs"}>PBS (Pullan 2008)</MenuItem>
                 <MenuItem value={"colourful_pbs"}>Colourful PBS</MenuItem>
             </Select>
