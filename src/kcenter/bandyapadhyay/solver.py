@@ -34,5 +34,9 @@ class ConstantColourfulKCenter(ConstantPseudoColourfulKCenter):
         Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
         (LP2 Section 2.1 figure 2).
         """
-        solver = ConstantPseudoColourfulKCenter(self.graph, self.k - 1, self.constraints)
-        return solver.solve()
+        solver = ConstantPseudoColourfulKCenter(self.graph, self.k, self.constraints)
+        clusters, outliers, radius = solver.solve()
+        if len(clusters.keys()) > self.k:
+            solver = ConstantPseudoColourfulKCenter(self.graph, self.k - 1, self.constraints)
+            return solver.solve()
+        return clusters, outliers, radius
