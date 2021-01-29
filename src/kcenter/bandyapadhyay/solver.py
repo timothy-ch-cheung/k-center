@@ -57,14 +57,8 @@ class ConstantColourfulKCenterSolver(AbstractSolver):
         right = len(weights)
         last_valid_solution = None
         weight = weights[-1]
-        max_iterations = math.ceil(math.log(nodes, 2))
-        iteration = 0
 
         while left <= right:
-            if nodes > 500 and iteration >= max_iterations:
-                break
-            else:
-                iteration += 1
             mid = (left + right) // 2
             current_weight = weights[mid]
 
