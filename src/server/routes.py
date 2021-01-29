@@ -7,14 +7,14 @@ from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.pbs.pbs import PBS
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourfulKCenter
 from src.kcenter.constant.colour import Colour
-from src.kcenter.greedy.greedy import GreedySolver
-from src.kcenter.greedy.greedy_reduce import GreedyReduceSolver
+from src.kcenter.greedy.greedy import Greedy
+from src.kcenter.greedy.greedy_reduce import GreedyReduce
 from src.server.graph_loader import GraphLoader
 
 main = Blueprint('main', __name__)
 k_center_algorithms = {
-    "greedy": GreedySolver,
-    "greedy_reduce": GreedyReduceSolver,
+    "greedy": Greedy,
+    "greedy_reduce": GreedyReduce,
     "colourful_bandyapadhyay_pseudo": ConstantPseudoColourfulKCenter,
     "colourful_bandyapadhyay": ConstantColourfulKCenter,
     "pbs": PBS,

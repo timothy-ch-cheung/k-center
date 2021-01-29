@@ -3,11 +3,11 @@ from typing import Dict, Generator, Tuple, Set, List, Callable
 import networkx as nx
 
 from src.kcenter.constant.colour import Colour
-from src.kcenter.greedy.greedy import GreedySolver
+from src.kcenter.greedy.greedy import Greedy
 from src.kcenter.verify.verify import verify_solution
 
 
-class GreedyReduceSolver(GreedySolver):
+class GreedyReduce(Greedy):
     """Colorful K-Center solver that uses a greedy heuristic and minimizes the cost based on
     the colour constraints.
 
@@ -48,7 +48,7 @@ class GreedyReduceSolver(GreedySolver):
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         clusters, outliers, radius = super().solve()
-        weights = GreedyReduceSolver.get_weights(self.graph, radius)
+        weights = GreedyReduce.get_weights(self.graph, radius)
 
         centers = set(clusters.keys())
         new_weight = self.calculate_optimal_radius_binary(weights, centers)
@@ -64,24 +64,3 @@ class GreedyReduceSolver(GreedySolver):
         radius = new_weight
 
         return clusters, outliers, radius
-
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
-        solution = super().generator()
-        clusters, radius = {}, float("inf")
-        for step in solution:
-            clusters, outliers, radius, label, active = step
-            yield clusters, outliers, radius, label
-
-        weights = GreedyReduceSolver.get_weights(self.graph, radius)
-
-        new_weight = None
-        centers = set(clusters.keys())
-        for weight in weights:
-            if verify_solution(self.graph, self.constraints, self.k, weight, centers):
-                new_weight = weight
-                yield clusters, set(), new_weight, f"decrease weight to {round(new_weight, 3)}"
-            else:
-                break
-
-        radius = new_weight if new_weight is not None else radius
-        yield clusters, set(), radius, f"completed reduced solution to radius of {round(radius, 3)}"

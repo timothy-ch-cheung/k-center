@@ -2,13 +2,20 @@ import time
 
 from flask import request, Blueprint, jsonify
 
+from src.kcenter.greedy.stepped_greedy import SteppedGreedy
+from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
 from src.kcenter.constant.colour import Colour
 from src.server.graph_loader import GraphLoader
-from src.server.routes import k_center_algorithms, repackage_solution
+from src.server.routes import repackage_solution
 
 step = Blueprint('step', __name__)
 
 problem_instances = {}
+
+stepped_algorithms = {
+    "greedy": SteppedGreedy,
+    "greedy_reduce": SteppedGreedyReduce
+}
 
 
 @step.route('/api/v1/step/start', methods=["POST"])
@@ -23,7 +30,7 @@ def start():
     graph = GraphLoader.get_graph(graph_name)
     algorithm = request_data['algorithm']
 
-    instance = k_center_algorithms[algorithm](graph, k, constraints)
+    instance = stepped_algorithms[algorithm](graph, k, constraints)
     generator = instance.generator()
     problem_instances[id] = {"instance": instance, "generator": generator, "name": graph_name}
     return '', 204
