@@ -1,10 +1,10 @@
 import pytest
 
-from kcenter.verify.verify import verify_solution
-from prototypes.Bandyapadhyay_Clustering import basic_graph_with_outlier
+from src.kcenter.verify.verify import verify_solution
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenter
 from src.kcenter.constant.colour import Colour
 from tests.kcenter.solver.greedy.test_greedy import FLOAT_ERROR_MARGIN
+from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 
 
 def test_greedy_basic_graph_with_outlier_clustering():
