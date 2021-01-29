@@ -328,15 +328,18 @@ class PBS(AbstractSolver):
                     return p
         return max_point
 
+    def get_next_point(self, individual: Individual):
+        return self.get_furthest_point(individual)
+
     def initilise_local_search(self, individual: Individual):
         while len(individual.centers) < self.k:
-            furthest_point = self.get_furthest_point(individual)
-            furthest_point_facility = individual.nearest_centers[furthest_point].nearest
+            new_center_point = self.get_next_point(individual)
+            furthest_point_facility = individual.nearest_centers[new_center_point].nearest
             if furthest_point_facility is None:
                 nwk = list(self.graph.nodes())
             else:
-                k = PBS.linear_search(self.graph.nodes()[furthest_point]["neighbours"], furthest_point_facility.point)
-                nwk = PBS.get_nwk(self.graph, furthest_point, k)
+                k = PBS.linear_search(self.graph.nodes()[new_center_point]["neighbours"], furthest_point_facility.point)
+                nwk = PBS.get_nwk(self.graph, new_center_point, k)
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
         self.find_cost(individual)
