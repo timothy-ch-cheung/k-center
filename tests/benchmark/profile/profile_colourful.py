@@ -1,19 +1,32 @@
 import cProfile
 import pstats
 
+from kcenter.verify.verify import verify_solution
 from src.kcenter.bandyapadhyay.solver import ConstantColourfulKCenterSolver
 from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.pbs import PBS
 from src.server.graph_loader import GraphLoader
 
 # graph = GraphLoader.get_graph("k_center")
-# instance = ConstantColourfulKCenterSolver(graph, 5, {Colour.BLUE: 0, Colour.RED: 20})
+# constraints = {Colour.BLUE: 0, Colour.RED: 20}
+# k = 5
 
-graph = GraphLoader.get_graph("large")
-instance = ConstantColourfulKCenterSolver(graph, 10, {Colour.BLUE: 50, Colour.RED: 50})
+# graph = GraphLoader.get_graph("large")
+# constraints = {Colour.BLUE: 50, Colour.RED: 50}
+# k = 5
+
+graph = GraphLoader.get_graph("medium")
+constraints = {Colour.BLUE: 10, Colour.RED: 10}
+k = 4
+
+# graph = GraphLoader.get_graph("basic")
+# constraints = {Colour.BLUE: 2, Colour.RED: 2}
+# k = 2
 
 # graph = GraphLoader.get_graph("thousand")
-# instance = ConstantColourfulKCenterSolver(graph, 50, {Colour.BLUE: 500, Colour.RED: 500})
+# constraints = {Colour.BLUE: 500, Colour.RED: 500}
+# k = 50
+
+instance = ConstantColourfulKCenterSolver(graph, k, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()
@@ -25,3 +38,8 @@ stats.print_stats()
 # stats.print_stats()
 
 print("cost", radius)
+print("centers", set(clusters.keys()))
+print("clusters", clusters)
+print("outliers", outliers)
+
+print(verify_solution(graph, constraints, k, radius, set(clusters.keys())))

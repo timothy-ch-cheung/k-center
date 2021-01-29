@@ -15,8 +15,8 @@ def test_greedy_basic_graph_clustering():
 
     assert radius == pytest.approx(1.456, FLOAT_ERROR_MARGIN)
     assert clusters == {
-        2: {0, 1, 2},
-        4: {3, 4}
+        0: {0, 1, 2},
+        3: {3, 4}
     }
     assert outliers == set()
     assert verify_solution(graph, {Colour.BLUE: 3, Colour.RED: 2}, k=2, radius=radius,
@@ -30,8 +30,8 @@ def test_greedy_basic_graph_with_outlier_clustering():
     clusters, outliers, radius = instance.solve()
     assert radius == pytest.approx(1.414, FLOAT_ERROR_MARGIN)
     assert clusters == {
-        1: {0, 1},
-        4: {3, 4}
+        0: {0, 1},
+        3: {3, 4}
     }
     assert outliers == {2}
     assert verify_solution(graph, {Colour.BLUE: 2, Colour.RED: 2}, k=2, radius=radius,

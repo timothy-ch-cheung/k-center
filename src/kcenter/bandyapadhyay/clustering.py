@@ -11,6 +11,7 @@ def get_point_with_max_coverage(graph: nx.Graph, unclustered_points: Set[int]) -
     for node in unclustered_points:
         if graph.nodes()[node]["z"] > max_zj:
             max_node = node
+            max_zj = graph.nodes()[node]["z"]
     return max_node
 
 
