@@ -1,8 +1,9 @@
 import cProfile
 import pstats
 
+from kcenter.bandyapadhyay.solver import ConstantColourfulKCenter
 from kcenter.verify.verify import verify_solution
-from src.kcenter.bandyapadhyay_pseudo.solver import ConstantColourfulKCenterSolver
+from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourfulKCenter
 from src.kcenter.constant.colour import Colour
 from src.server.graph_loader import GraphLoader
 
@@ -26,7 +27,8 @@ k = 5
 # constraints = {Colour.BLUE: 500, Colour.RED: 500}
 # k = 50
 
-instance = ConstantColourfulKCenterSolver(graph, k, constraints)
+# instance = ConstantPseudoColourfulKCenter(graph, k, constraints)
+instance = ConstantColourfulKCenter(graph, k, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()
