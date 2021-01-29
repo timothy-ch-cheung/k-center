@@ -16,18 +16,6 @@ class ConstantColourfulKCenter(ConstantPseudoColourfulKCenter):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def get_potential_centers(self, lp_solution) -> Set[int]:
-        return {point for point, sol in lp_solution.items() if sol['x'] > 0}
-
-    def calc_min_dist(self, potential_centers: Set[int]):
-        min_dist = float("inf")
-        for i in potential_centers:
-            for j in potential_centers.difference({i}):
-                dist = self.graph[i][j]["weight"]
-                if dist < min_dist:
-                    min_dist = dist
-        return min_dist
-
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
 
