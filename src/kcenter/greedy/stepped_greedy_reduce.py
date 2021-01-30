@@ -17,6 +17,14 @@ class GreedyReduceSteps:
         num_centers_label = f"{k} centers have" if k > 1 else "single center has"
         return f"Our {num_centers_label} been chosen. The current cost is {cost}, we will continue to reduce the cost until the solution does not meet the constraints."
 
+    @staticmethod
+    def decrease_cost(new_cost: float) -> str:
+        return f"decrease weight to {round(new_cost, GreedyReduceSteps.DECIMAL_PLACES)}"
+
+    @staticmethod
+    def final_cost(cost: float) -> str:
+        return f"completed reduced solution to radius of {round(cost, GreedyReduceSteps.DECIMAL_PLACES)}"
+
 class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
@@ -29,9 +37,9 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
             clusters, outliers, radius, label, active = step
             if not active:
                 break
-            yield clusters, outliers, radius, label
+            yield clusters, outliers, radius, label, True
 
-        yield clusters, outliers, radius, GreedyReduceSteps.intermediate_cost(radius, self.k)
+        yield clusters, outliers, radius, GreedyReduceSteps.intermediate_cost(radius, self.k), True
 
         weights = GreedyReduce.get_weights(self.graph, radius)
 
@@ -40,9 +48,9 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
         for weight in weights:
             if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-                yield clusters, set(), new_weight, f"decrease weight to {round(new_weight, 3)}"
+                yield clusters, set(), new_weight, GreedyReduceSteps.decrease_cost(new_weight), True
             else:
                 break
 
         radius = new_weight if new_weight is not None else radius
-        yield clusters, set(), radius, f"completed reduced solution to radius of {round(radius, 3)}"
+        yield clusters, set(), radius, GreedyReduceSteps.final_cost(radius), False
