@@ -15,7 +15,3 @@ class AbstractSolver(ABC):
     @abstractmethod
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         pass
-
-    @abstractmethod
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
-        pass
