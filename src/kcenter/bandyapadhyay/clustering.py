@@ -78,15 +78,14 @@ def cluster(graph: nx.Graph, p) -> Dict[int, Set[int]]:
 
 
 def cluster_generator(graph: nx.Graph, p) -> Generator[Tuple[int, Dict[int, Set[int]], SearchStage], None, None]:
-    """Greedily cluster points within 2p distance from the center
+    """Greedily cluster points within 2p distance from the center, generating a new cluster per yield
 
     :param p: radius length
-    :return: dictionary of clusters with their centers as the key
+    :return: center of cluster, dictionary of clusters, and state of clustering
     """
     clusters = {}
     unclustered_points = set(graph.nodes())
 
-    # len() is O(1) since a variable keeps track of size
     while len(unclustered_points) > 0:
         j = get_point_with_max_coverage(graph, unclustered_points)
 

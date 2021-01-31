@@ -49,8 +49,6 @@ def basic_graph_with_two_outliers() -> nx.Graph:
     G.add_node(4, pos=numpy.array((6.4, 4.7)), colour=Colour.RED)
     G.add_node(5, pos=numpy.array((1.2, 3.5)), colour=Colour.BLUE)
 
-    # min weight = 0.5099
-    # max weight = 6.3695
     calculate_edges(G)
     return G
 
