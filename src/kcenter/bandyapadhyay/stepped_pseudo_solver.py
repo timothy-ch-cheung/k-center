@@ -77,7 +77,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
                 left = mid + 1
                 yield current_weight, last_valid_solution, SearchStage.INVALID_WEIGHT
 
-        yield weight, lp_solution, SearchStage.FINISHED
+        yield weight, last_valid_solution, SearchStage.FINISHED
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
