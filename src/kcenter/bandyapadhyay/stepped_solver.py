@@ -1,5 +1,5 @@
-from collections import Generator
-from typing import Tuple, Dict, Set
+from typing import Tuple, Dict, Set, Generator
+
 import networkx as nx
 
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
@@ -19,7 +19,7 @@ class SteppedConstantColourful(ConstantPseudoColourful):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, str, bool], None, None]:
         clusters = outliers = radius = label = None
         instance = SteppedConstantPseudoColourful(self.graph, self.k, self.constraints)
         solution = instance.generator()

@@ -79,7 +79,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
 
         yield weight, last_valid_solution, SearchStage.FINISHED
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, str, bool], None, None]:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
 
         Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
