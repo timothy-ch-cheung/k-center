@@ -1,6 +1,8 @@
-from typing import Set, Dict
+from typing import Set, Dict, Generator, Tuple
 
 import networkx as nx
+
+from src.kcenter.bandyapadhyay.search_stage import SearchStage
 
 
 def get_point_with_max_coverage(graph: nx.Graph, unclustered_points: Set[int]) -> int:
@@ -24,7 +26,7 @@ def sum_centers_around_point(graph: nx.Graph, j: int, p: float) -> float:
     :param p: radius length
     :return: total value of fractionally opened centers around point j
     """
-    total = 0;
+    total = 0
     for node in graph:
         if node != j and graph[j][node]["weight"] < p:
             total += graph.nodes()[node]["x"]
@@ -73,3 +75,32 @@ def cluster(graph: nx.Graph, p) -> Dict[int, Set[int]]:
         clusters[j] = Cj
         unclustered_points = unclustered_points.difference(Cj)
     return clusters
+
+
+def cluster_generator(graph: nx.Graph, p) -> Generator[Tuple[int, Dict[int, Set[int]], SearchStage], None, None]:
+    """Greedily cluster points within 2p distance from the center, generating a new cluster per yield
+
+    :param p: radius length
+    :return: center of cluster, dictionary of clusters, and state of clustering
+    """
+    clusters = {}
+    unclustered_points = set(graph.nodes())
+
+    while len(unclustered_points) > 0:
+        j = get_point_with_max_coverage(graph, unclustered_points)
+
+        xj = sum_centers_around_point(graph, j, p)
+        graph.nodes()[j]["x"] = xj
+        graph.nodes()[j]["z"] = xj
+
+        Cj = ball(graph, j, 2 * p).intersection(unclustered_points)
+        for i in Cj:
+            if j == i:
+                continue
+            graph.nodes()[i]["x"] = 0
+            graph.nodes()[i]["z"] = graph.nodes()[j]["z"]
+
+        clusters[j] = Cj
+        unclustered_points = unclustered_points.difference(Cj)
+        yield j, clusters, SearchStage.UNFINISHED
+    yield -1, clusters, SearchStage.FINISHED

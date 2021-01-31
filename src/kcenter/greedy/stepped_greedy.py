@@ -39,7 +39,7 @@ class SteppedGreedy(Greedy):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str, bool], None, None]:
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, str, bool], None, None]:
         clusters = {Greedy.INITIAL_HEAD: set(self.graph.nodes)}
         max_weight = max(list(nx.get_edge_attributes(self.graph, "weight").values()))
         label = GreedySteps.initial_center(graph=self.graph, center=Greedy.INITIAL_HEAD)

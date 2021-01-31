@@ -1,4 +1,4 @@
-from typing import Tuple, Set, Generator, Dict, List
+from typing import Tuple, Set, Dict, List
 
 import networkx as nx
 
@@ -9,7 +9,7 @@ from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
-class ConstantPseudoColourfulKCenter(AbstractSolver):
+class ConstantPseudoColourful(AbstractSolver):
     """Implementation based on the algorithm by Bandyapadhyay et al. from
     'A Constant Approximation for Colorful k-Center (2019)'
 
@@ -47,13 +47,12 @@ class ConstantPseudoColourfulKCenter(AbstractSolver):
         return weights[-1], {}
 
     @staticmethod
-    def calculate_optimal_radius_binary(weights: List[float], radius_checker: RadiusChecker) -> Tuple[float, Dict[int, float]]:
+    def calculate_optimal_radius_binary(weights: List[float], radius_checker: RadiusChecker) -> Tuple[
+        float, Dict[int, float]]:
         """Returns the optimal radius for the graph, using a modified binary search
 
         :param weights: list of weights sorted from smallest to largest
         :param radius_checker: object which contains LP1 which can verify whether a given radius is valid
-        :param nodes: number of nodes in graph, used to decide whether do a full search for OPT or to make a guess for
-        running time purposes
         """
         left = 0
         right = len(weights)
@@ -74,20 +73,17 @@ class ConstantPseudoColourfulKCenter(AbstractSolver):
 
         return weight, last_valid_solution
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
-        pass
-
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
 
         Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
         (LP2 Section 2.1 figure 2).
         """
-        weights = ConstantPseudoColourfulKCenter.get_weights(self.graph)
+        weights = ConstantPseudoColourful.get_weights(self.graph)
 
         radius_checker = RadiusChecker(self.graph, self.k, self.constraints[Colour.RED], self.constraints[Colour.BLUE])
 
-        opt, lp_solution = ConstantPseudoColourfulKCenter.calculate_optimal_radius_binary(weights, radius_checker)
+        opt, lp_solution = ConstantPseudoColourful.calculate_optimal_radius_binary(weights, radius_checker)
 
         for point, attributes in lp_solution.items():
             self.graph.nodes()[point]["x"] = attributes["x"]
@@ -98,7 +94,7 @@ class ConstantPseudoColourfulKCenter(AbstractSolver):
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
 
-        centers = ConstantPseudoColourfulKCenter.choose_centers(solution)
+        centers = ConstantPseudoColourful.choose_centers(solution)
         unused_centers = set(clusters.keys()).difference(centers)
 
         outliers: Set[int] = set()

@@ -2,6 +2,7 @@ import time
 
 from flask import request, Blueprint, jsonify
 
+from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
 from src.kcenter.constant.colour import Colour
@@ -14,7 +15,8 @@ problem_instances = {}
 
 stepped_algorithms = {
     "greedy": SteppedGreedy,
-    "greedy_reduce": SteppedGreedyReduce
+    "greedy_reduce": SteppedGreedyReduce,
+    "colourful_bandyapadhyay_pseudo": SteppedConstantPseudoColourful
 }
 
 

@@ -25,11 +25,12 @@ class GreedyReduceSteps:
     def final_cost(cost: float) -> str:
         return f"completed reduced solution to radius of {round(cost, GreedyReduceSteps.DECIMAL_PLACES)}"
 
+
 class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
+    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, int, str, bool], None, None]:
         clusters = outliers = radius = label = active = None
         solution = super().generator()
         clusters, radius = {}, float("inf")

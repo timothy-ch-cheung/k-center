@@ -5,6 +5,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import {SolutionStep} from "../../pages/steps/Steps";
 import API from "../../API";
+import {algorithms} from "../../constants/algorithms";
 
 export interface PageSetting {
     nextEnabled: boolean
@@ -96,7 +97,7 @@ export default function Step(props: Props) {
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Step-By-Step Walkthrough</H3>
-        <Subtitle>{props.algorithm ? `${props.algorithm} algorithm` : ""}</Subtitle>
+        {props.algorithm && <Subtitle>{algorithms[props.algorithm].short_name}</Subtitle>}
         <SectionDivider/>
         <TextBox width={props.width} height={320}>
             {props.text ? props.text : DEFAULT_STEP_TEXT}
