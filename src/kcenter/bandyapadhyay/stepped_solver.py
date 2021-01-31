@@ -1,5 +1,5 @@
-from collections import Generator, Set
-from typing import Tuple, Dict
+from collections import Generator
+from typing import Tuple, Dict, Set
 import networkx as nx
 
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
