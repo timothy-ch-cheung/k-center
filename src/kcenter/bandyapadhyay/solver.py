@@ -3,10 +3,10 @@ from typing import Dict, Tuple, Set
 import networkx as nx
 
 from src.kcenter.constant.colour import Colour
-from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourfulKCenter
+from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 
 
-class ConstantColourfulKCenter(ConstantPseudoColourfulKCenter):
+class ConstantColourful(ConstantPseudoColourful):
     """Implementation based on the algorithm by Bandyapadhyay et al. from
     'A Constant Approximation for Colorful k-Center (2019)'
 
@@ -22,9 +22,9 @@ class ConstantColourfulKCenter(ConstantPseudoColourfulKCenter):
         Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
         (LP2 Section 2.1 figure 2).
         """
-        solver = ConstantPseudoColourfulKCenter(self.graph, self.k, self.constraints)
+        solver = ConstantPseudoColourful(self.graph, self.k, self.constraints)
         clusters, outliers, radius = solver.solve()
         if len(clusters.keys()) > self.k:
-            solver = ConstantPseudoColourfulKCenter(self.graph, self.k - 1, self.constraints)
+            solver = ConstantPseudoColourful(self.graph, self.k - 1, self.constraints)
             return solver.solve()
         return clusters, outliers, radius
