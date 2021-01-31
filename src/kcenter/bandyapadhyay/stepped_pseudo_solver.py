@@ -30,8 +30,11 @@ class ConstantPseudoColourfulSteps:
         return f"All weights are exhausted - the minimal feasible cost for LP1 is {round(cost, ConstantPseudoColourfulSteps.DECIMAL_PLACES)} and therefore is the optimal cost. Using this cost we can greedily cluster all points."
 
     @staticmethod
-    def create_cluster(center: int, cluster: Set[int]) -> str:
-        return f"Create cluster at {center}, covering {len(cluster)} points."
+    def create_cluster(center: int, cluster: Set[int], graph: nx.Graph) -> str:
+        point = graph.nodes()[center]["pos"]
+        x = round(point[0], ConstantPseudoColourfulSteps.DECIMAL_PLACES)
+        y = round(point[1], ConstantPseudoColourfulSteps.DECIMAL_PLACES)
+        return f"Create cluster at ({x}, {y}), covering {len(cluster)} points."
 
     @staticmethod
     def cluster_creation_completed() -> str:
@@ -112,7 +115,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
         for sol in clustering_solution:
             center, clusters, stage = sol
             if stage == SearchStage.UNFINISHED:
-                yield clusters, set(), opt, ConstantPseudoColourfulSteps.create_cluster(center, clusters[center]), True
+                yield clusters, set(), opt, ConstantPseudoColourfulSteps.create_cluster(center, clusters[center], self.graph), True
             elif stage == SearchStage.FINISHED:
                 yield clusters, set(), opt, ConstantPseudoColourfulSteps.cluster_creation_completed(), True
 
