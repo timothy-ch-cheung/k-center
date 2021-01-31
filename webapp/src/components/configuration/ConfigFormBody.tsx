@@ -7,6 +7,7 @@ import {HorizontalGroup, SectionDivider, Spacer} from "./Layout";
 import {ChartData} from "../chart/Chart";
 import API from "../../API";
 import {SolveRequestData} from "./ConfigPanel";
+import {algorithms} from "../../constants/algorithms";
 
 interface Props {
     submitButtonText: string
@@ -17,17 +18,17 @@ interface Props {
 }
 
 const FormControlNoWrap = styled(FormControl)`
-    display: flex;
-    wrap: nowrap;
-    margin-bottom: 10px;
+  display: flex;
+  wrap: nowrap;
+  margin-bottom: 10px;
 `
 
 const BluePaletteIcon = styled(PaletteIcon)`
-    color: blue
+  color: blue
 `
 
 const RedPaletteIcon = styled(PaletteIcon)`
-    color: red
+  color: red
 `
 
 export default function (props: Props) {
@@ -83,12 +84,12 @@ export default function (props: Props) {
         <FormControlNoWrap>
             <InputLabel>Algorithm</InputLabel>
             <Select onChange={handleAlgorithmSelectChange}>
-                <MenuItem value={"greedy"}>greedy</MenuItem>
-                <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay_pseudo"}>O(1)-colourful (Pseudo approximation, Bandyapadhyay et al. 2019)</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (17-approximation, Bandyapadhyay et al. 2019)</MenuItem>
-                <MenuItem value={"pbs"}>PBS (Pullan 2008)</MenuItem>
-                <MenuItem value={"colourful_pbs"}>Colourful PBS</MenuItem>
+                <MenuItem value={"greedy"}>{algorithms.greedy.name}</MenuItem>
+                <MenuItem value={"greedy_reduce"}>{algorithms.greedy_reduce.name}</MenuItem>
+                <MenuItem value={"colourful_bandyapadhyay_pseudo"}>{algorithms.colourful_bandyapadhyay_pseudo.name}</MenuItem>
+                <MenuItem value={"colourful_bandyapadhyay"}>{algorithms.colourful_bandyapadhyay.name}</MenuItem>
+                <MenuItem value={"pbs"}>{algorithms.pbs.name}</MenuItem>
+                <MenuItem value={"colourful_pbs"}>{algorithms.colourful_pbs.name}</MenuItem>
             </Select>
         </FormControlNoWrap>
         <Spacer/>
