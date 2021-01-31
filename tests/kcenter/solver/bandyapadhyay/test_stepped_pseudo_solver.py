@@ -81,7 +81,7 @@ def test_generator_greedy_basic_graph_outlier_colourful_clustering():
         {0: {0, 1}, 2: {2}, 3: {3, 4}},
         set(),
         pytest.approx(0.7071, FLOAT_ERROR_MARGIN),
-        "Create cluster at (0.5, 6.3), covering 1 points.",
+        "Create cluster at (0.5, 6.3), covering 1 point.",
         True
     )
 

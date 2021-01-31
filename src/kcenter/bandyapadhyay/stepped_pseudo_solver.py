@@ -34,7 +34,7 @@ class ConstantPseudoColourfulSteps:
         point = graph.nodes()[center]["pos"]
         x = round(point[0], ConstantPseudoColourfulSteps.DECIMAL_PLACES)
         y = round(point[1], ConstantPseudoColourfulSteps.DECIMAL_PLACES)
-        return f"Create cluster at ({x}, {y}), covering {len(cluster)} points."
+        return f"Create cluster at ({x}, {y}), covering {len(cluster)} {'point' if len(cluster) == 1 else 'points'}."
 
     @staticmethod
     def cluster_creation_completed() -> str:
