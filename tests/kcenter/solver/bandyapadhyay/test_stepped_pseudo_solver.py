@@ -1,7 +1,7 @@
 import pytest
 
-from kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
-from kcenter.constant.colour import Colour
+from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
+from src.kcenter.constant.colour import Colour
 from tests.kcenter.solver.greedy.test_greedy import FLOAT_ERROR_MARGIN
 from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 

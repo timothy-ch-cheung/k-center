@@ -2,12 +2,12 @@ from typing import Dict, List, Generator, Tuple, Set, Iterable
 
 import networkx as nx
 
-from kcenter.bandyapadhyay.clustering import cluster_generator
-from kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
-from kcenter.bandyapadhyay.radius_checker import RadiusChecker
-from kcenter.bandyapadhyay.red_maximiser import RedMaximiser
-from kcenter.bandyapadhyay.search_stage import SearchStage
-from kcenter.constant.colour import Colour
+from src.kcenter.bandyapadhyay.clustering import cluster_generator
+from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
+from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
+from src.kcenter.bandyapadhyay.red_maximiser import RedMaximiser
+from src.kcenter.bandyapadhyay.search_stage import SearchStage
+from src.kcenter.constant.colour import Colour
 
 
 class ConstantPseudoColourfulSteps:

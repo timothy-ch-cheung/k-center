@@ -2,7 +2,7 @@ from typing import Set, Dict, Generator, Tuple
 
 import networkx as nx
 
-from kcenter.bandyapadhyay.search_stage import SearchStage
+from src.kcenter.bandyapadhyay.search_stage import SearchStage
 
 
 def get_point_with_max_coverage(graph: nx.Graph, unclustered_points: Set[int]) -> int:

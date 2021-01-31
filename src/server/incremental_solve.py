@@ -2,7 +2,7 @@ import time
 
 from flask import request, Blueprint, jsonify
 
-from kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
+from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
 from src.kcenter.constant.colour import Colour
