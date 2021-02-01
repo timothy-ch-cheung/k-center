@@ -1,11 +1,14 @@
 import {ChartFrame} from "../chart/Chart";
 import {H3, SectionDivider} from "../configuration/Layout";
 import PagingBar from "../Pagination/PagingBar";
-import React from "react";
+import React, {useState} from "react";
 import styled from "@emotion/styled";
 import {SolutionStep} from "../../pages/steps/Steps";
 import API from "../../API";
 import {algorithms} from "../../constants/algorithms";
+import {CircularProgress} from "@material-ui/core";
+import TitlePanel from "../title_panel/TitlePanel";
+import {Dimensions} from "../../interfaces";
 
 export interface PageSetting {
     nextEnabled: boolean
@@ -39,11 +42,6 @@ interface Props {
 
 }
 
-interface Dimensions {
-    width: number
-    height: number
-}
-
 
 const DEFAULT_STEP_TEXT = ""
 
@@ -52,11 +50,8 @@ const TextBox = styled("p")`
     height: ${(props: Dimensions) => props.height}px;
 `
 
-const Subtitle = styled("h5")`
-    margin: 5px 20px;
-`
-
 export default function Step(props: Props) {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const handlePrev = () => {
         const newPage = props.pageControl.currentPage - 1
@@ -75,6 +70,7 @@ export default function Step(props: Props) {
         const newPage = props.pageControl.currentPage + 1
         let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
         if (props.pageControl.currentPage == props.solutionHistory.length) {
+            setIsLoading(true)
             API.post("/step/next", {id: props.id}).then(function (response) {
                     props.setChartData(response.data)
                     props.updateSolutionHistory(response.data)
@@ -84,6 +80,7 @@ export default function Step(props: Props) {
                         completedSolution.step.label = response.data.step.label
                     }
                     props.pageControl.updateControl(update)
+                    setIsLoading(false)
                 }
             )
         } else {
@@ -96,16 +93,19 @@ export default function Step(props: Props) {
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
-        <H3>Step-By-Step Walkthrough</H3>
-        {props.algorithm && <Subtitle>{algorithms[props.algorithm].short_name}</Subtitle>}
+        <TitlePanel
+            title={"Step-By-Step Walkthrough"}
+            subtitle={props.algorithm? algorithms[props.algorithm].short_name : ""}
+            loading={isLoading}
+            dimensions={{width: props.width, height: 50}}/>
         <SectionDivider/>
         <TextBox width={props.width} height={320}>
             {props.text ? props.text : DEFAULT_STEP_TEXT}
         </TextBox>
         <SectionDivider/>
         <PagingBar currentPage={props.pageControl.currentPage}
-                   isNextEnabled={props.pageControl.nextEnabled}
-                   isPrevEnabled={props.pageControl.prevEnabled}
+                   isNextEnabled={props.pageControl.nextEnabled && !isLoading}
+                   isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
                    handlePrevClick={handlePrev}
                    handleNextClick={handleNext}
                    maxPage={props.pageControl.maxPage}
