@@ -29,9 +29,8 @@ class SteppedConstantColourful(ConstantPseudoColourful):
                 break
             yield step
 
-        yield clusters, outliers, radius, label, True
-
         if len(clusters.keys()) > self.k:
+            yield clusters, outliers, radius, label, True
             yield clusters, outliers, radius, ConstantColourfulSteps.retry_with_k_minus_one(self.k), True
 
             instance = SteppedConstantPseudoColourful(self.graph, self.k - 1, self.constraints)
@@ -39,3 +38,5 @@ class SteppedConstantColourful(ConstantPseudoColourful):
 
             for step in solution:
                 yield step
+        else:
+            yield clusters, outliers, radius, label, False
