@@ -47,10 +47,9 @@ export const GraphPlaceHolder = styled("h3")`
 `
 
 interface ChartItem {
-    colour: string,
-    x: number,
-    y: number,
-    center?: boolean
+    colour: string
+    x: number
+    y: number
 }
 
 export interface OptimalSolution {
@@ -61,11 +60,17 @@ export interface OptimalSolution {
     outliers: number
 }
 
+interface Coordinate {
+    x: number
+    y: number
+}
+
 export interface Solution {
     k: number
     timeTaken: number
     radius: number
     outliers: number
+    centers: Coordinate
 }
 
 
@@ -75,7 +80,8 @@ export interface ChartData {
     blue: number
     red: number
     optimalSolution: OptimalSolution
-    solution?: Solution
+    solutions?: Solution[]
+    solution_index?: number
 }
 
 interface Props {

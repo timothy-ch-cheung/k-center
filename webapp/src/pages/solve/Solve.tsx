@@ -47,7 +47,7 @@ function Solve() {
             <InstanceStats gridArea="top-right" chart={chartData} width={180} height={210}/>
             <SolutionStats
                 gridArea="bot-right" width={180} height={200}
-                solution={chartData?.solution}
+                solution={chartData?.solutions?.length == 1? chartData?.solutions[0]: undefined}
                 solveRequestData={solveRequestData}
             />
         </ChartContainer>

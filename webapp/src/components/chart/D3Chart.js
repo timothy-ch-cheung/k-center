@@ -55,14 +55,14 @@ D3Chart.update = function (props) {
         .attr('dy', '-1.5em')
         .text('Y');
 
-    props.chart.solution && chart.selectAll('.radii')
-        .data(props.chart.data)
+    props.chart.solutions && chart.selectAll('.radii')
+        .data(props.chart.solutions[0].centers)
         .enter().append('circle')
         .attr('class', 'radii')
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
-        .attr('r', radiusToPixels(props.width, maxDomain, props.chart.solution.radius))
-        .style("stroke", (d) => d.center ? "black" : "none")
+        .attr('r', radiusToPixels(props.width, maxDomain, props.chart.solutions[0].radius))
+        .style("stroke", "black")
         .style('fill', 'none');
 
     chart.selectAll('.circle')
