@@ -81,7 +81,6 @@ export interface ChartData {
     red: number
     optimalSolution: OptimalSolution
     solutions?: Solution[]
-    solution_index?: number
 }
 
 interface Props {
@@ -89,6 +88,7 @@ interface Props {
     width: number
     height: number
     gridArea?: string
+    solutionIndex?: number
 }
 
 export default function Chart(props: Props): JSX.Element {
@@ -97,7 +97,8 @@ export default function Chart(props: Props): JSX.Element {
         props.chart && d3Chart.create({
             width: props.width,
             height: props.height,
-            chart: props.chart
+            chart: props.chart,
+            solutionIndex: props.solutionIndex
         });
         initialised = true
     }

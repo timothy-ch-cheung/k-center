@@ -2,6 +2,7 @@ import * as d3 from "d3";
 
 const D3Chart = {}
 let chart
+let solutionIndex
 
 const margin = {top: 40, right: 20, bottom: 60, left: 60};
 const legendWidth = 100;
@@ -14,6 +15,7 @@ D3Chart.create = function (props) {
         .attr('height', props.height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    solutionIndex = props.solutionIndex
 }
 
 D3Chart.update = function (props) {
@@ -56,12 +58,12 @@ D3Chart.update = function (props) {
         .text('Y');
 
     props.chart.solutions && chart.selectAll('.radii')
-        .data(props.chart.solutions[0].centers)
+        .data(props.chart.solutions[solutionIndex].centers)
         .enter().append('circle')
         .attr('class', 'radii')
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
-        .attr('r', radiusToPixels(props.width, maxDomain, props.chart.solutions[0].radius))
+        .attr('r', radiusToPixels(props.width, maxDomain, props.chart.solutions[solutionIndex].radius))
         .style("stroke", "black")
         .style('fill', 'none');
 
