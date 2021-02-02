@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import d3Chart from './D3Chart'
 import styled from '@emotion/styled'
+import {ChartItem} from "./ChartInterfaces";
 
 interface FrameProps {
     width: number,
@@ -8,49 +9,43 @@ interface FrameProps {
 }
 
 export const ChartFrame = styled("div")`
-    background-color: white; 
-    margin: 5px;
-    padding: 15px; 
-    padding-right: 30px; 
-    border-radius: 15px;
-    border: 2px solid green;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    width: ${(props: FrameProps) => props.width}px;
-    height: ${(props: FrameProps) => props.height}px;
-    overflow: hidden;
+  background-color: white;
+  margin: 5px;
+  padding: 15px;
+  padding-right: 30px;
+  border-radius: 15px;
+  border: 2px solid green;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: ${(props: FrameProps) => props.width}px;
+  height: ${(props: FrameProps) => props.height}px;
+  overflow: hidden;
 `
 
-const ChartSvg = styled("svg")`
-    color: black;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
+export const ChartSvg = styled("svg")`
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
 `
 
 const ToolTip = styled("div")`
-    background-color: rgba(105,105,105, 0.85);
-    border-radius: 5px;
-    height: 18px;
-    opacity: 0;
-    pointer-events: none;
-    position: absolute;
-    text-align: center;
-    font-size: 16px;
-    padding: 5px;
+  background-color: rgba(105, 105, 105, 0.85);
+  border-radius: 5px;
+  height: 18px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  text-align: center;
+  font-size: 16px;
+  padding: 5px;
 `
 
 export const GraphPlaceHolder = styled("h3")`
-    color: grey;
-    text-align: center;
+  color: grey;
+  text-align: center;
 `
-
-interface ChartItem {
-    colour: string
-    x: number
-    y: number
-}
 
 export interface OptimalSolution {
     k: number
@@ -102,6 +97,7 @@ export default function Chart(props: Props): JSX.Element {
         });
         initialised = true
     }
+
     useEffect(() => {
         initialise()
     }, [])
@@ -110,7 +106,7 @@ export default function Chart(props: Props): JSX.Element {
         if (!initialised) {
             initialise()
         }
-        console.log(props.solution)
+
         props.data && d3Chart.update({
             width: props.width,
             height: props.height,

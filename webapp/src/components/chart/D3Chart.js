@@ -2,12 +2,11 @@ import * as d3 from "d3";
 
 const D3Chart = {}
 let chart
-let solutionIndex
 
 const margin = {top: 40, right: 20, bottom: 60, left: 60};
 const legendWidth = 100;
 
-const radiusToPixels = (chartSize, maxDomain, radius) => (chartSize / maxDomain) * radius
+export const radiusToPixels = (chartSize, maxDomain, radius) => (chartSize / maxDomain) * radius
 
 D3Chart.create = function (props) {
     chart = d3.select(".chart")
@@ -15,7 +14,6 @@ D3Chart.create = function (props) {
         .attr('height', props.height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    solutionIndex = props.solutionIndex
 }
 
 D3Chart.update = function (props) {
@@ -25,6 +23,7 @@ D3Chart.update = function (props) {
     d3.selectAll('.chart .toggle-text').remove();
     d3.selectAll('.chart .toggle').remove();
     d3.selectAll('.chart .axis').remove();
+
     const x = d3.scaleLinear()
         .range([0, props.width]);
 

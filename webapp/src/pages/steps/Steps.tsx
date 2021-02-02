@@ -24,13 +24,13 @@ export interface SolutionStep extends ChartData {
 }
 
 const ChartContainer = styled("div")`
-    display: grid;
-    grid-template-rows: 115px 200px 175px;
-    grid-template-columns: 240px 580px 260px;
-    grid-gap: 5px;
-    margin: 30px auto;
-    width: 1250px;
-    grid-template-areas:
+  display: grid;
+  grid-template-rows: 115px 200px 175px;
+  grid-template-columns: 240px 580px 260px;
+  grid-gap: 5px;
+  margin: 30px auto;
+  width: 1250px;
+  grid-template-areas:
     "top-left middle right"
     "mid-left middle right"
     "bot-left middle right";
@@ -87,7 +87,8 @@ export default function Steps(props: Props) {
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
-            <Chart gridArea="middle" data={chartData?.data} width={350} height={350} solution={chartData?.solutions? chartData?.solutions[0] : undefined}/>
+            <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
+                   solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
             <Step gridArea="right"
                   width={300} height={455}
                   solutionHistory={solutionHistory}
