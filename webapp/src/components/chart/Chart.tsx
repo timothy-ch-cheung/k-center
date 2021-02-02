@@ -84,21 +84,21 @@ export interface ChartData {
 }
 
 interface Props {
-    chart?: ChartData
+    data?: ChartItem[]
     width: number
     height: number
     gridArea?: string
-    solutionIndex?: number
+    solution?: Solution
 }
 
 export default function Chart(props: Props): JSX.Element {
     let initialised = false
     const initialise = () => {
-        props.chart && d3Chart.create({
+        props.data && d3Chart.create({
             width: props.width,
             height: props.height,
-            chart: props.chart,
-            solutionIndex: props.solutionIndex
+            data: props.data,
+            solution: props.solution
         });
         initialised = true
     }
@@ -110,16 +110,18 @@ export default function Chart(props: Props): JSX.Element {
         if (!initialised) {
             initialise()
         }
-        props.chart && d3Chart.update({
+        console.log(props.solution)
+        props.data && d3Chart.update({
             width: props.width,
             height: props.height,
-            chart: props.chart
+            data: props.data,
+            solution: props.solution
         });
-    }, [props, props.chart])
+    }, [props, props.data])
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width * 1.5} height={props.height * 1.3}>
-        <ChartSvg className="chart"/>
-        {!props.chart && <GraphPlaceHolder>Choose a problem instance</GraphPlaceHolder>}
+        <ChartSvg className={"chart"}/>
+        {!props.data && <GraphPlaceHolder>Choose a problem instance</GraphPlaceHolder>}
         <ToolTip className="tooltip"/>
     </ChartFrame>
 }

@@ -87,7 +87,7 @@ export default function Steps(props: Props) {
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
-            <Chart gridArea="middle" chart={chartData} width={350} height={350} solutionIndex={0}/>
+            <Chart gridArea="middle" data={chartData?.data} width={350} height={350} solution={chartData?.solutions? chartData?.solutions[0] : undefined}/>
             <Step gridArea="right"
                   width={300} height={455}
                   solutionHistory={solutionHistory}
