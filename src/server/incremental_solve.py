@@ -2,6 +2,7 @@ import time
 
 from flask import request, Blueprint, jsonify
 
+from src.kcenter.pbs.stepped_pbs import SteppedPBS
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
@@ -18,7 +19,8 @@ stepped_algorithms = {
     "greedy": SteppedGreedy,
     "greedy_reduce": SteppedGreedyReduce,
     "colourful_bandyapadhyay_pseudo": SteppedConstantPseudoColourful,
-    "colourful_bandyapadhyay": SteppedConstantColourful
+    "colourful_bandyapadhyay": SteppedConstantColourful,
+    "pbs": SteppedPBS
 }
 
 
@@ -40,6 +42,27 @@ def start():
     return '', 204
 
 
+def process_standard(graph, graph_name, step, time_elapsed):
+    clusters, outliers, radius, label, is_active = step
+    solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
+    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
+    solution["step"] = {"label": label, "active": is_active}
+    return solution, is_active
+
+
+def process_genetic(graph, graph_name, step):
+    solutions, label, is_active = step
+    data = []
+    nodes = list(graph.nodes())
+    for node in nodes:
+        position = graph.nodes()[node]["pos"]
+        point_data = {"x": position[0], "y": position[1], "colour": graph.nodes()[node]["colour"].name.lower()}
+        data.append(point_data)
+    solution = {"data": data, "solutions": solutions, "step": {"label": label, "active": is_active}}
+    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
+    return solution, is_active
+
+
 @step.route('/api/v1/step/next', methods=["POST"])
 def next_step():
     request_data = request.get_json()
@@ -54,12 +77,14 @@ def next_step():
     graph_name = problem_instance["name"]
 
     start = time.time()
-    clusters, outliers, radius, label, is_active = next(generator)
+    step = next(generator)
     end = time.time()
     time_elapsed = end - start
-    solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
-    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
-    solution["step"] = {"label": label, "active": is_active}
+
+    if len(step) == 3:
+        solution, is_active = process_genetic(graph, graph_name, step)
+    else:
+        solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
 
     if not is_active:
         del problem_instances[id]

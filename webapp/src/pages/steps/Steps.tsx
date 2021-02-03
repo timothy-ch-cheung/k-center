@@ -9,6 +9,8 @@ import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Parameters from "../../components/stats/parameters/Parameters";
 import Step, {PageSetting, UpdatePageControl} from "../../components/step/Step";
+import {algorithms} from "../../constants/algorithms";
+import PopulationChart from "../../population_chart/PopulationChart";
 
 interface Props {
 
@@ -69,6 +71,16 @@ export default function Steps(props: Props) {
         setSolutionHistory(solutionHistory.concat(solution))
     }
 
+    const renderGraphVisualisation = () => {
+        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "approximation"){
+            return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
+                          solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
+        } else {
+            return <PopulationChart gridArea="middle" data={chartData?.data} width={350} height={350}
+                          solutions={chartData?.solutions}/>
+        }
+    }
+
     return <Container>
         <div>
             <IconButton aria-label="back" onClick={handleBackButtonClick}>
@@ -87,8 +99,7 @@ export default function Steps(props: Props) {
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
-            <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
-                   solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
+            {renderGraphVisualisation()}
             <Step gridArea="right"
                   width={300} height={455}
                   solutionHistory={solutionHistory}

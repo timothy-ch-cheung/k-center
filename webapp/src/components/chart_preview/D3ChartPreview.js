@@ -22,17 +22,15 @@ D3ChartPreview.update = function (props) {
     d3.selectAll(`.preview_${props.id} .radii`).remove();
 
     const x = d3.scaleLinear()
-        .range([0, props.width]);
+        .range([-20, props.width]);
 
     const y = d3.scaleLinear()
-        .range([props.height, 0]);
+        .range([props.height, -20]);
 
     const minDomain = Math.min(d3.min(props.data, (d) => d.y), d3.min(props.data, (d) => d.x))
     const maxDomain = Math.max(d3.max(props.data, (d) => d.y), d3.max(props.data, (d) => d.x))
     const min = minDomain - (maxDomain * 0.75)
     const max = maxDomain + (maxDomain * 0.75)
-    console.log("min " + min + " " + minDomain)
-    console.log("max " + max + " " + maxDomain)
 
     x.domain([min, max]);
     y.domain([min, max]);

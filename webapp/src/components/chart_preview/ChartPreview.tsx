@@ -11,7 +11,7 @@ interface Props {
     height: number
     solution?: Solution
     id: number
-    onClick?: () => any
+    onClick?: (id: any) => void
 }
 
 interface FrameProps extends Dimensions {
@@ -22,6 +22,8 @@ const ChartFrame = styled("div")`
   background-color: white;
   padding: 5px;
   border-radius: 15px;
+  border: 1px solid lightgray;
+  margin: 3px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -33,7 +35,7 @@ const ChartFrame = styled("div")`
           `
      &:hover {
       color: green;
-      box-shadow: 0 0 3pt 2pt green;
+      box-shadow: 0 0 2pt 1pt green;
      }
   `}
 `
@@ -56,6 +58,10 @@ export default function ChartPreview(props: Props): JSX.Element {
         initialised = true
     }
 
+    const handleClick = () => {
+        props.onClick && props.onClick(props.id)
+    }
+
     useEffect(() => {
         initialise()
     }, [])
@@ -74,8 +80,8 @@ export default function ChartPreview(props: Props): JSX.Element {
         });
     }, [props, props.data])
 
-    return <ChartFrame width={props.width} height={props.height} onClick={props.onClick} isBtn={!(props.onClick === undefined)}>
-        <Heading>{`cost=${props.solution?.radius.toFixed(3)}`}</Heading>
+    return <ChartFrame width={props.width} height={props.height} onClick={handleClick} isBtn={!(props.onClick === undefined)}>
+        <Heading>{`${props.id} cost=${props.solution?.radius.toFixed(3)}`}</Heading>
         <ChartSvg className={`preview_${props.id}`}/>
     </ChartFrame>
 }
