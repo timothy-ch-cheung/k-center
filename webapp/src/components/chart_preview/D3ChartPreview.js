@@ -29,8 +29,8 @@ D3ChartPreview.update = function (props) {
 
     const minDomain = Math.min(d3.min(props.data, (d) => d.y), d3.min(props.data, (d) => d.x))
     const maxDomain = Math.max(d3.max(props.data, (d) => d.y), d3.max(props.data, (d) => d.x))
-    const min = minDomain - (maxDomain * 0.75)
-    const max = maxDomain + (maxDomain * 0.75)
+    const min = minDomain - (maxDomain * 0.5)
+    const max = maxDomain + (maxDomain * 0.5)
 
     x.domain([min, max]);
     y.domain([min, max]);
@@ -41,7 +41,7 @@ D3ChartPreview.update = function (props) {
         .attr('class', 'radii')
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
-        .attr('r', radiusToPixels(props.width, maxDomain, props.solution.radius))
+        .attr('r', radiusToPixels(props.width, max, props.solution.radius))
         .style("stroke", "black")
         .style('fill', 'none');
 
