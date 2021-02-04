@@ -71,25 +71,5 @@ class SteppedPBS(PBS):
             solutions = self.yield_population()
             yield solutions, PBSSteps.end_of_generation(solutions), True
 
-        fittest_individual = min(self.population, key=lambda x: x.cost)
-        clusters = {center: set() for center in fittest_individual.centers}
-        outliers = set()
-
-        for point in self.points:
-            min_dist = float("inf")
-            nearest_center = None
-            for center in fittest_individual.centers:
-                if point == center:
-                    nearest_center = center
-                    break
-                cost = self.weights[(point, center)]
-                if cost <= min_dist and cost <= fittest_individual.cost:
-                    min_dist = cost
-                    nearest_center = center
-            if nearest_center is not None:
-                clusters[nearest_center].add(point)
-            else:
-                outliers.add(point)
-
         solutions = self.yield_population()
         yield solutions, PBSSteps.finished_evolving(PBS.GENERATIONS, solutions), False

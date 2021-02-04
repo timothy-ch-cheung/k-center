@@ -2,6 +2,7 @@ import time
 
 from flask import request, Blueprint, jsonify
 
+from kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.constant.colour import Colour
@@ -19,7 +20,8 @@ stepped_algorithms = {
     "greedy_reduce": SteppedGreedyReduce,
     "colourful_bandyapadhyay_pseudo": SteppedConstantPseudoColourful,
     "colourful_bandyapadhyay": SteppedConstantColourful,
-    "pbs": SteppedPBS
+    "pbs": SteppedPBS,
+    "colourful_pbs": SteppedColourfulPBS
 }
 
 
