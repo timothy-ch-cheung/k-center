@@ -1,4 +1,4 @@
-from kcenter.solver.abstract_generator import Solution
+from src.kcenter.solver.abstract_generator import Solution
 
 sol = Solution(clusters={1: {1, 2}, 3: {3, 4}}, outliers={5}, cost=1.5)
 
