@@ -3,8 +3,8 @@ from typing import Dict
 
 import networkx as nx
 
-from kcenter.solver.abstract_generator import Solution
-from kcenter.verify.verify import cluster
+from src.kcenter.solver.abstract_generator import Solution
+from src.kcenter.verify.verify import cluster
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS
 
