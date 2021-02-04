@@ -2,6 +2,7 @@ from typing import Set, Dict, Tuple, Generator
 
 import networkx as nx
 
+from src.kcenter.solver.abstract_generator import AbstractGenerator, Solution
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy import Greedy
 
@@ -35,15 +36,15 @@ class GreedySteps:
                f"furthest point from the previous center. This makes the final cost {cost}."
 
 
-class SteppedGreedy(Greedy):
+class SteppedGreedy(Greedy, AbstractGenerator):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, str, bool], None, None]:
+    def generator(self) -> AbstractGenerator.YIELD_TYPE:
         clusters = {Greedy.INITIAL_HEAD: set(self.graph.nodes)}
         max_weight = max(list(nx.get_edge_attributes(self.graph, "weight").values()))
         label = GreedySteps.initial_center(graph=self.graph, center=Greedy.INITIAL_HEAD)
-        yield clusters, set(), max_weight, label, True
+        yield [Solution(clusters=clusters, cost=max_weight)], label, True
 
         for i in range(1, self.k):
             max_node, max_dist, owning_center = Greedy.max_dist(self.graph, clusters)
@@ -52,8 +53,8 @@ class SteppedGreedy(Greedy):
 
             Greedy.move_nodes_to_new_cluster(self.graph, clusters, max_node)
             label = GreedySteps.subsequent_center(self.graph, max_node, max_dist)
-            yield clusters, set(), max_dist, label, True
+            yield [Solution(clusters, max_dist)], label, True
 
         radius = Greedy.max_dist(self.graph, clusters)[1]
         label = GreedySteps.final_cost(radius, self.k)
-        yield clusters, set(), radius, label, False
+        yield [Solution(clusters, radius)], label, False

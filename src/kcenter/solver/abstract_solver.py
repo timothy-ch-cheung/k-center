@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple, Set, Generator
+from typing import Dict, Tuple, Set
 
 import networkx as nx
 

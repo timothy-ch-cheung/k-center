@@ -2,6 +2,7 @@ from typing import Dict, Generator, Tuple, Set
 
 import networkx as nx
 
+from src.kcenter.solver.abstract_generator import Solution, AbstractGenerator
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy_reduce import GreedyReduce
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
@@ -30,28 +31,28 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, int, str, bool], None, None]:
-        clusters = outliers = radius = label = active = None
-        solution = super().generator()
-        clusters, radius = {}, float("inf")
-        for step in solution:
-            clusters, outliers, radius, label, active = step
+    def generator(self) -> AbstractGenerator.YIELD_TYPE:
+        solutions = []
+        generator = super().generator()
+        for step in generator:
+            solutions, label, active = step
             if not active:
                 break
-            yield clusters, outliers, radius, label, True
+            yield solutions, label, True
 
-        yield clusters, outliers, radius, GreedyReduceSteps.intermediate_cost(radius, self.k), True
+        solution = solutions[0]
+        yield solutions, GreedyReduceSteps.intermediate_cost(solution.cost, self.k), True
 
-        weights = GreedyReduce.get_weights(self.graph, radius)
+        weights = GreedyReduce.get_weights(self.graph, solution.cost)
 
         new_weight = None
-        centers = set(clusters.keys())
+        centers = set(solution.clusters.keys())
         for weight in weights:
             if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-                yield clusters, set(), new_weight, GreedyReduceSteps.decrease_cost(new_weight), True
+                yield [Solution(solution.clusters, new_weight)], GreedyReduceSteps.decrease_cost(new_weight), True
             else:
                 break
 
-        radius = new_weight if new_weight is not None else radius
-        yield clusters, set(), radius, GreedyReduceSteps.final_cost(radius), False
+        radius = new_weight if new_weight is not None else solution.cost
+        yield [Solution(solution.clusters, radius)], GreedyReduceSteps.final_cost(radius), False
