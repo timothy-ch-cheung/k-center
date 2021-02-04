@@ -2,7 +2,7 @@ from typing import Dict
 
 import networkx as nx
 
-from kcenter.solver.abstract_generator import AbstractGenerator
+from src.kcenter.solver.abstract_generator import AbstractGenerator
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.constant.colour import Colour
@@ -30,7 +30,7 @@ class SteppedConstantColourful(ConstantPseudoColourful, AbstractGenerator):
                 break
             yield step
 
-        if len(solutions[0].clusters.keys()) > self.k:
+        if solutions is not None and len(solutions[0].clusters.keys()) > self.k:
             yield solutions, label, True
             yield solutions, ConstantColourfulSteps.retry_with_k_minus_one(self.k), True
 

@@ -1,5 +1,7 @@
+import math
 from abc import abstractmethod, ABC
 from typing import Dict, Set, Tuple, Generator, List
+
 import networkx as nx
 
 Label = str
@@ -13,10 +15,17 @@ class Solution:
         self.outliers = outliers or set()
 
     def __str__(self):
-        return f"clusters: {self.clusters}, cost: {round(self.cost, 3)}, outliers: {self.outliers}"
+        return f"clusters: {self.clusters}, cost: {round(self.cost, 5)}, outliers: {self.outliers}"
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other):
+        if isinstance(other, Solution):
+            return self.clusters == other.clusters \
+                   and math.isclose(self.cost, other.cost) \
+                   and self.outliers == other.outliers
+        return False
 
     def to_json(self, graph: nx.Graph):
         centers = list(self.clusters.keys())

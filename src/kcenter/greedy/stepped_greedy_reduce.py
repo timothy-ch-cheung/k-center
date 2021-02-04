@@ -32,27 +32,27 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
         super().__init__(graph, k, constraints)
 
     def generator(self) -> AbstractGenerator.YIELD_TYPE:
-        solutions = None
-        solution = super().generator()
-        clusters, radius = {}, float("inf")
-        for step in solution:
+        solutions = []
+        generator = super().generator()
+        for step in generator:
             solutions, label, active = step
             if not active:
                 break
             yield solutions, label, True
 
-        yield solutions, GreedyReduceSteps.intermediate_cost(radius, self.k), True
+        solution = solutions[0]
+        yield solutions, GreedyReduceSteps.intermediate_cost(solution.cost, self.k), True
 
-        weights = GreedyReduce.get_weights(self.graph, radius)
+        weights = GreedyReduce.get_weights(self.graph, solution.cost)
 
         new_weight = None
-        centers = set(clusters.keys())
+        centers = set(solution.clusters.keys())
         for weight in weights:
             if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-                yield [Solution(clusters, new_weight)], GreedyReduceSteps.decrease_cost(new_weight), True
+                yield [Solution(solution.clusters, new_weight)], GreedyReduceSteps.decrease_cost(new_weight), True
             else:
                 break
 
-        radius = new_weight if new_weight is not None else radius
-        yield [Solution(clusters, radius)], GreedyReduceSteps.final_cost(radius), False
+        radius = new_weight if new_weight is not None else solution.cost
+        yield [Solution(solution.clusters, radius)], GreedyReduceSteps.final_cost(radius), False

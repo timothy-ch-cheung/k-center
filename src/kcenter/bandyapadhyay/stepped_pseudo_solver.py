@@ -2,7 +2,7 @@ from typing import Dict, List, Generator, Tuple, Set, Iterable
 
 import networkx as nx
 
-from kcenter.solver.abstract_generator import AbstractGenerator, Solution
+from src.kcenter.solver.abstract_generator import AbstractGenerator, Solution
 from src.kcenter.bandyapadhyay.clustering import cluster_generator
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
@@ -96,7 +96,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator)
 
         lp_solver = SteppedConstantPseudoColourful.calculate_optimal_radius_binary(weights, radius_checker)
         opt = lp_solution = None
-        yield clusters, set(), 0, ConstantPseudoColourfulSteps.opt_search_start(weights), True
+        yield [Solution(clusters)], ConstantPseudoColourfulSteps.opt_search_start(weights), True
 
         for sol in lp_solver:
             cost, lp_solution, state = sol
