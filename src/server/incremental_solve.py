@@ -2,7 +2,7 @@ import time
 
 from flask import request, Blueprint, jsonify
 
-from kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
+from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.constant.colour import Colour

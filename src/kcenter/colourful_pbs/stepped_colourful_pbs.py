@@ -2,9 +2,9 @@ from typing import Dict
 
 import networkx as nx
 
-from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
-from kcenter.constant.colour import Colour
-from kcenter.pbs.stepped_pbs import SteppedPBS
+from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
+from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.stepped_pbs import SteppedPBS
 
 
 class SteppedColourfulPBS(ColourfulPBS, SteppedPBS):
