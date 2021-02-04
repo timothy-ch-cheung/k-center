@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABC
 from typing import Dict, Set, Tuple, Generator, List
+import networkx as nx
 
 Label = str
 Active = bool
@@ -11,9 +12,16 @@ class Solution:
         self.cost = cost
         self.outliers = outliers or set()
 
-    def to_json(self):
+    def __str__(self):
+        return f"clusters: {self.clusters}, cost: {round(self.cost, 3)}, outliers: {self.outliers}"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def to_json(self, graph: nx.Graph):
         centers = list(self.clusters.keys())
-        return {"centers": centers, "k": len(centers), "radius": self.cost, "outliers": len(self.outliers)}
+        center_coords = [{"x": pos[0], "y": pos[1]} for pos in [graph.nodes()[i]["pos"] for i in centers]]
+        return {"centers": center_coords, "k": len(centers), "radius": self.cost, "outliers": len(self.outliers)}
 
 
 class AbstractGenerator(ABC):

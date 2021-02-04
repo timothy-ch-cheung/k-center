@@ -54,7 +54,7 @@ def process_standard(graph, graph_name, step, time_elapsed):
 
     solutions_json = []
     for solution in solutions:
-        solutions_json.append({**solution.to_json(), **{"timeTaken": time_elapsed}})
+        solutions_json.append({**solution.to_json(graph), **{"timeTaken": time_elapsed}})
 
     solution = {"data": data,
                 "solutions": solutions_json,
