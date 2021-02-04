@@ -1,7 +1,10 @@
+from functools import reduce
 from typing import Dict
 
 import networkx as nx
 
+from kcenter.solver.abstract_generator import Solution
+from kcenter.verify.verify import cluster
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS
 
@@ -13,10 +16,10 @@ class PBSSteps:
     def get_best_individual(solutions):
         best_individual = -1
         min_cost = float("inf")
-        for i, individual in enumerate(solutions):
-            if individual["radius"] < min_cost:
+        for i, solution in enumerate(solutions):
+            if solution.cost < min_cost:
                 best_individual = i
-                min_cost = individual["radius"]
+                min_cost = solution.cost
         return best_individual, min_cost
 
     @staticmethod
@@ -42,10 +45,9 @@ class SteppedPBS(PBS):
         solutions = []
 
         for individual in self.population:
-            centers = [{"x": pos[0], "y": pos[1]} for pos in [self.graph.nodes()[i]["pos"] for i in individual.centers]]
-            solutions.append({
-                "k": len(centers), "centers": centers, "radius": individual.cost, "outliers": 0, "timeTaken": 0
-            })
+            clustered_points = cluster(self.graph, individual.centers, individual.cost)
+            outliers = self.points.difference(reduce((lambda x, y: x.union(y)), clustered_points.values()))
+            solutions.append(Solution(clusters=clustered_points, outliers=outliers, cost=individual.cost))
         return solutions
 
     def generator(self):

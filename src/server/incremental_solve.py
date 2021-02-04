@@ -2,14 +2,13 @@ import time
 
 from flask import request, Blueprint, jsonify
 
-from src.kcenter.pbs.stepped_pbs import SteppedPBS
-from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
+from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
+from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
-from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.stepped_pbs import SteppedPBS
 from src.server.graph_loader import GraphLoader
-from src.server.routes import repackage_solution
 
 step = Blueprint('step', __name__)
 
@@ -64,19 +63,6 @@ def process_standard(graph, graph_name, step, time_elapsed):
     return solution, is_active
 
 
-def process_genetic(graph, graph_name, step):
-    solutions, label, is_active = step
-    data = []
-    nodes = list(graph.nodes())
-    for node in nodes:
-        position = graph.nodes()[node]["pos"]
-        point_data = {"x": position[0], "y": position[1], "colour": graph.nodes()[node]["colour"].name.lower()}
-        data.append(point_data)
-    solution = {"data": data, "solutions": solutions, "step": {"label": label, "active": is_active}}
-    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
-    return solution, is_active
-
-
 @step.route('/api/v1/step/next', methods=["POST"])
 def next_step():
     request_data = request.get_json()
@@ -95,10 +81,7 @@ def next_step():
     end = time.time()
     time_elapsed = end - start
 
-    if len(step) == 3:
-        solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
-    else:
-        solution, is_active = process_genetic(graph, graph_name, step)
+    solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
 
     if not is_active:
         del problem_instances[id]
