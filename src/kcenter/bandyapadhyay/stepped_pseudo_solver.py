@@ -2,6 +2,7 @@ from typing import Dict, List, Generator, Tuple, Set, Iterable
 
 import networkx as nx
 
+from kcenter.solver.abstract_generator import AbstractGenerator, Solution
 from src.kcenter.bandyapadhyay.clustering import cluster_generator
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
@@ -49,7 +50,7 @@ class ConstantPseudoColourfulSteps:
         return label
 
 
-class SteppedConstantPseudoColourful(ConstantPseudoColourful):
+class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
@@ -82,7 +83,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
 
         yield weight, last_valid_solution, SearchStage.FINISHED
 
-    def generator(self) -> Generator[Tuple[Dict[int, Set[int]], Set[int], float, str, bool], None, None]:
+    def generator(self) -> AbstractGenerator.YIELD_TYPE:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
 
         Uses subroutines radius_checker (LP1 Section 2 figure 1), clustering (Section 2 Algorithm 1) and red_maximiser
@@ -94,18 +95,18 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
         radius_checker = RadiusChecker(self.graph, self.k, self.constraints[Colour.RED], self.constraints[Colour.BLUE])
 
         lp_solver = SteppedConstantPseudoColourful.calculate_optimal_radius_binary(weights, radius_checker)
-        opt = cost = lp_solution = None
+        opt = lp_solution = None
         yield clusters, set(), 0, ConstantPseudoColourfulSteps.opt_search_start(weights), True
 
         for sol in lp_solver:
             cost, lp_solution, state = sol
             if state == SearchStage.VALID_WEIGHT:
-                yield clusters, set(), 0, ConstantPseudoColourfulSteps.valid_cost_attempt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.valid_cost_attempt(cost), True
             elif state == SearchStage.INVALID_WEIGHT:
-                yield clusters, set(), 0, ConstantPseudoColourfulSteps.invalid_cost_attempt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.invalid_cost_attempt(cost), True
             else:
                 opt = cost
-                yield clusters, set(), 0, ConstantPseudoColourfulSteps.found_opt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.found_opt(cost), True
 
         for point, attributes in lp_solution.items():
             self.graph.nodes()[point]["x"] = attributes["x"]
@@ -115,9 +116,9 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
         for sol in clustering_solution:
             center, clusters, stage = sol
             if stage == SearchStage.UNFINISHED:
-                yield clusters, set(), opt, ConstantPseudoColourfulSteps.create_cluster(center, clusters[center], self.graph), True
+                yield [Solution(clusters, cost=opt)], ConstantPseudoColourfulSteps.create_cluster(center, clusters[center], self.graph), True
             elif stage == SearchStage.FINISHED:
-                yield clusters, set(), opt, ConstantPseudoColourfulSteps.cluster_creation_completed(), True
+                yield [Solution(clusters, cost=opt)], ConstantPseudoColourfulSteps.cluster_creation_completed(), True
 
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
@@ -131,5 +132,5 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful):
             del clusters[center]
 
         cost = 2 * opt
-        yield clusters, set(), cost, ConstantPseudoColourfulSteps.centers_chosen(set(clusters.keys()), self.k,
+        yield [Solution(clusters, cost=cost)], ConstantPseudoColourfulSteps.centers_chosen(set(clusters.keys()), self.k,
                                                                                  cost), False

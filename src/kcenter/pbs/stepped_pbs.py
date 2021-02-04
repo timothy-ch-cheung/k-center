@@ -1,4 +1,4 @@
-from typing import Dict, Generator, Tuple, Set, List, Union
+from typing import Dict
 
 import networkx as nx
 
@@ -32,6 +32,7 @@ class PBSSteps:
     def finished_evolving(num_generations, solutions):
         best_individual, min_cost = PBSSteps.get_best_individual(solutions)
         return f"{num_generations} generations were completed. The fittest individual was {best_individual} with a cost of {round(min_cost, PBSSteps.DECIMAL_PLACES)}"
+
 
 class SteppedPBS(PBS):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):

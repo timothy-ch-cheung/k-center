@@ -43,10 +43,24 @@ def start():
 
 
 def process_standard(graph, graph_name, step, time_elapsed):
-    clusters, outliers, radius, label, is_active = step
-    solution = repackage_solution(graph, clusters, outliers, radius, time_elapsed)
-    solution = {**solution, **GraphLoader.get_json_meta_data(graph_name)}
-    solution["step"] = {"label": label, "active": is_active}
+    solutions, label, is_active = step
+
+    data = []
+    nodes = list(graph.nodes())
+    for node in nodes:
+        position = graph.nodes()[node]["pos"]
+        point_data = {"x": position[0], "y": position[1], "colour": graph.nodes()[node]["colour"].name.lower()}
+        data.append(point_data)
+
+    solutions_json = []
+    for solution in solutions:
+        solutions_json.append({**solution.to_json(), **{"timeTaken": time_elapsed}})
+
+    solution = {"data": data,
+                "solutions": solutions_json,
+                "step": {"label": label, "active": is_active},
+                **GraphLoader.get_json_meta_data(graph_name)
+                }
     return solution, is_active
 
 
@@ -82,9 +96,9 @@ def next_step():
     time_elapsed = end - start
 
     if len(step) == 3:
-        solution, is_active = process_genetic(graph, graph_name, step)
-    else:
         solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
+    else:
+        solution, is_active = process_genetic(graph, graph_name, step)
 
     if not is_active:
         del problem_instances[id]
