@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 from src.kcenter.constant.colour import Colour
@@ -54,3 +56,14 @@ def test_generate_population_medium_graph_is_diverse(seed_random):
     comp.sim(generated_centers[3], generated_centers[0])
     for i, actual_similarity in similarity.items():
         np.testing.assert_allclose(actual_similarity, expected_similarity[i], rtol=1e-03)
+
+
+def test_generate_population_medium_graph_is_cost_diverse(seed_random):
+    graph = GraphLoader.get_graph("medium")
+    instance = PBS(graph, 4, {Colour.BLUE: 10, Colour.RED: 10})
+    population = instance.generate_population()
+    for i in population:
+        for j in population:
+            if i == j:
+                continue
+            assert math.isclose(i.cost, j.cost) == False, f"{i} is too similar to {j}"
