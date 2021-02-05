@@ -59,8 +59,8 @@ def test_generate_population_medium_graph_is_diverse(seed_random):
 
 
 def test_generate_population_medium_graph_is_cost_diverse(seed_random):
-    graph = GraphLoader.get_graph("medium")
-    instance = PBS(graph, 4, {Colour.BLUE: 10, Colour.RED: 10})
+    graph = GraphLoader.get_graph("k_center")
+    instance = PBS(graph, 5, {Colour.BLUE: 0, Colour.RED: 20})
     population = instance.generate_population()
     for i in population:
         for j in population:
