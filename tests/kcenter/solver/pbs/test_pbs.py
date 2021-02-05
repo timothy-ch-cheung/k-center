@@ -9,6 +9,7 @@ from tests.kcenter.util.create_test_graph import basic_graph, basic_graph_with_o
 
 FLOAT_ERROR_MARGIN = 0.001
 STRICT_CONSTRAINTS = {Colour.BLUE: 2, Colour.RED: 3}
+RELAXED_CONSTRAINTS = {Colour.BLUE: 2, Colour.RED: 2}
 K = 2
 
 
