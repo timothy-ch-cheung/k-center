@@ -80,7 +80,6 @@ export default function Step(props: Props) {
                     }
                     props.pageControl.updateControl(update)
                     setIsLoading(false)
-                    console.log(response.data)
                 }
             )
         } else {

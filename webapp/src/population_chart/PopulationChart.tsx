@@ -41,7 +41,6 @@ export default function PopulationChart(props: Props): JSX.Element {
     const [open, setOpen] = useState<boolean>(false)
 
     const handleClick = (id: number) => {
-        console.log(id)
         setOpen(true)
         setSolutionId(id)
     }
