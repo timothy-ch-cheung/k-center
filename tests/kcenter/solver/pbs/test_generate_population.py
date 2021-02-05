@@ -60,7 +60,7 @@ def test_generate_population_medium_graph_is_diverse(seed_random):
 
 
 def test_generate_population_medium_graph_is_cost_diverse(seed_random):
-    random.seed(7)
+    random.seed(47)
     graph = GraphLoader.get_graph("large")
     instance = PBS(graph, 5, {Colour.BLUE: 50, Colour.RED: 50})
     population = instance.generate_population()
@@ -69,3 +69,6 @@ def test_generate_population_medium_graph_is_cost_diverse(seed_random):
             if i == j:
                 continue
             assert math.isclose(i.cost, j.cost) == False, f"{i} is too similar to {j}"
+
+    np.testing.assert_allclose([individual.cost for individual in population],
+                               [76.2846, 53.4217, 68.7665, 66.9643, 66.4290, 56.6719, 66.4697, 78.9867], rtol=1e-03)
