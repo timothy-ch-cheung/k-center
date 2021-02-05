@@ -6,7 +6,7 @@ let chart
 const margin = {top: 40, right: 20, bottom: 60, left: 60};
 const legendWidth = 100;
 
-const radiusToPixels = (chartSize, maxDomain, radius) => (chartSize / maxDomain) * radius
+export const radiusToPixels = (chartSize, maxDomain, radius) => (chartSize / maxDomain) * radius
 
 D3Chart.create = function (props) {
     chart = d3.select(".chart")
@@ -17,19 +17,20 @@ D3Chart.create = function (props) {
 }
 
 D3Chart.update = function (props) {
-    const circleSize = props.chart.data.length > 150 ? 2 : 5
-    d3.selectAll('.circle').remove();
-    d3.selectAll('.radii').remove();
-    d3.selectAll('.toggle-text').remove();
-    d3.selectAll('.toggle').remove();
-    d3.selectAll('.axis').remove();
+    const circleSize = props.data.length > 150 ? 2 : 5
+    d3.selectAll('.chart .circle').remove();
+    d3.selectAll('.chart .radii').remove();
+    d3.selectAll('.chart .toggle-text').remove();
+    d3.selectAll('.chart .toggle').remove();
+    d3.selectAll('.chart .axis').remove();
+
     const x = d3.scaleLinear()
         .range([0, props.width]);
 
     const y = d3.scaleLinear()
         .range([props.height, 0]);
 
-    const maxDomain = Math.max(d3.min(props.chart.data, (d) => d.y), d3.max(props.chart.data, (d) => d.x)) * 1.25
+    const maxDomain = Math.max(d3.min(props.data, (d) => d.y), d3.max(props.data, (d) => d.x)) * 1.25
 
     x.domain([0, maxDomain]);
     y.domain([0, maxDomain]);
@@ -55,18 +56,18 @@ D3Chart.update = function (props) {
         .attr('dy', '-1.5em')
         .text('Y');
 
-    props.chart.solution && chart.selectAll('.radii')
-        .data(props.chart.data)
+    props.solution && chart.selectAll('.radii')
+        .data(props.solution.centers)
         .enter().append('circle')
         .attr('class', 'radii')
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
-        .attr('r', radiusToPixels(props.width, maxDomain, props.chart.solution.radius))
-        .style("stroke", (d) => d.center ? "black" : "none")
+        .attr('r', radiusToPixels(props.width, maxDomain, props.solution.radius))
+        .style("stroke", "black")
         .style('fill', 'none');
 
     chart.selectAll('.circle')
-        .data(props.chart.data)
+        .data(props.data)
         .enter().append('circle')
         .attr('class', (d) => `circle ${d.colour} ${d.center ? 'center' : ''}`)
         .attr('cx', (d) => x(d.x))
@@ -74,7 +75,7 @@ D3Chart.update = function (props) {
         .attr('r', circleSize)
         .style('fill', (d) => d.colour);
 
-    drawTooltips(props.chart.data);
+    drawTooltips(props.data);
     drawLegend(props)
 }
 
@@ -101,7 +102,7 @@ function drawTooltips(data) {
 function drawLegend(props) {
     drawCentersBoundaryToggle(props.width);
     drawHighlightCenterButton(props.width);
-    drawClassToggles(props.chart.data, props.width);
+    drawClassToggles(props.data, props.width);
 }
 
 function drawCentersBoundaryToggle(chartWidth) {

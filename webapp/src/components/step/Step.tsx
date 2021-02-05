@@ -1,14 +1,13 @@
 import {ChartFrame} from "../chart/Chart";
-import {H3, SectionDivider} from "../configuration/Layout";
+import {SectionDivider} from "../configuration/Layout";
 import PagingBar from "../Pagination/PagingBar";
 import React, {useState} from "react";
 import styled from "@emotion/styled";
 import {SolutionStep} from "../../pages/steps/Steps";
 import API from "../../API";
 import {algorithms} from "../../constants/algorithms";
-import {CircularProgress} from "@material-ui/core";
-import TitlePanel from "../title_panel/TitlePanel";
 import {Dimensions} from "../../interfaces";
+import TitlePanel from "../title_panel/TitlePanel";
 
 export interface PageSetting {
     nextEnabled: boolean
@@ -46,8 +45,8 @@ interface Props {
 const DEFAULT_STEP_TEXT = ""
 
 const TextBox = styled("p")`
-    width: ${(props: Dimensions) => props.width}px;
-    height: ${(props: Dimensions) => props.height}px;
+  width: ${(props: Dimensions) => props.width}px;
+  height: ${(props: Dimensions) => props.height}px;
 `
 
 export default function Step(props: Props) {
@@ -95,7 +94,7 @@ export default function Step(props: Props) {
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <TitlePanel
             title={"Step-By-Step Walkthrough"}
-            subtitle={props.algorithm? algorithms[props.algorithm].short_name : ""}
+            subtitle={props.algorithm ? algorithms[props.algorithm].short_name : ""}
             loading={isLoading}
             dimensions={{width: props.width, height: 50}}/>
         <SectionDivider/>

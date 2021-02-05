@@ -10,13 +10,13 @@ import SolutionStats from "../../components/stats/solution/SolutionStats";
 
 
 const ChartContainer = styled("div")`
-    display: grid;
-    grid-template-rows: 250px 250px;
-    grid-template-columns: 405px 580px 250px;
-    grid-gap: 5px;
-    margin: 30px auto;
-    width: 1250px;
-    grid-template-areas:
+  display: grid;
+  grid-template-rows: 250px 250px;
+  grid-template-columns: 405px 580px 250px;
+  grid-gap: 5px;
+  margin: 30px auto;
+  width: 1250px;
+  grid-template-areas:
     "left middle top-right"
     "left middle bot-right";
 `
@@ -43,11 +43,12 @@ function Solve() {
                 setChartData={setChartData}
                 setSolveRequestData={setSolveRequestData}
             />
-            <Chart gridArea="middle" chart={chartData} width={350} height={350}/>
+            <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
+                   solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
             <InstanceStats gridArea="top-right" chart={chartData} width={180} height={210}/>
             <SolutionStats
                 gridArea="bot-right" width={180} height={200}
-                solution={chartData?.solution}
+                solution={chartData?.solutions?.length == 1 ? chartData?.solutions[0] : undefined}
                 solveRequestData={solveRequestData}
             />
         </ChartContainer>

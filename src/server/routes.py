@@ -42,17 +42,17 @@ def repackage_solution(graph, clusters, outliers, radius, time_elapsed):
     for node in nodes:
         position = graph.nodes()[node]["pos"]
         point_data = {"x": position[0], "y": position[1], "colour": graph.nodes()[node]["colour"].name.lower()}
-        if node in clusters:
-            point_data["center"] = True
         data.append(point_data)
 
+    centers = [{"x": pos[0], "y": pos[1]} for pos in [graph.nodes()[i]["pos"] for i in clusters.keys()]]
     solution = {
-        "k": len(clusters.keys()),
+        "k": len(centers),
         "radius": radius,
         "outliers": len(outliers),
-        "timeTaken": time_elapsed
+        "timeTaken": time_elapsed,
+        "centers": centers
     }
-    return {"data": data, "solution": solution}
+    return {"data": data, "solutions": [solution]}
 
 
 @main.route('/api/v1/solve', methods=["POST"])
