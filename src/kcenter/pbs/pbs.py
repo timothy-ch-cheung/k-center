@@ -342,12 +342,10 @@ class PBS(AbstractSolver):
                 self.remove_center(point_to_remove, optimised_individual)
                 self.add_center(point_to_add, optimised_individual)
                 swapped.add((point_to_remove, point_to_add))
-                # print(optimised_individual.cost)
 
             iteration += 1
             if optimised_individual.cost >= prev_cost:
                 stale_iterations += 1
-        # print()
 
         return optimised_individual
 
