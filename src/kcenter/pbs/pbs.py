@@ -478,16 +478,17 @@ class PBS(AbstractSolver):
         second_child = generate_child(self, second_child_centers)
         return first_child, second_child
 
-    def is_diverse(self, candidate: Individual):
+    def is_diverse(self, candidate: Individual, population: List[Individual] = None):
         def is_between(lower_bound: float, upper_bound: float, value: float):
             return lower_bound <= value <= upper_bound
 
         COST_THRESHHOLD = 0.01
+        population = population or self.population
         is_diverse = True
-        for individual in self.population:
-            lower = candidate.cost * (1 - COST_THRESHHOLD)
-            upper = candidate.cost * (1 + COST_THRESHHOLD)
-            if is_between(lower, upper, individual.cost):
+        for individual in population:
+            lower = individual.cost * (1 - COST_THRESHHOLD)
+            upper = individual.cost * (1 + COST_THRESHHOLD)
+            if is_between(lower, upper, candidate.cost):
                 is_diverse = False
                 break
         return is_diverse
@@ -511,14 +512,19 @@ class PBS(AbstractSolver):
         return self.population
 
     def generate_population(self) -> List[Individual]:
-        population = []
+        population: List[Individual] = []
+        MAX_FAIL_COUNT = 8
+        num_fail = 0
         while len(population) < PBS.POPULATION_SIZE:
             init_center = {random.choice(tuple(self.points))}
             candidate = Individual(init_center)
             self.init_individual(candidate)
-            candidate = self.local_search(candidate, 0)
-            if self.is_diverse(candidate):
+            candidate = self.local_search(candidate, 1)
+            if self.is_diverse(candidate, population) or num_fail >= MAX_FAIL_COUNT:
                 population.append(candidate)
+                num_fail = 0
+            else:
+                num_fail += 1
         return population
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:
