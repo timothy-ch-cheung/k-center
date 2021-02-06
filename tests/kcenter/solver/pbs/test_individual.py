@@ -38,15 +38,9 @@ def test_neighbour_inequality_different_type():
     assert first_neighbour != float(100)
 
 
-def test_neighbour_copy():
-    neighbour = Neighbour(2, 2.1)
-    copy_neighbour = neighbour.copy()
-    assert neighbour == copy_neighbour
-
-
 def test_neighbour_str():
     neighbour = Neighbour(2, 2.1)
-    assert str(neighbour) == "{point: 2, cost: 2.1}"
+    assert str(neighbour) == "Neighbour(point=2, cost=2.1)"
 
 
 def test_individual_str():
@@ -54,7 +48,7 @@ def test_individual_str():
                             nearest_centers={0: {"nearest_center": Neighbour(0, 0), "second_nearest_center": None},
                                              1: {"nearest_center": Neighbour(0, 1.5), "second_nearest_center": None}})
     assert str(
-        individual) == "{centers: [0], cost: 2.1, nearest_centers: {0: {'nearest_center': {point: 0, cost: 0}, 'second_nearest_center': None}, 1: {'nearest_center': {point: 0, cost: 1.5}, 'second_nearest_center': None}}}"
+        individual) == "{centers: [0], cost: 2.1, nearest_centers: {0: {'nearest_center': Neighbour(point=0, cost=0), 'second_nearest_center': None}, 1: {'nearest_center': Neighbour(point=0, cost=1.5), 'second_nearest_center': None}}}"
 
 
 def test_nearest_centers_equality():
@@ -89,11 +83,11 @@ def test_individual_init_centers():
     })
     assert individual.centers == {0, 4}
     expected_nearest_centers = [
-        NearestCenters(Neighbour(0, 0), Neighbour(4, 5.515)),
+        NearestCenters(Neighbour(0, 0), Neighbour(4, 5.5154)),
         NearestCenters(Neighbour(0, 0.5099), Neighbour(4, 5.8138)),
         NearestCenters(Neighbour(0, 0.8544), Neighbour(4, 6.3694)),
         NearestCenters(Neighbour(4, 0.7071), Neighbour(0, 5.2839)),
         NearestCenters(Neighbour(4, 0), Neighbour(0, 5.5154))
     ]
     for point, expected in enumerate(expected_nearest_centers):
-        assert str(individual.nearest_centers[point]) == str(expected)
+        assert individual.nearest_centers[point] == expected

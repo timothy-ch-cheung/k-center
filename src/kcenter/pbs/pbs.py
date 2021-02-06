@@ -1,5 +1,6 @@
 import math
 import random
+from dataclasses import dataclass
 from typing import Tuple, Dict, Set, Generator, List
 
 import networkx as nx
@@ -15,49 +16,24 @@ def min2(a: float, b: float) -> float:
     return b
 
 
+@dataclass
 class Neighbour:
-    """
-    Data structure to store a neighbour to a point and the distance to it.
-    """
-
-    def __init__(self, point: int, cost: float):
-        self.point = point
-        self.cost = cost
-
-    def copy(self):
-        return Neighbour(self.point, self.cost)
-
-    def __eq__(self, other):
-        if isinstance(other, Neighbour):
-            return self.point == other.point and self.cost == other.cost
-        return False
+    __slots__ = ['point', 'cost']
+    point: int
+    cost: float
 
     def __str__(self):
-        return "{" + f"point: {self.point}, cost: {round(self.cost, 3)}" + "}"
+        return f"Neighbour(point={self.point}, cost={round(self.cost, 3)})"
 
     def __repr__(self):
         return self.__str__()
 
 
+@dataclass
 class NearestCenters:
-    """
-    Data structure to store the nearest and second nearest centers to a given point
-    """
-
-    def __init__(self, nearest: Neighbour, second_nearest: Neighbour):
-        self.nearest = nearest
-        self.second_nearest = second_nearest
-
-    def __eq__(self, other):
-        if isinstance(other, NearestCenters):
-            return self.nearest == other.nearest and self.second_nearest == other.second_nearest
-        return False
-
-    def __str__(self):
-        return f'{{\'nearest_center\': {self.nearest}, \'second_nearest_center\': {self.second_nearest}}}'
-
-    def __repr__(self):
-        return self.__str__()
+    __slots__ = ['nearest', 'second_nearest']
+    nearest: Neighbour
+    second_nearest: Neighbour
 
 
 class Individual:
@@ -366,10 +342,12 @@ class PBS(AbstractSolver):
                 self.remove_center(point_to_remove, optimised_individual)
                 self.add_center(point_to_add, optimised_individual)
                 swapped.add((point_to_remove, point_to_add))
+                # print(optimised_individual.cost)
 
             iteration += 1
             if optimised_individual.cost >= prev_cost:
                 stale_iterations += 1
+        # print()
 
         return optimised_individual
 
