@@ -1,3 +1,5 @@
+import random
+
 import pytest
 
 from src.server.graph_loader import GraphLoader
@@ -50,11 +52,12 @@ def test_pbs_basic_graph_with_outlier(seed_random):
 
 
 def test_pbs_medium_graph(seed_random):
+    random.seed(1)
     graph = medium_graph()
     instance = PBS(graph, 3, STRICT_CONSTRAINTS)
     clusters, outliers, radius = instance.solve()
 
-    assert clusters == {1: {0, 1}, 3: {3, 4}, 6: {2, 5, 6, 7, 8, 9}}
+    assert clusters == {0: {0, 1}, 3: {3, 4}, 6: {2, 5, 6, 7, 8, 9}}
     assert outliers == set()
     assert radius == pytest.approx(1.063, FLOAT_ERROR)
     assert verify_solution(graph, STRICT_CONSTRAINTS, 3, radius, set(clusters.keys())) is True
