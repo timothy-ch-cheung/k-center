@@ -126,7 +126,12 @@ class ColourfulPBS(PBS):
                 second_nearest = nearest_centers.second_nearest
                 nearest = nearest_centers.nearest
 
-                min_dist = min2(self.weights[(point, i)], second_nearest.cost)
+                new_cost = self.weights[(point, i)]
+                if new_cost < second_nearest.cost:
+                    min_dist = new_cost
+                else:
+                    min_dist = second_nearest.cost
+
                 if min_dist > individual.cost:
                     M[nearest.point] += 1
 

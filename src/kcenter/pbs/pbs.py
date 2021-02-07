@@ -10,12 +10,6 @@ from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
-def min2(a: float, b: float) -> float:
-    if a < b:
-        return a
-    return b
-
-
 @dataclass
 class Neighbour:
     __slots__ = ['point', 'cost']
@@ -271,7 +265,12 @@ class PBS(AbstractSolver):
                 second_nearest = nearest_centers.second_nearest
                 nearest = nearest_centers.nearest
 
-                min_dist = min2(self.weights[(point, i)], second_nearest.cost)
+                new_cost = self.weights[(point, i)]
+                if new_cost < second_nearest.cost:
+                    min_dist = new_cost
+                else:
+                    min_dist = second_nearest.cost
+
                 if min_dist > M[nearest.point]:
                     M[nearest.point] = min_dist
 
