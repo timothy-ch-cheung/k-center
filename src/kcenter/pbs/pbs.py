@@ -493,7 +493,7 @@ class PBS(AbstractSolver):
                 break
         return is_diverse
 
-    def update_population(self, candidate: Individual):
+    def update_population(self, candidate: Individual) -> bool:
         """Add the candidate to the solution if the candidate improves the population
 
         W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
@@ -506,20 +506,23 @@ class PBS(AbstractSolver):
             if self.population[index_max].cost > candidate.cost:
                 self.population[index_max] = candidate
                 self.no_update_count = 0
-                return self.population
+                return True
 
         self.no_update_count += 1
-        return self.population
+        return False
+
+    def generate_candidate(self):
+        init_center = {random.choice(tuple(self.points))}
+        candidate = Individual(init_center)
+        self.init_individual(candidate)
+        return self.local_search(candidate, 1)
 
     def generate_population(self) -> List[Individual]:
         population: List[Individual] = []
         MAX_FAIL_COUNT = 8
         num_fail = 0
         while len(population) < PBS.POPULATION_SIZE:
-            init_center = {random.choice(tuple(self.points))}
-            candidate = Individual(init_center)
-            self.init_individual(candidate)
-            candidate = self.local_search(candidate, 1)
+            candidate = self.generate_candidate()
             if self.is_diverse(candidate, population) or num_fail >= MAX_FAIL_COUNT:
                 population.append(candidate)
                 num_fail = 0
@@ -551,6 +554,7 @@ class PBS(AbstractSolver):
                     first_child, second_child = self.crossover_directed(individual, sibling)
                     self.update_population(self.local_search(self.mutation_directed(first_child), generation))
                     self.update_population(self.local_search(self.mutation_directed(second_child), generation))
+            print()
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         self.evolve()
