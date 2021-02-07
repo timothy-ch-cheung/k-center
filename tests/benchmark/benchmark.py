@@ -7,6 +7,9 @@ import numpy as np
 graph = GraphLoader.get_graph("large")
 instance = PBS(graph, 5, {Colour.BLUE: 50, Colour.RED: 50})
 
+graph = GraphLoader.get_graph("medium")
+instance = PBS(graph, 4, {Colour.BLUE: 10, Colour.RED: 10})
+
 TRIALS = 100
 costs = []
 durations = []
@@ -17,7 +20,7 @@ for i in range(TRIALS):
     clusters, outliers, radius = instance.solve()
     duration = time.time() - start
     costs.append(radius)
-    durations.append(durations)
+    durations.append(duration)
     print(round(radius, 3), round(duration, 3))
 
 print(f"COST: mean={np.mean(costs)} std={np.std(costs)}")
