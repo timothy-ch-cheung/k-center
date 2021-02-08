@@ -554,7 +554,6 @@ class PBS(AbstractSolver):
                     first_child, second_child = self.crossover_directed(individual, sibling)
                     self.update_population(self.local_search(self.mutation_directed(first_child), generation))
                     self.update_population(self.local_search(self.mutation_directed(second_child), generation))
-            print()
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         self.evolve()

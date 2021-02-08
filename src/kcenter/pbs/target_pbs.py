@@ -42,15 +42,20 @@ class TargetPBS(PBS):
                     candidate = self.local_search(self.mutation_random(individual), generation)
                     yield candidate if self.update_population(candidate) else None
 
-                    candidate = self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
-                                                  generation)
+                    child = self.local_search(self.crossover_random(individual, sibling), generation)
+                    yield child if self.update_population(child) else None
+                    candidate = self.local_search(self.mutation_directed(child), generation)
                     yield candidate if self.update_population(candidate) else None
 
                     first_child, second_child = self.crossover_directed(individual, sibling)
 
+                    first_child = self.local_search(first_child, generation)
+                    yield first_child if self.update_population(first_child) else None
                     candidate = self.local_search(self.mutation_directed(first_child), generation)
                     yield candidate if self.update_population(candidate) else None
 
+                    second_child = self.local_search(second_child, generation)
+                    yield second_child if self.update_population(second_child) else None
                     candidate = self.local_search(self.mutation_directed(second_child), generation)
                     yield candidate if self.update_population(candidate) else None
             generation += 1
