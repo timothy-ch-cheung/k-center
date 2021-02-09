@@ -1,5 +1,6 @@
 import functools
 import itertools
+import math
 import time
 from typing import Dict, Tuple, Set, List, Iterator
 
@@ -8,7 +9,7 @@ import networkx as nx
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
 from src.kcenter.verify.verify import cluster
-from util.calculation import calculate_combinations
+from src.util.calculation import calculate_combinations
 
 
 class BruteForceKCenter(AbstractSolver):
@@ -36,29 +37,39 @@ class BruteForceKCenter(AbstractSolver):
         return max_cost
 
     def _iterations(self):
-        candidate_centers: Iterator[List[int]] = itertools.permutations(self.graph.nodes(), self.k)
+        candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
         while True:
             candidate = next(candidate_centers)
             yield functools.partial(self.find_candidate_cost, candidate)
 
     def predict_time(self) -> float:
-        TRIALS = 10
-        iterations = self._iterations()
-        total = 0.0
-        for i in range(TRIALS):
-            candidate_test = next(iterations)
+        def time_check(trials: int):
+            iterations = self._iterations()
             start = time.time()
-            candidate_test()
-            duration = time.time() - start
-            total += duration
-        duration = total/TRIALS
+            for i in range(trials):
+                candidate_test = next(iterations)
+                candidate_test()
+            end = time.time()
+            duration = end - start
+            return duration/trials
+
+        TRIALS = [5, 10, 100]
+        time_per_check = 0.0
+        for num_trials in TRIALS:
+            if num_trials > calculate_combinations(len(self.points), self.k):
+                break
+            time_per_check = time_check(num_trials)
+            print(num_trials, time_per_check)
+            if not math.isclose(0, time_per_check):
+                break
+
         combinations = calculate_combinations(len(self.points), self.k)
-        return duration * combinations
+        return time_per_check * combinations
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
         best_cost = float("inf")
         best_candidate = None
-        candidate_centers: Iterator[List[int], None, None] = itertools.permutations(self.graph.nodes(), self.k)
+        candidate_centers: Iterator[List[int], None, None] = itertools.combinations(self.graph.nodes(), self.k)
         for candidate in candidate_centers:
             cost = self.find_candidate_cost(candidate)
             if cost < best_cost:

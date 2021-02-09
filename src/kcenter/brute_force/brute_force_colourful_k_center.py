@@ -4,8 +4,8 @@ from typing import Dict, Tuple, Set, List, Iterator
 
 import networkx as nx
 
-from kcenter.brute_force.brute_force_k_center import BruteForceKCenter
-from kcenter.constant.colour import Colour
+from src.kcenter.brute_force.brute_force_k_center import BruteForceKCenter
+from src.kcenter.constant.colour import Colour
 
 
 class BruteForceColourfulKCenter(BruteForceKCenter):
@@ -27,7 +27,7 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
             return False
 
     def _iterations(self):
-        candidate_centers: Iterator[List[int]] = itertools.permutations(self.graph.nodes(), self.k)
+        candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
         while True:
             candidate = next(candidate_centers)
             yield functools.partial(self.check_candidate, candidate, self.costs[0])
@@ -38,7 +38,7 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
 
     def find_solution(self) -> Tuple[List[int], float]:
         for candidate_cost in self.costs:
-            candidate_centers: Iterator[List[int]] = itertools.permutations(self.graph.nodes(), self.k)
+            candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
             for candidate in candidate_centers:
                 valid = self.check_candidate(candidate, candidate_cost)
                 if valid:
@@ -57,7 +57,7 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
                     nearest_center = center
                     break
                 point_cost = self.weights[(point, center)]
-                if point_cost <= min_dist and cost <= cost:
+                if point_cost <= min_dist and point_cost <= cost:
                     min_dist = cost
                     nearest_center = center
             if nearest_center is not None:
