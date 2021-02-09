@@ -39,3 +39,11 @@ def test_greedy_medium_graph_colourful_clustering():
     }
     assert outliers == set()
     assert verify_solution(graph, constraints, k, radius, set(clusters.keys())) is True
+
+
+def test_predict_time():
+    graph = GraphLoader.get_graph("medium")
+    k = 4
+    constraints = {Colour.BLUE: 10, Colour.RED: 10}
+    instance = BruteForceKCenter(graph, k, constraints)
+    assert instance.predict_time() > 0

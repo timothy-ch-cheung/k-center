@@ -38,3 +38,11 @@ def test_greedy_medium_graph_colourful_clustering():
     }
     assert outliers == {20, 21, 22, 23, 24}
     assert verify_solution(graph, RELAXED_CONSTRAINTS, k, radius, set(clusters.keys())) is True
+
+
+def test_predict_time():
+    graph = GraphLoader.get_graph("medium")
+    k = 4
+    constraints = {Colour.BLUE: 10, Colour.RED: 10}
+    instance = BruteForceColourfulKCenter(graph, k, constraints)
+    assert instance.predict_time() > 0
