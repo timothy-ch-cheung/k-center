@@ -25,6 +25,11 @@ class BruteForceKCenter(AbstractSolver):
         super().__init__(graph, k, constraints)
 
     def find_candidate_cost(self, candidate: List[int]) -> float:
+        """Find the cost of solving the K-Center problem with a given set of centers.
+
+        :param candidate: list of centers
+        :return the maximum cost that a point has to its nearest center
+        """
         max_cost = 0.0
         for point in self.graph.nodes():
             min_cost = float("inf")
@@ -37,12 +42,23 @@ class BruteForceKCenter(AbstractSolver):
         return max_cost
 
     def _iterations(self):
+        """Create a generator which gives the next candidate to check as a function
+
+        :return a function which executes a single iteration in the brute force algorithm - in other words it tests a
+        single candidate.
+        """
         candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
         while True:
             candidate = next(candidate_centers)
             yield functools.partial(self.find_candidate_cost, candidate)
 
     def predict_time(self) -> float:
+        """Estimate how long it would take to brute force the K-Center problem. Performs trials to get an average of
+        how long it make take to test a single candidate.
+
+        :return estimated time to solve in seconds
+        """
+
         def time_check(trials: int):
             iterations = self._iterations()
             start = time.time()
@@ -51,7 +67,7 @@ class BruteForceKCenter(AbstractSolver):
                 candidate_test()
             end = time.time()
             duration = end - start
-            return duration/trials
+            return duration / trials
 
         TRIALS = [5, 10, 100]
         time_per_check = 0.0
@@ -67,6 +83,10 @@ class BruteForceKCenter(AbstractSolver):
         return time_per_check * combinations
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
+        """Test all candidates that use K centers and return the best solution.
+
+        :return the optimal solution to the K-Center problem
+        """
         best_cost = float("inf")
         best_candidate = None
         candidate_centers: Iterator[List[int], None, None] = itertools.combinations(self.graph.nodes(), self.k)

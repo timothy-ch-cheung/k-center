@@ -27,6 +27,11 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
             return False
 
     def _iterations(self):
+        """Create a generator which gives the next candidate to check as a function
+
+        :return a function which executes a single iteration in the brute force algorithm - in other words it tests a
+        single candidate.
+        """
         candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
         while True:
             candidate = next(candidate_centers)
@@ -37,6 +42,10 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
         return time * len(self.costs)
 
     def find_solution(self) -> Tuple[List[int], float]:
+        """Brute force all center set candidates and cost candidates in order of cost ascending.
+
+        :return the centers of the optimal solution to the Colourful K-Center problem
+        """
         for candidate_cost in self.costs:
             candidate_centers: Iterator[List[int]] = itertools.combinations(self.graph.nodes(), self.k)
             for candidate in candidate_centers:
@@ -45,6 +54,10 @@ class BruteForceColourfulKCenter(BruteForceKCenter):
                     return candidate, candidate_cost
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
+        """Brute force all candidates for the Colourful K-Center problem
+
+        :return the optimal solution to the K-Center problem
+        """
         centers, cost = self.find_solution()
         clusters = {center: set() for center in centers}
         outliers = set()

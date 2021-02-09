@@ -2,6 +2,11 @@ from decimal import Decimal
 
 
 def from_seconds(seconds: float):
+    """Break down time in seconds into more units.
+
+    param seconds: time in seconds
+    return: seconds broken down into years, weeks, days, hours, minutes, and seconds
+    """
     years, seconds = divmod(seconds, 365 * 24 * 60 * 60)
     weeks, seconds = divmod(seconds, 7 * 24 * 60 * 60)
     days, seconds = divmod(seconds, 24 * 60 * 60)
@@ -11,6 +16,12 @@ def from_seconds(seconds: float):
 
 
 def seconds_to_string(seconds: float):
+    """Return a string describing time in seconds in more units.
+
+    param seconds: time in seconds
+    return: string describing time in seconds, omitting units which have a value of 0 - e.g. will not return the 'years'
+    component if there are 0 years
+    """
     years, weeks, days, hours, minutes, seconds = from_seconds(seconds)
     string = ""
     if years != 0 and years > 10 ** 10:
