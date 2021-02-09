@@ -1,9 +1,9 @@
 import pytest
 
-from kcenter.brute_force.brute_force_k_center import BruteForceKCenter
-from kcenter.constant.colour import Colour
-from kcenter.verify.verify import verify_solution
-from server.graph_loader import GraphLoader
+from src.kcenter.brute_force.brute_force_k_center import BruteForceKCenter
+from src.kcenter.constant.colour import Colour
+from src.kcenter.verify.verify import verify_solution
+from src.server.graph_loader import GraphLoader
 from tests.kcenter.solver.greedy.test_greedy import STRICT_CONSTRAINTS, K
 from tests.kcenter.util.assertion import FLOAT_ERROR_MARGIN
 from tests.kcenter.util.create_test_graph import basic_graph

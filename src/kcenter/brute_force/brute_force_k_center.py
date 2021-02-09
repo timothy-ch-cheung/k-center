@@ -5,9 +5,9 @@ from typing import Dict, Tuple, Set, List, Iterator
 
 import networkx as nx
 
-from kcenter.constant.colour import Colour
-from kcenter.solver.abstract_solver import AbstractSolver
-from kcenter.verify.verify import cluster
+from src.kcenter.constant.colour import Colour
+from src.kcenter.solver.abstract_solver import AbstractSolver
+from src.kcenter.verify.verify import cluster
 
 
 class BruteForceKCenter(AbstractSolver):
