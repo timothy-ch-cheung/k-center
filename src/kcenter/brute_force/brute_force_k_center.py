@@ -58,7 +58,6 @@ class BruteForceKCenter(AbstractSolver):
 
         :return estimated time to solve in seconds
         """
-
         def time_check(trials: int):
             iterations = self._iterations()
             start = time.time()
