@@ -34,5 +34,15 @@ export const algorithms : {[key: string]: algorithm_props}= {
         name: "Colourful PBS",
         short_name: "Colourful PBS",
         type: "genetic"
+    },
+    brute_force_k_center: {
+        name: "Brute force K-Center",
+        short_name: "Brute force K-Center",
+        type: "exact"
+    },
+    brute_force_colourful_k_center: {
+        name: "Brute force Colourful K-Center",
+        short_name: "Brute force Colourful K-Center",
+        type: "exact"
     }
 }
