@@ -3,6 +3,7 @@ import {ChartData, ChartFrame} from "../chart/Chart";
 import API from "../../API";
 import {H3, SectionDivider} from "./Layout";
 import ConfigFormBody from "./ConfigFormBody";
+import {AlertData} from "../../pages/solve/Solve";
 
 interface Props {
     width: number
@@ -11,7 +12,7 @@ interface Props {
     setChartData: (chart: any) => void
     setSolveRequestData: (data: SolveRequestData) => void
     gridArea?: string
-    alertOpen: (text: string) => void
+    alertOpen: (alert: AlertData) => void
 }
 
 export interface SolveRequestData {

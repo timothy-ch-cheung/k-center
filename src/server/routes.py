@@ -3,10 +3,10 @@ import time
 import networkx as nx
 from flask import render_template, request, jsonify, Blueprint
 
-from src.kcenter.brute_force.brute_force_colourful_k_center import BruteForceColourfulKCenter
-from src.kcenter.brute_force.brute_force_k_center import BruteForceKCenter
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.solver import ConstantColourful
+from src.kcenter.brute_force.brute_force_colourful_k_center import BruteForceColourfulKCenter
+from src.kcenter.brute_force.brute_force_k_center import BruteForceKCenter
 from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.greedy import Greedy
@@ -26,6 +26,10 @@ k_center_algorithms = {
     "brute_force_k_center": BruteForceKCenter,
     "brute_force_colourful_k_center": BruteForceColourfulKCenter
 }
+
+
+class ResponseTypes:
+    PREDICTED_TIME = "predicted_time"
 
 
 @main.route("/")
@@ -66,8 +70,9 @@ def repackage_solution(graph: nx.Graph, clusters, outliers, radius, time_elapsed
     return {"data": data, "solutions": [solution]}
 
 
-def repackage_notice(graph: nx.Graph, alert: str):
+def repackage_notice(graph: nx.Graph, alert: str, algorithm: str):
     data = get_point_list(graph)
+    alert = {"message": alert, "type": f"{algorithm}_{ResponseTypes.PREDICTED_TIME}"}
     return {"data": data, "alert": alert}
 
 
@@ -86,7 +91,7 @@ def solve():
     if algorithm.startswith("brute_force") and len(graph.nodes()) > 50:
         estimated_time = instance.predict_time()
         message = f"Solving was not attempted, on this server, it would take {seconds_to_string(estimated_time)} to solve"
-        sol_data = repackage_notice(graph, message)
+        sol_data = repackage_notice(graph, message, algorithm)
     else:
         start = time.time()
         clusters, outliers, radius = instance.solve()

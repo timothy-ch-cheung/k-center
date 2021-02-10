@@ -75,7 +75,6 @@ class BruteForceKCenter(AbstractSolver):
             if num_trials > calculate_combinations(len(self.points), self.k):
                 break
             time_per_check = time_check(num_trials)
-            print(num_trials, time_per_check)
             if not math.isclose(0, time_per_check):
                 break
 

@@ -22,10 +22,15 @@ const ChartContainer = styled("div")`
     "left middle bot-right";
 `
 
+export interface AlertData {
+    message: string
+    type: string
+}
+
 function Solve() {
     const history = useHistory();
     const [alertOpen, setAlertOpen] = useState<boolean>(false)
-    const [alertText, setAlertText] = useState<string>("")
+    const [alertData, setAlertData] = useState<AlertData>({message: "", type: "none"})
     const [chartData, setChartData] = useState<ChartData>()
     const [solveRequestData, setSolveRequestData] = useState<SolveRequestData>()
 
@@ -37,14 +42,13 @@ function Solve() {
         setAlertOpen(false)
     }
 
-    const openAlert = (text: string) => {
+    const openAlert = (data: AlertData) => {
         setAlertOpen(true)
-        setAlertText(text)
-
+        setAlertData(data)
     }
 
     return <Container>
-        <CloseableAlert open={alertOpen} onClose={onCloseAlert} text={alertText}/>
+        <CloseableAlert open={alertOpen} onClose={onCloseAlert} alertData={alertData}/>
         <div>
             <IconButton aria-label="back" onClick={handleBackButtonClick}>
                 <HomeIcon fontSize="large"/>
