@@ -11,6 +11,7 @@ interface Props {
     setChartData: (chart: any) => void
     setSolveRequestData: (data: SolveRequestData) => void
     gridArea?: string
+    alertOpen: (text: string) => void
 }
 
 export interface SolveRequestData {
@@ -30,6 +31,9 @@ function ConfigPanel(props: Props) {
                 props.setChartData(response.data)
                 props.setSolveRequestData(requestBody)
                 setIsSolving(false)
+                if (response.data.alert != null) {
+                    props.alertOpen(response.data.alert)
+                }
             }
         )
     }

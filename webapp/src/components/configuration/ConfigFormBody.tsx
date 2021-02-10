@@ -90,6 +90,8 @@ export default function (props: Props) {
                 <MenuItem value={"colourful_bandyapadhyay"}>{algorithms.colourful_bandyapadhyay.name}</MenuItem>
                 <MenuItem value={"pbs"}>{algorithms.pbs.name}</MenuItem>
                 <MenuItem value={"colourful_pbs"}>{algorithms.colourful_pbs.name}</MenuItem>
+                <MenuItem value={"brute_force_k_center"}>{algorithms.brute_force_k_center.name}</MenuItem>
+                <MenuItem value={"brute_force_colourful_k_center"}>{algorithms.brute_force_colourful_k_center.name}</MenuItem>
             </Select>
         </FormControlNoWrap>
         <Spacer/>
