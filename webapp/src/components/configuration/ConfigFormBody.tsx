@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, CircularProgress, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Button, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, Select} from "@material-ui/core";
 import NumberSlider from "../number_slider/NumberSlider";
 import styled from "@emotion/styled";
 import PaletteIcon from "@material-ui/icons/Palette";
@@ -31,12 +31,35 @@ const RedPaletteIcon = styled(PaletteIcon)`
   color: red
 `
 
+const SelectFormControl = styled(FormControlNoWrap)`
+  margin-bottom: 2px;
+`
+
+const ErrorText = styled(FormHelperText)`
+  color: red;
+  margin-top: 0;
+`
+
+const SelectInputLabel = styled(InputLabel)`
+  background-color: white;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 4px;
+`
+
+const SelectBox = styled(Select)`
+  padding: 12px;
+  border-radius: 2px;
+`
+
 export default function (props: Props) {
     const [k, setK] = useState<number>(1)
     const [blue, setBlue] = useState<number>(1)
     const [red, setRed] = useState<number>(1)
     const [problemInstance, setProblemInstance] = useState<string>('')
     const [algorithm, setAlgorithm] = useState<string>('')
+    const [problemInstanceValid, setProblemInstanceValid] = useState<boolean>(true)
+    const [algorithmValid, setAlgorithmValid] = useState<boolean>(true)
 
     const handleProblemInstanceSelectChange = (event: any) => {
         const problemInstance = event.target.value
@@ -48,28 +71,49 @@ export default function (props: Props) {
                 setRed(response.data.optimalSolution.minRed)
             }
         )
+        if (problemInstance !== "") {
+            setProblemInstanceValid(true)
+        }
     }
 
     const handleAlgorithmSelectChange = (event: any) => {
         setAlgorithm(event.target.value)
+        if (event.target.value !== "") {
+            setAlgorithmValid(true)
+        }
+    }
+
+    const handleAlgorithmClose = () => {
+        if (!algorithm) {
+            setAlgorithmValid(false)
+        }
+    }
+
+    const handleProblemInstanceClose = () => {
+        if (!problemInstance) {
+            setProblemInstanceValid(false)
+        }
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault()
-        const requestBody: SolveRequestData = {
-            k: k,
-            blue: blue,
-            red: red,
-            graph: problemInstance,
-            algorithm: algorithm
+        if(problemInstanceValid && algorithmValid) {
+            const requestBody: SolveRequestData = {
+                k: k,
+                blue: blue,
+                red: red,
+                graph: problemInstance,
+                algorithm: algorithm
+            }
+            props.handleSubmit(requestBody)
         }
-        props.handleSubmit(requestBody)
     }
 
     return <form onSubmit={handleSubmit}>
-        <FormControlNoWrap>
-            <InputLabel>Problem instance</InputLabel>
-            <Select onChange={handleProblemInstanceSelectChange}>
+        <Spacer height={5}/>
+        <FormControlNoWrap variant={"outlined"} margin={"dense"}>
+            <SelectInputLabel>Problem Instance</SelectInputLabel>
+            <Select onChange={handleProblemInstanceSelectChange} error={!problemInstanceValid} onClose={handleProblemInstanceClose}>
                 <MenuItem value={"basic"}>basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                 <MenuItem value={"medium"}>medium</MenuItem>
@@ -80,21 +124,24 @@ export default function (props: Props) {
                 <MenuItem value={"five_thousand"}>Five Thousand</MenuItem>
                 <MenuItem value={"ten_thousand"}>Ten Thousand</MenuItem>
             </Select>
+            <ErrorText>{problemInstanceValid ? "." : "please select a problem instance"}</ErrorText>
         </FormControlNoWrap>
-        <FormControlNoWrap>
-            <InputLabel>Algorithm</InputLabel>
-            <Select onChange={handleAlgorithmSelectChange}>
+        <FormControlNoWrap variant={"outlined"} margin={"dense"}>
+            <SelectInputLabel>Algorithm</SelectInputLabel>
+            <Select onChange={handleAlgorithmSelectChange} error={!algorithmValid} onClose={handleAlgorithmClose}>
                 <MenuItem value={"greedy"}>{algorithms.greedy.name}</MenuItem>
                 <MenuItem value={"greedy_reduce"}>{algorithms.greedy_reduce.name}</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay_pseudo"}>{algorithms.colourful_bandyapadhyay_pseudo.name}</MenuItem>
+                <MenuItem
+                    value={"colourful_bandyapadhyay_pseudo"}>{algorithms.colourful_bandyapadhyay_pseudo.name}</MenuItem>
                 <MenuItem value={"colourful_bandyapadhyay"}>{algorithms.colourful_bandyapadhyay.name}</MenuItem>
                 <MenuItem value={"pbs"}>{algorithms.pbs.name}</MenuItem>
                 <MenuItem value={"colourful_pbs"}>{algorithms.colourful_pbs.name}</MenuItem>
                 <MenuItem value={"brute_force_k_center"}>{algorithms.brute_force_k_center.name}</MenuItem>
-                <MenuItem value={"brute_force_colourful_k_center"}>{algorithms.brute_force_colourful_k_center.name}</MenuItem>
+                <MenuItem
+                    value={"brute_force_colourful_k_center"}>{algorithms.brute_force_colourful_k_center.name}</MenuItem>
             </Select>
+            <ErrorText>{algorithmValid ? "." : "please select an algorithm"}</ErrorText>
         </FormControlNoWrap>
-        <Spacer/>
         <NumberSlider
             label="Number of centers"
             min={1}
