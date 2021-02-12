@@ -9,8 +9,11 @@ export const SectionDivider = styled(Divider)`
     margin-bottom: 10px;
 `
 
+interface Spacing {
+    height?: number
+}
 export const Spacer = styled("div")`
-    height: 15px;
+    height: ${(props: Spacing) => {return props.height? props.height: 15}}px;
 `
 
 export const HorizontalGroup = styled("div")`
