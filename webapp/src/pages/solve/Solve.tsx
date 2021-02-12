@@ -7,6 +7,7 @@ import {useHistory} from "react-router-dom";
 import ConfigPanel, {SolveRequestData} from "../../components/configuration/ConfigPanel";
 import InstanceStats from "../../components/stats/optimal/InstanceStats";
 import SolutionStats from "../../components/stats/solution/SolutionStats";
+import CloseableAlert from "../../components/alert/ClosableAlert";
 
 
 const ChartContainer = styled("div")`
@@ -21,8 +22,15 @@ const ChartContainer = styled("div")`
     "left middle bot-right";
 `
 
+export interface AlertData {
+    message: string
+    type: string
+}
+
 function Solve() {
     const history = useHistory();
+    const [alertOpen, setAlertOpen] = useState<boolean>(false)
+    const [alertData, setAlertData] = useState<AlertData>({message: "", type: "none"})
     const [chartData, setChartData] = useState<ChartData>()
     const [solveRequestData, setSolveRequestData] = useState<SolveRequestData>()
 
@@ -30,7 +38,17 @@ function Solve() {
         history.push('/')
     }
 
+    const onCloseAlert = () => {
+        setAlertOpen(false)
+    }
+
+    const openAlert = (data: AlertData) => {
+        setAlertOpen(true)
+        setAlertData(data)
+    }
+
     return <Container>
+        <CloseableAlert open={alertOpen} onClose={onCloseAlert} alertData={alertData}/>
         <div>
             <IconButton aria-label="back" onClick={handleBackButtonClick}>
                 <HomeIcon fontSize="large"/>
@@ -42,6 +60,7 @@ function Solve() {
                 chartData={chartData}
                 setChartData={setChartData}
                 setSolveRequestData={setSolveRequestData}
+                alertOpen={openAlert}
             />
             <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                    solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>

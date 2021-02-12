@@ -1,8 +1,10 @@
 import pytest
+
+from src.server.graph_loader import GraphLoader
 from tests.kcenter.util.create_test_graph import basic_graph
 
 from src.kcenter.constant.colour import Colour
-from src.kcenter.verify.verify import verify_solution
+from src.kcenter.verify.verify import verify_solution, verify_k_center_solution
 
 graph = basic_graph()
 constraints = {Colour.BLUE: 3, Colour.RED: 2}
@@ -44,3 +46,8 @@ def test_invalid_k():
 @pytest.mark.parametrize("invalid_constraint", invalid_constraints)
 def test_unsatisfiable_constraints(invalid_constraint):
     assert verify_solution(graph, invalid_constraint, k, radius, centers) is False
+
+
+def test_unsatisfiable_constraints():
+    graph = GraphLoader.get_graph("k_center_large")
+    assert verify_k_center_solution(graph, {0, 1, 2, 3, 4}, 5, 15.0) is True

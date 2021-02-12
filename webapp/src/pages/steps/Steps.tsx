@@ -72,7 +72,7 @@ export default function Steps(props: Props) {
     }
 
     const renderGraphVisualisation = () => {
-        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "approximation"){
+        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic"){
             return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                           solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
         } else {
