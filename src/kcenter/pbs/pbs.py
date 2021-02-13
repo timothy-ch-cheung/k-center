@@ -330,10 +330,10 @@ class PBS(AbstractSolver):
             new_center_point = self.get_next_point(individual)
             furthest_point_facility = individual.nearest_centers[new_center_point].nearest
             if furthest_point_facility is None:
-                nwk = list(self.graph.nodes())
+                nwk = list(self.points.difference(individual.centers))
             else:
                 k = PBS.linear_search(self.graph.nodes()[new_center_point]["neighbours"], furthest_point_facility.point)
-                nwk = PBS.get_nwk(self.graph, new_center_point, k)
+                nwk = list(set(PBS.get_nwk(self.graph, new_center_point, k)).difference(individual.centers))
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
         self.find_cost(individual)
