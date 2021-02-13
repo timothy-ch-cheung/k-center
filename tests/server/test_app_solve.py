@@ -249,7 +249,7 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
     }
 
 
-def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier):
+def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier, seed_random):
     basic_graph_with_outlier["algorithm"] = "pbs"
     response = test_client.post("/api/v1/solve", json=basic_graph_with_outlier)
 

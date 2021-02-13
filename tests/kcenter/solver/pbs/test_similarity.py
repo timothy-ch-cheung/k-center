@@ -1,7 +1,7 @@
 import pytest
 
-from kcenter.pbs.pbs import Individual, PBS
-from server.orlib_graph_loader import ORLIBGraphLoader
+from src.kcenter.pbs.pbs import Individual, PBS
+from src.server.orlib_graph_loader import ORLIBGraphLoader
 from src.kcenter.pbs.similarity import CompareSolution
 from tests.kcenter.util.create_test_graph import grid_graph
 from tests.server.test_app_solve import FLOAT_ERROR_MARGIN
