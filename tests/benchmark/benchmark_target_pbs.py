@@ -18,7 +18,7 @@ costs = []
 durations = []
 
 print("COST TIME")
-for i in range(200,298):
+for i in range(TRIALS):
     random.seed(i)
     start = time.time()
     clusters, outliers, radius = instance.target_solve(target_cost=target)

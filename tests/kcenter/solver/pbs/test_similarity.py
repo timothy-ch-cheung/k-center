@@ -1,5 +1,7 @@
 import pytest
 
+from kcenter.pbs.pbs import Individual, PBS
+from server.orlib_graph_loader import ORLIBGraphLoader
 from src.kcenter.pbs.similarity import CompareSolution
 from tests.kcenter.util.create_test_graph import grid_graph
 from tests.server.test_app_solve import FLOAT_ERROR_MARGIN
@@ -37,3 +39,12 @@ def test_sim(S, expected):
     comp = CompareSolution(graph, min_value=MIN, max_value=MAX)
     center_set = {1, 2, 3}
     assert comp.sim(center_set, S) == expected
+
+
+def test_is_diverse():
+    population = [Individual({65, 99, 42, 75, 81}, 128.0)]
+    candidate = Individual({66, 32, 13, 78, 60}, 127.0)
+    graph = ORLIBGraphLoader.get_graph("pmed1")
+    instance = PBS(graph, graph.graph["k"], {})
+
+    assert instance.is_diverse(candidate, population) == True

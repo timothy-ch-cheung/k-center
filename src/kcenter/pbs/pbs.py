@@ -473,16 +473,10 @@ class PBS(AbstractSolver):
         return first_child, second_child
 
     def is_diverse(self, candidate: Individual, population: List[Individual] = None):
-        def is_between(lower_bound: float, upper_bound: float, value: float):
-            return lower_bound <= value <= upper_bound
-
-        COST_THRESHHOLD = 0.01
         population = population or self.population
         is_diverse = True
         for individual in population:
-            lower = individual.cost * (1 - COST_THRESHHOLD)
-            upper = individual.cost * (1 + COST_THRESHHOLD)
-            if is_between(lower, upper, candidate.cost):
+            if math.isclose(individual.cost, candidate.cost):
                 is_diverse = False
                 break
         return is_diverse
