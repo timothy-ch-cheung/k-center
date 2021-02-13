@@ -1,5 +1,6 @@
 import pytest
 
+from kcenter.verify.verify import verify_k_center_solution
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.target_pbs import TargetPBS
 from src.server.orlib_graph_loader import ORLIBGraphLoader
@@ -24,3 +25,4 @@ def test_target_pbs(seed_random):
         99: {32, 1, 97, 98, 99, 100, 9, 48, 83, 23, 24, 25, 26, 28, 29, 31}}
     assert outliers == set()
     assert radius == pytest.approx(127, FLOAT_ERROR_MARGIN)
+    assert verify_k_center_solution(graph, set(clusters.keys()), k, radius) == True
