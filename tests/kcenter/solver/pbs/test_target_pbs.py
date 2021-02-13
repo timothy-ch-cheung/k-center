@@ -1,6 +1,6 @@
 import pytest
 
-from kcenter.verify.verify import verify_k_center_solution
+from src.kcenter.verify.verify import verify_k_center_solution
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.target_pbs import TargetPBS
 from src.server.orlib_graph_loader import ORLIBGraphLoader
