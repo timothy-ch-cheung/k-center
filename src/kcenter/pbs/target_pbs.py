@@ -4,8 +4,8 @@ from typing import Dict, Tuple, Set, Generator, Optional
 
 import networkx as nx
 
-from kcenter.constant.colour import Colour
-from kcenter.pbs.pbs import PBS, Individual
+from src.kcenter.constant.colour import Colour
+from src.kcenter.pbs.pbs import PBS, Individual
 
 
 class TargetPBS(PBS):

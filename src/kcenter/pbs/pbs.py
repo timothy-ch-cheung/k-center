@@ -5,7 +5,6 @@ from typing import Tuple, Dict, Set, Generator, List
 import networkx as nx
 
 from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
@@ -131,12 +130,7 @@ class PBS(AbstractSolver):
                     graph.add_edge(i, j, weight=0)
                 self.weights[(i, j)] = graph[i][j]["weight"]
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
-
-        min_point = min(graph.nodes()[x]["pos"][0] for x in self.points), min(
-            graph.nodes()[x]["pos"][1] for x in self.points)
-        max_point = max(graph.nodes()[x]["pos"][0] for x in self.points), max(
-            graph.nodes()[x]["pos"][1] for x in self.points)
-        self.compare = CompareSolution(graph, min_value=min_point, max_value=max_point)
+        self.DEFAULT_POINT = list(graph.nodes())[0]
 
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
@@ -317,7 +311,7 @@ class PBS(AbstractSolver):
         :return: The point which is furthest from its nearest center
         """
         max_cost = 0
-        max_point = 0
+        max_point = self.DEFAULT_POINT
         for p in self.points:
             nearest = individual.nearest_centers[p].nearest
             if nearest is not None:
@@ -336,10 +330,10 @@ class PBS(AbstractSolver):
             new_center_point = self.get_next_point(individual)
             furthest_point_facility = individual.nearest_centers[new_center_point].nearest
             if furthest_point_facility is None:
-                nwk = list(self.graph.nodes())
+                nwk = list(self.points.difference(individual.centers))
             else:
                 k = PBS.linear_search(self.graph.nodes()[new_center_point]["neighbours"], furthest_point_facility.point)
-                nwk = PBS.get_nwk(self.graph, new_center_point, k)
+                nwk = list(set(PBS.get_nwk(self.graph, new_center_point, k)).difference(individual.centers))
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
         self.find_cost(individual)
@@ -479,16 +473,10 @@ class PBS(AbstractSolver):
         return first_child, second_child
 
     def is_diverse(self, candidate: Individual, population: List[Individual] = None):
-        def is_between(lower_bound: float, upper_bound: float, value: float):
-            return lower_bound <= value <= upper_bound
-
-        COST_THRESHHOLD = 0.01
         population = population or self.population
         is_diverse = True
         for individual in population:
-            lower = individual.cost * (1 - COST_THRESHHOLD)
-            upper = individual.cost * (1 + COST_THRESHHOLD)
-            if is_between(lower, upper, candidate.cost):
+            if math.isclose(individual.cost, candidate.cost):
                 is_diverse = False
                 break
         return is_diverse

@@ -104,7 +104,7 @@ def test_pbs_colourful_basic_graph_outlier(seed_random):
 
     assert radius == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
     assert clusters == {
-        0: {0, 1},
+        1: {0, 1},
         3: {3, 4}
     }
     assert outliers == {2}
