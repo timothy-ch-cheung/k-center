@@ -40,7 +40,7 @@ function NumberSlider(props: Props) {
                 <Slider
                     value={props.value}
                     onChange={handleSliderChange}
-                    marks
+                    marks={props.max <= 25}
                     min={props.min}
                     max={props.max}
                 />
