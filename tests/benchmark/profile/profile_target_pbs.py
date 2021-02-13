@@ -1,22 +1,20 @@
 import cProfile
 import pstats
 
-from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from kcenter.pbs.target_pbs import TargetPBS
-from kcenter.verify.verify import verify_solution
+from kcenter.verify.verify import verify_k_center_solution
+from server.orlib_graph_loader import ORLIBGraphLoader
 from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.pbs import PBS
-from src.server.graph_loader import GraphLoader
 
 # graph = GraphLoader.get_graph("k_center")
 # constraints = {Colour.BLUE: 0, Colour.RED: 20}
 # k = 5
 # target = 5.0
 
-graph = GraphLoader.get_graph("large")
-constraints = {Colour.BLUE: 50, Colour.RED: 50}
-k = 5
-target = 45.406651436823594
+# graph = GraphLoader.get_graph("large")
+# constraints = {Colour.BLUE: 50, Colour.RED: 50}
+# k = 5
+# target = 45.406651436823594
 
 # graph = GraphLoader.get_graph("medium")
 # constraints = {Colour.BLUE: 10, Colour.RED: 10}
@@ -31,6 +29,11 @@ target = 45.406651436823594
 # graph = GraphLoader.get_graph("thousand")
 # constraints = {Colour.BLUE: 500, Colour.RED: 500}
 # k = 50
+
+graph = ORLIBGraphLoader.get_graph("pmed1")
+constraints = {Colour.BLUE: 100, Colour.RED: 0}
+k = graph.graph["k"]
+target = 127
 
 instance = TargetPBS(graph, k, constraints)
 
@@ -48,4 +51,4 @@ print("centers", set(clusters.keys()))
 print("clusters", clusters)
 print("outliers", outliers)
 
-print(verify_solution(graph, constraints, k, radius, set(clusters.keys())))
+print(verify_k_center_solution(graph, set(clusters.keys()), k, radius))
