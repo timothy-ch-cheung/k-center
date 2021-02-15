@@ -143,7 +143,7 @@ class PBS(AbstractSolver):
 
     def find_cost(self, individual: Individual) -> float:
         furthest_point = max(self.points,
-                             key=lambda x: 0
+                             key=lambda x: self.DEFAULT_POINT
                              if individual.nearest_centers[x].nearest is None
                              else individual.nearest_centers[x].nearest.cost
                              )
