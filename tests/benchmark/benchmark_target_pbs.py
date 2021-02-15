@@ -5,27 +5,32 @@ import numpy as np
 
 from kcenter.pbs.target_pbs import TargetPBS
 from server.orlib_graph_loader import ORLIBGraphLoader
-from src.kcenter.constant.colour import Colour
 
-graph = ORLIBGraphLoader.get_graph("pmed1")
-k = graph.graph["k"]
-constraints = {Colour.BLUE: 100, Colour.RED: 0}
-target = 127
-instance = TargetPBS(graph, k, constraints)
 
-TRIALS = 100
-costs = []
-durations = []
+def benchmark(problem_instance: str, target: float, verbose: bool = False):
+    graph = ORLIBGraphLoader.get_graph(problem_instance)
+    instance = TargetPBS(graph, graph.graph["k"], {})
 
-print("COST TIME")
-for i in range(TRIALS):
-    random.seed(i)
-    start = time.time()
-    clusters, outliers, radius = instance.target_solve(target_cost=target)
-    duration = time.time() - start
-    costs.append(radius)
-    durations.append(duration)
-    print(i, round(radius, 3), round(duration, 3))
+    TRIALS = 100
+    costs = []
+    durations = []
 
-print(f"COST: mean={np.mean(costs)} std={np.std(costs)}")
-print(f"TIME: mean={np.mean(durations)} std={np.std(durations)}")
+    for i in range(TRIALS):
+        random.seed(i)
+        start = time.time()
+        clusters, outliers, radius = instance.target_solve(target_cost=target)
+        duration = time.time() - start
+        costs.append(radius)
+        durations.append(duration)
+        if verbose:
+            print(i, round(radius, 3), round(duration, 3))
+
+    cost_stats = f"COST[mean={np.mean(costs)}, std={np.std(costs)}]"
+    time_stats = f"TIME[mean={np.mean(durations)}, std={np.std(durations)}]"
+    print(f"{problem_instance}: {cost_stats} {time_stats}")
+
+optimal_costs = ORLIBGraphLoader.get_opt()
+
+for i in range(1, 41):
+    problem = f"pmed{i}"
+    benchmark(problem, optimal_costs[problem])
