@@ -4,38 +4,16 @@ import pstats
 from kcenter.pbs.target_pbs import TargetPBS
 from kcenter.verify.verify import verify_k_center_solution
 from server.orlib_graph_loader import ORLIBGraphLoader
-from src.kcenter.constant.colour import Colour
 
-# graph = GraphLoader.get_graph("k_center")
-# constraints = {Colour.BLUE: 0, Colour.RED: 20}
-# k = 5
-# target = 5.0
+optimal = ORLIBGraphLoader.get_opt()
 
-# graph = GraphLoader.get_graph("large")
-# constraints = {Colour.BLUE: 50, Colour.RED: 50}
-# k = 5
-# target = 45.406651436823594
+problem_instance = "pmed3"
 
-# graph = GraphLoader.get_graph("medium")
-# constraints = {Colour.BLUE: 10, Colour.RED: 10}
-# k = 4
-# target = 45.40201898472788
-
-# graph = GraphLoader.get_graph("basic")
-# constraints = {Colour.BLUE: 2, Colour.RED: 2}
-# k = 2
-# target = 0.7280109889280517
-
-# graph = GraphLoader.get_graph("thousand")
-# constraints = {Colour.BLUE: 500, Colour.RED: 500}
-# k = 50
-
-graph = ORLIBGraphLoader.get_graph("pmed1")
-constraints = {Colour.BLUE: 100, Colour.RED: 0}
+graph = ORLIBGraphLoader.get_graph(problem_instance)
 k = graph.graph["k"]
-target = 127
+target = optimal[problem_instance]
 
-instance = TargetPBS(graph, k, constraints)
+instance = TargetPBS(graph, k, {})
 
 profiler = cProfile.Profile()
 profiler.enable()

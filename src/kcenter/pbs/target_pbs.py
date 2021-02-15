@@ -1,6 +1,6 @@
 import math
 from itertools import chain
-from typing import Dict, Tuple, Set, Generator, Optional
+from typing import Dict, Tuple, Set, Generator, Optional, List
 
 import networkx as nx
 
