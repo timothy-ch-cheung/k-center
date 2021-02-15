@@ -1,5 +1,5 @@
 import os
-from typing import Tuple
+from typing import Tuple, Dict
 
 import networkx as nx
 
@@ -52,3 +52,14 @@ class ORLIBGraphLoader:
             for end_vertex, cost in neighbours.items():
                 G.add_edge(start_vertex, end_vertex, key=str(start_vertex) + str(end_vertex), weight=cost)
         return G
+
+    @staticmethod
+    def get_opt() -> Dict[str, float]:
+        opt = dict()
+        with open(f"{os.path.dirname(__file__)}/dataset/ORLIB/kcenteropt.txt", "r") as f:
+            for line in f.readlines():
+                line = line.strip().split(" ")
+                problem_instance = line[0]
+                optimal = float(line[1])
+                opt[problem_instance] = optimal
+        return opt
