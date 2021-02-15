@@ -22,7 +22,7 @@ class ORLIBGraphLoader:
     def parse_edge(edge: str) -> Tuple[int, int, float]:
         """Header format: start vertex, end vertex, cost
 
-        :param header: edge line from the ORLIB problem instance
+        :param edge: edge line from the ORLIB problem instance
         :return: start vertex, end vertex, cost
         """
         edge = edge.strip().split(" ")
@@ -41,16 +41,24 @@ class ORLIBGraphLoader:
             for vertex in range(1, num_vertices + 1):
                 G.add_node(vertex)
 
+            nodes = list(G.nodes())
+            for i in nodes:
+                for j in nodes:
+                    if i == j:
+                        G.add_edge(i, i, weight=0.0)
+                    else:
+                        G.add_edge(i, j, weight=float("inf"))
+
             for line in f.readlines():
                 start_vertex, end_vertex, cost = ORLIBGraphLoader.parse_edge(line)
-                G.add_edge(start_vertex, end_vertex, key=str(start_vertex) + str(end_vertex), weight=cost)
-                G.add_edge(end_vertex, start_vertex, key=str(end_vertex) + str(start_vertex), weight=cost)
+                G[start_vertex][end_vertex]["weight"] = cost
+                G[end_vertex][start_vertex]["weight"] = cost
 
         shortest_paths = nx.algorithms.shortest_paths.floyd_warshall(G)
 
         for start_vertex, neighbours in shortest_paths.items():
             for end_vertex, cost in neighbours.items():
-                G.add_edge(start_vertex, end_vertex, key=str(start_vertex) + str(end_vertex), weight=cost)
+                G[start_vertex][end_vertex]["weight"] = cost
         return G
 
     @staticmethod
