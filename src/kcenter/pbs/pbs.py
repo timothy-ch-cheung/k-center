@@ -286,16 +286,19 @@ class PBS(AbstractSolver):
         :return: The point which is furthest from its nearest center
         """
         max_cost = 0
-        max_point = self.DEFAULT_POINT
+        max_points = []
         for p in self.points:
             nearest = individual.nearest_centers[p].nearest
             if nearest is not None:
                 if max_cost < nearest.cost:
-                    max_point = p
+                    max_points = [p]
                     max_cost = nearest.cost
-                if nearest.cost == individual.cost:
-                    return p
-        return max_point
+                elif math.isclose(nearest.cost, individual.cost):
+                    max_points.append(p)
+        if len(max_points) == 0:
+            return self.DEFAULT_POINT
+        else:
+            return random.choice(max_points)
 
     def get_next_point(self, individual: Individual):
         return self.get_furthest_point(individual)
