@@ -36,7 +36,7 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
         return nearest_centers
 
     def max_delta(self, nearest_centers: Dict[int, Neighbour], cost: float):
-        critical_vertices = [x for x in nearest_centers.values() if math.isclose(x.cost,  cost)]
+        critical_vertices = [x for x in nearest_centers.values() if math.isclose(x.cost, cost)]
         return len(critical_vertices)
 
     def randomized_build(self, alpha: float = 0.25, beta: float = 0.5):
@@ -74,7 +74,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                     if (new_cost := self.find_candidate_cost(new_P)) < best_new_sol_value:
                         best_new_sol_value = new_cost
                         best_flip = point
-                    elif best_flip is None and math.isclose(new_cost, best_new_sol_value) and (cv := self.max_delta(self.calc_nearest_centers(new_P), new_cost)) < best_cv:
+                    elif best_flip is None and math.isclose(new_cost, best_new_sol_value) and (
+                    cv := self.max_delta(self.calc_nearest_centers(new_P), new_cost)) < best_cv:
                         # likely mistake in algorithm in paper for not ensuring new_cost=best_new_sol_value
                         best_cv = cv
                         best_cv_flip = point
@@ -90,9 +91,15 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
 
         return P
 
-    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
-        initial_solution = self.randomized_build()
-        solution = self.plateau_surf_local_search(initial_solution)
-        cost = self.find_candidate_cost(solution)
-        clusters = cluster(self.graph, solution, cost)
-        return clusters, set(), cost
+    def solve(self, iterations=10) -> Tuple[Dict[int, Set[int]], Set[int], float]:
+        best_cost = float("inf")
+        best_cluster = None
+        for i in range(iterations):
+            initial_solution = self.randomized_build()
+            solution = self.plateau_surf_local_search(initial_solution)
+            cost = self.find_candidate_cost(solution)
+
+            if cost < best_cost:
+                best_cost = cost
+                best_cluster = cluster(self.graph, solution, cost)
+        return best_cluster, set(), best_cost
