@@ -1,3 +1,4 @@
+from src.kcenter.constant.solver_state import SolverState
 from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.solver.abstract_generator import Solution
 from tests.kcenter.solver.pbs.test_pbs import K, RELAXED_CONSTRAINTS
@@ -22,7 +23,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
                        ],
                        "The initial population is generated.",
-                       True))
+                       SolverState.ACTIVE_MAIN))
 
     assert_step_equal(next(solution),
                       ([
@@ -36,7 +37,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
                        ],
                        "The best individual in this generation is 0 with a cost of 0.707",
-                       True))
+                       SolverState.ACTIVE_MAIN))
 
     assert_step_equal(next(solution),
                       ([
@@ -50,7 +51,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
                        ],
                        "The best individual in this generation is 0 with a cost of 0.707",
-                       True))
+                       SolverState.ACTIVE_MAIN))
 
     assert_step_equal(next(solution),
                       ([
@@ -64,7 +65,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
                        ],
                        "The best individual in this generation is 0 with a cost of 0.707",
-                       True))
+                       SolverState.ACTIVE_MAIN))
 
     assert_step_equal(next(solution),
                       ([
@@ -78,4 +79,4 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
                        ],
                        "3 generations were completed. The fittest individual was 0 with a cost of 0.707",
-                       False))
+                       SolverState.INACTIVE))

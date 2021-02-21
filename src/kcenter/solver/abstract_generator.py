@@ -4,6 +4,8 @@ from typing import Dict, Set, Tuple, Generator, List
 
 import networkx as nx
 
+from src.kcenter.constant.solver_state import SolverState
+
 Label = str
 Active = bool
 
@@ -34,7 +36,7 @@ class Solution:
 
 
 class AbstractGenerator(ABC):
-    YIELD_TYPE = Tuple[List[Solution], Label, Active]
+    YIELD_TYPE = Tuple[List[Solution], Label, SolverState]
 
     @abstractmethod
     def generator(self) -> Generator[YIELD_TYPE, None, None]:

@@ -1,14 +1,15 @@
-from typing import Dict, List, Generator, Tuple, Set, Iterable
+from typing import Dict, List, Tuple, Set, Iterable
 
 import networkx as nx
 
-from src.kcenter.solver.abstract_generator import AbstractGenerator, Solution
+from src.kcenter.constant.solver_state import SolverState
 from src.kcenter.bandyapadhyay.clustering import cluster_generator
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.radius_checker import RadiusChecker
 from src.kcenter.bandyapadhyay.red_maximiser import RedMaximiser
 from src.kcenter.bandyapadhyay.search_stage import SearchStage
 from src.kcenter.constant.colour import Colour
+from src.kcenter.solver.abstract_generator import AbstractGenerator, Solution
 
 
 class ConstantPseudoColourfulSteps:
@@ -96,17 +97,19 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator)
 
         lp_solver = SteppedConstantPseudoColourful.calculate_optimal_radius_binary(weights, radius_checker)
         opt = lp_solution = None
-        yield [Solution(clusters)], ConstantPseudoColourfulSteps.opt_search_start(weights), True
+        yield [Solution(clusters)], ConstantPseudoColourfulSteps.opt_search_start(weights), SolverState.ACTIVE_MAIN
 
         for sol in lp_solver:
             cost, lp_solution, state = sol
             if state == SearchStage.VALID_WEIGHT:
-                yield [Solution(clusters)], ConstantPseudoColourfulSteps.valid_cost_attempt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.valid_cost_attempt(
+                    cost), SolverState.ACTIVE_MAIN
             elif state == SearchStage.INVALID_WEIGHT:
-                yield [Solution(clusters)], ConstantPseudoColourfulSteps.invalid_cost_attempt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.invalid_cost_attempt(
+                    cost), SolverState.ACTIVE_MAIN
             else:
                 opt = cost
-                yield [Solution(clusters)], ConstantPseudoColourfulSteps.found_opt(cost), True
+                yield [Solution(clusters)], ConstantPseudoColourfulSteps.found_opt(cost), SolverState.ACTIVE_MAIN
 
         for point, attributes in lp_solution.items():
             self.graph.nodes()[point]["x"] = attributes["x"]
@@ -116,9 +119,12 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator)
         for sol in clustering_solution:
             center, clusters, stage = sol
             if stage == SearchStage.UNFINISHED:
-                yield [Solution(clusters, cost=opt)], ConstantPseudoColourfulSteps.create_cluster(center, clusters[center], self.graph), True
+                yield [Solution(clusters, cost=opt)], ConstantPseudoColourfulSteps.create_cluster(center,
+                                                                                                  clusters[center],
+                                                                                                  self.graph), SolverState.ACTIVE_MAIN
             elif stage == SearchStage.FINISHED:
-                yield [Solution(clusters, cost=opt)], ConstantPseudoColourfulSteps.cluster_creation_completed(), True
+                yield [Solution(clusters,
+                                cost=opt)], ConstantPseudoColourfulSteps.cluster_creation_completed(), SolverState.ACTIVE_MAIN
 
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
@@ -133,4 +139,4 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator)
 
         cost = 2 * opt
         yield [Solution(clusters, cost=cost)], ConstantPseudoColourfulSteps.centers_chosen(set(clusters.keys()), self.k,
-                                                                                 cost), False
+                                                                                           cost), SolverState.INACTIVE

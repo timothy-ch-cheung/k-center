@@ -2,9 +2,9 @@ import time
 
 from flask import request, Blueprint, jsonify
 
-from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
+from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
@@ -44,7 +44,7 @@ def start():
 
 
 def process_standard(graph, graph_name, step, time_elapsed):
-    solutions, label, is_active = step
+    solutions, label, solver_state = step
 
     data = []
     nodes = list(graph.nodes())
@@ -57,6 +57,7 @@ def process_standard(graph, graph_name, step, time_elapsed):
     for solution in solutions:
         solutions_json.append({**solution.to_json(graph), **{"timeTaken": time_elapsed}})
 
+    is_active = solver_state.active()
     solution = {"data": data,
                 "solutions": solutions_json,
                 "step": {"label": label, "active": is_active},
