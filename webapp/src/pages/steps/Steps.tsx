@@ -11,10 +11,7 @@ import Parameters from "../../components/stats/parameters/Parameters";
 import Step, {PageSetting, UpdatePageControl} from "../../components/step/Step";
 import {algorithms} from "../../constants/algorithms";
 import PopulationChart from "../../population_chart/PopulationChart";
-
-interface Props {
-
-}
+import {View} from "../../components/view_panel/ViewPanel";
 
 interface Step {
     active: boolean
@@ -46,13 +43,14 @@ const DEFAULT_STEP_PAGE_SETTINGS = {
 }
 
 
-export default function Steps(props: Props) {
+export default function Steps() {
     const history = useHistory();
     const [id, setId] = useState<string>(uuid());
     const [solutionHistory, setSolutionHistory] = useState<SolutionStep[]>([])
     const [solveRequestData, setSolveRequestData] = useState<StepSolveRequestData>()
     const [chartData, setChartData] = useState<SolutionStep>()
     const [pageSetting, setPageSetting] = useState<PageSetting>(DEFAULT_STEP_PAGE_SETTINGS)
+    const [chartView, setChartView] = useState<View>(View.Population)
 
     const updatePageControl = (update: UpdatePageControl) => {
         setPageSetting({...pageSetting, ...update})
@@ -61,6 +59,7 @@ export default function Steps(props: Props) {
     const resetPageControl = () => {
         setPageSetting(DEFAULT_STEP_PAGE_SETTINGS)
         setSolutionHistory([])
+        setChartView(View.Population)
     }
 
     const handleBackButtonClick = () => {
@@ -72,12 +71,12 @@ export default function Steps(props: Props) {
     }
 
     const renderGraphVisualisation = () => {
-        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic"){
+        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic") {
             return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                           solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
         } else {
             return <PopulationChart gridArea="middle" data={chartData?.data} width={350} height={350}
-                          solutions={chartData?.solutions}/>
+                                    solutions={chartData?.solutions} chartView={chartView} setChartView={setChartView}/>
         }
     }
 
