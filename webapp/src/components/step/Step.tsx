@@ -8,6 +8,7 @@ import API from "../../API";
 import {algorithms} from "../../constants/algorithms";
 import {Dimensions} from "../../interfaces";
 import TitlePanel from "../title_panel/TitlePanel";
+import {Button, ButtonGroup} from "@material-ui/core";
 
 export interface PageSetting {
     nextEnabled: boolean
@@ -46,8 +47,21 @@ const DEFAULT_STEP_TEXT = ""
 
 const TextBox = styled("p")`
   width: ${(props: Dimensions) => props.width}px;
-  height: ${(props: Dimensions) => props.height}px;
+  flex: 2;
 `
+
+const SmallButton = styled(Button)`
+  font-size: 0.6em;
+  padding: 5px;
+  width: 50%;
+`
+
+const StepBar = () => {
+    return <ButtonGroup>
+        <SmallButton>Inspect generation</SmallButton>
+        <SmallButton>Skip to next generation</SmallButton>
+    </ButtonGroup>
+}
 
 export default function Step(props: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -92,22 +106,25 @@ export default function Step(props: Props) {
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
-        <TitlePanel
-            title={"Step-By-Step Walkthrough"}
-            subtitle={props.algorithm ? algorithms[props.algorithm].short_name : ""}
-            loading={isLoading}
-            dimensions={{width: props.width, height: 50}}/>
-        <SectionDivider/>
-        <TextBox width={props.width} height={320}>
-            {props.text ? props.text : DEFAULT_STEP_TEXT}
-        </TextBox>
-        <SectionDivider/>
-        <PagingBar currentPage={props.pageControl.currentPage}
-                   isNextEnabled={props.pageControl.nextEnabled && !isLoading}
-                   isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
-                   handlePrevClick={handlePrev}
-                   handleNextClick={handleNext}
-                   maxPage={props.pageControl.maxPage}
-        />
+        <div style={{display: "flex", flexFlow: "column", height: props.height}}>
+            <TitlePanel
+                title={"Step-By-Step Walkthrough"}
+                subtitle={props.algorithm ? algorithms[props.algorithm].short_name : ""}
+                loading={isLoading}
+                dimensions={{width: props.width, height: 50}}/>
+            <SectionDivider/>
+            <TextBox width={props.width} height={320}>
+                {props.text ? props.text : DEFAULT_STEP_TEXT}
+            </TextBox>
+            <SectionDivider/>
+            {props.algorithm && algorithms[props.algorithm].type == "genetic" && <StepBar/>}
+            <PagingBar currentPage={props.pageControl.currentPage}
+                       isNextEnabled={props.pageControl.nextEnabled && !isLoading}
+                       isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
+                       handlePrevClick={handlePrev}
+                       handleNextClick={handleNext}
+                       maxPage={props.pageControl.maxPage}
+            />
+        </div>
     </ChartFrame>
 }
