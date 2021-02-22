@@ -63,7 +63,7 @@ interface SubStep {
 
 const StepBar = (props: SubStep) => {
     return <ButtonGroup>
-        <SmallButton disabled={!props.isActive || !props.isSubSolve}>Inspect generation</SmallButton>
+        <SmallButton disabled={!props.isActive || !props.isSubSolve}>Inspect next generation</SmallButton>
         <SmallButton disabled={!props.isActive || props.isSubSolve}>Skip to next generation</SmallButton>
     </ButtonGroup>
 }

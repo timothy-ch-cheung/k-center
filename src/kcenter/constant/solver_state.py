@@ -12,3 +12,6 @@ class SolverState(IntEnum):
 
     def is_sub_solve(self):
         return self == SolverState.ACTIVE_SUB
+
+    def is_main(self):
+        return self == SolverState.ACTIVE_MAIN or self == SolverState.INACTIVE
