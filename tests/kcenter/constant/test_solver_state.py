@@ -12,4 +12,4 @@ test_data = [
 
 @pytest.mark.parametrize("solver_state, expected", test_data)
 def test_solver_state_active(solver_state, expected):
-    assert solver_state.active() == expected
+    assert solver_state.is_active() == expected

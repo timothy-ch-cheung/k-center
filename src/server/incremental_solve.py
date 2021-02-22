@@ -57,10 +57,11 @@ def process_standard(graph, graph_name, step, time_elapsed):
     for solution in solutions:
         solutions_json.append({**solution.to_json(graph), **{"timeTaken": time_elapsed}})
 
-    is_active = solver_state.active()
+    is_active = solver_state.is_active()
+    is_sub_solve = solver_state.is_sub_solve()
     solution = {"data": data,
                 "solutions": solutions_json,
-                "step": {"label": label, "active": is_active},
+                "step": {"label": label, "active": is_active, "subSolve": is_sub_solve},
                 **GraphLoader.get_json_meta_data(graph_name)
                 }
     return solution, is_active

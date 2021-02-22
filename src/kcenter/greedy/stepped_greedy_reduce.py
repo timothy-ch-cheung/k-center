@@ -37,7 +37,7 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
         generator = super().generator()
         for step in generator:
             solutions, label, solver_state = step
-            if not solver_state.active():
+            if not solver_state.is_active():
                 break
             yield solutions, label, SolverState.ACTIVE_MAIN
 

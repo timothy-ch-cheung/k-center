@@ -30,18 +30,21 @@ def test_step_through_basic_graph(basic_graph):
     response = test_client.post("/api/v1/step/next", json={"id": "1234"})
     assert response.get_json()["step"] == {
         "active": True,
+        'subSolve': False,
         "label": "The initial center is arbitrarily chosen, its coordinates are (1.3, 2.6). It is a blue point."
     }
 
     response = test_client.post("/api/v1/step/next", json={"id": "1234"})
     assert response.get_json()["step"] == {
         "active": True,
+        'subSolve': False,
         "label": "We find the point which has the maximum distance from its closest center, which is the point at (6.4, 4.7). It is a red point 5.515 distance away. This makes the current cost 5.515."
     }
 
     response = test_client.post("/api/v1/step/next", json={"id": "1234"})
     assert response.get_json()["step"] == {
         "active": False,
+        'subSolve': False,
         "label": "Our 2 centers have been chosen. To calculate the final cost, we find the distance to the furthest point from the previous center. This makes the final cost 0.854."
     }
 

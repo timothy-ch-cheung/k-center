@@ -23,6 +23,8 @@ interface Step {
 
 export interface SolutionStep extends ChartData {
     step?: Step
+    active?: boolean
+    subSolve?: boolean
 }
 
 const ChartContainer = styled("div")`
@@ -72,7 +74,8 @@ export default function Steps(props: Props) {
     }
 
     const renderGraphVisualisation = () => {
-        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic"){
+        const isGenetic = solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "genetic"
+        if (!isGenetic){
             return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                           solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
         } else {

@@ -7,5 +7,8 @@ class SolverState(IntEnum):
     ACTIVE_SUB_END = 3
     INACTIVE = 4
 
-    def active(self):
+    def is_active(self):
         return self != SolverState.INACTIVE
+
+    def is_sub_solve(self):
+        return self == SolverState.ACTIVE_SUB

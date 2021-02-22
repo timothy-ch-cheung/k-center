@@ -27,7 +27,7 @@ class SteppedConstantColourful(ConstantPseudoColourful, AbstractGenerator):
         solution = instance.generator()
         for step in solution:
             solutions, label, solver_state = step
-            if not solver_state.active():
+            if not solver_state.is_active():
                 break
             yield step
 

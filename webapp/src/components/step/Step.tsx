@@ -56,15 +56,22 @@ const SmallButton = styled(Button)`
   width: 50%;
 `
 
-const StepBar = () => {
+interface SubStep {
+    isSubSolve: boolean
+    isActive: boolean
+}
+
+const StepBar = (props: SubStep) => {
     return <ButtonGroup>
-        <SmallButton>Inspect generation</SmallButton>
-        <SmallButton>Skip to next generation</SmallButton>
+        <SmallButton disabled={!props.isActive || !props.isSubSolve}>Inspect generation</SmallButton>
+        <SmallButton disabled={!props.isActive || props.isSubSolve}>Skip to next generation</SmallButton>
     </ButtonGroup>
 }
 
 export default function Step(props: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isActive, setIsActive] = useState<boolean>(true)
+    const [isSubSolve, setIsSolveSolve] = useState<boolean>(true)
 
     const handlePrev = () => {
         const newPage = props.pageControl.currentPage - 1
@@ -91,6 +98,7 @@ export default function Step(props: Props) {
                         update = {...update, ...{maxPage: newPage, nextEnabled: false}}
                         let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
                         completedSolution.step.label = response.data.step.label
+                        setIsActive(false)
                     }
                     props.pageControl.updateControl(update)
                     setIsLoading(false)
@@ -117,7 +125,7 @@ export default function Step(props: Props) {
                 {props.text ? props.text : DEFAULT_STEP_TEXT}
             </TextBox>
             <SectionDivider/>
-            {props.algorithm && algorithms[props.algorithm].type == "genetic" && <StepBar/>}
+            {props.algorithm && algorithms[props.algorithm].type == "genetic" && <StepBar isSubSolve={isSubSolve} isActive={isActive}/>}
             <PagingBar currentPage={props.pageControl.currentPage}
                        isNextEnabled={props.pageControl.nextEnabled && !isLoading}
                        isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
