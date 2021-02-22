@@ -73,9 +73,8 @@ export default function Steps() {
     }
 
     const renderGraphVisualisation = () => {
-        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic") {
         const isGenetic = solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "genetic"
-        if (!isGenetic){
+        if (!isGenetic) {
             return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                           solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
         } else {
