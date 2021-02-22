@@ -96,6 +96,12 @@ export default function (props: Props) {
 
     const handleSubmit = (event: any) => {
         event.preventDefault()
+        if (!problemInstanceValid) {
+            setProblemInstanceChanged(true)
+        }
+        if (!algorithmValid) {
+            setAlgorithmChanged(true)
+        }
         if (problemInstanceValid && algorithmValid) {
             const requestBody: SolveRequestData = {
                 k: k,
