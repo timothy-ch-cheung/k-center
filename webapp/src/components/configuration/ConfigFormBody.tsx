@@ -55,8 +55,10 @@ export default function (props: Props) {
     const [red, setRed] = useState<number>(1)
     const [problemInstance, setProblemInstance] = useState<string>('')
     const [algorithm, setAlgorithm] = useState<string>('')
-    const [problemInstanceValid, setProblemInstanceValid] = useState<boolean>(true)
-    const [algorithmValid, setAlgorithmValid] = useState<boolean>(true)
+    const [problemInstanceValid, setProblemInstanceValid] = useState<boolean>(false)
+    const [isProblemInstanceChanged, setProblemInstanceChanged] = useState<boolean>(false)
+    const [algorithmValid, setAlgorithmValid] = useState<boolean>(false)
+    const [isAlgorithmChanged, setAlgorithmChanged] = useState<boolean>(false)
 
     const handleProblemInstanceSelectChange = (event: any) => {
         const problemInstance = event.target.value
@@ -81,12 +83,14 @@ export default function (props: Props) {
     }
 
     const handleAlgorithmClose = () => {
+        setAlgorithmChanged(true)
         if (!algorithm) {
             setAlgorithmValid(false)
         }
     }
 
     const handleProblemInstanceClose = () => {
+        setProblemInstanceChanged(true)
         if (!problemInstance) {
             setProblemInstanceValid(false)
         }
@@ -94,7 +98,13 @@ export default function (props: Props) {
 
     const handleSubmit = (event: any) => {
         event.preventDefault()
-        if(problemInstanceValid && algorithmValid) {
+        if (!problemInstanceValid) {
+            setProblemInstanceChanged(true)
+        }
+        if (!algorithmValid) {
+            setAlgorithmChanged(true)
+        }
+        if (problemInstanceValid && algorithmValid) {
             const requestBody: SolveRequestData = {
                 k: k,
                 blue: blue,
@@ -110,7 +120,10 @@ export default function (props: Props) {
         <Spacer height={5}/>
         <FormControlNoWrap variant={"outlined"} margin={"dense"}>
             <SelectInputLabel>Problem Instance</SelectInputLabel>
-            <Select onChange={handleProblemInstanceSelectChange} error={!problemInstanceValid} onClose={handleProblemInstanceClose}>
+            <Select onChange={handleProblemInstanceSelectChange}
+                    error={isProblemInstanceChanged && !problemInstanceValid}
+                    onClose={handleProblemInstanceClose}
+            >
                 <MenuItem value={"basic"}>basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                 <MenuItem value={"medium"}>medium</MenuItem>
@@ -121,11 +134,11 @@ export default function (props: Props) {
                 <MenuItem value={"five_thousand"}>Five Thousand</MenuItem>
                 <MenuItem value={"ten_thousand"}>Ten Thousand</MenuItem>
             </Select>
-            <ErrorText>{problemInstanceValid ? "." : "please select a problem instance"}</ErrorText>
+            <ErrorText>{isProblemInstanceChanged && !problemInstanceValid ? "please select a problem instance" : "."}</ErrorText>
         </FormControlNoWrap>
         <FormControlNoWrap variant={"outlined"} margin={"dense"}>
             <SelectInputLabel>Algorithm</SelectInputLabel>
-            <Select onChange={handleAlgorithmSelectChange} error={!algorithmValid} onClose={handleAlgorithmClose}>
+            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid} onClose={handleAlgorithmClose}>
                 {Object.entries(algorithms).map(([algorithm_name, algorithm_properties]) => {
                     if (props.mode === Mode.Step && !algorithm_properties.stepped_enabled) {
                         return null
@@ -133,7 +146,7 @@ export default function (props: Props) {
                     return <MenuItem value={algorithm_name}>{algorithm_properties.name}</MenuItem>
                 })}
             </Select>
-            <ErrorText>{algorithmValid ? "." : "please select an algorithm"}</ErrorText>
+            <ErrorText>{isAlgorithmChanged && !algorithmValid ? "please select an algorithm" : "."}</ErrorText>
         </FormControlNoWrap>
         <NumberSlider
             label="Number of centers"
