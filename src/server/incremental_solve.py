@@ -1,5 +1,3 @@
-import time
-
 from flask import request, Blueprint, jsonify
 
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
