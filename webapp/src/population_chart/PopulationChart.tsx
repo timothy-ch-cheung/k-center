@@ -5,7 +5,7 @@ import ChartPreview from "../components/chart_preview/ChartPreview";
 import styled from "@emotion/styled";
 import {Dimensions} from "../interfaces";
 import {GridList, GridListTile, Modal, Paper} from "@material-ui/core";
-import {v4 as uuid} from "uuid";
+import ViewPanel, {View} from "../components/view_panel/ViewPanel";
 
 interface Props {
     data?: ChartItem[]
@@ -13,6 +13,8 @@ interface Props {
     height: number
     gridArea?: string
     solutions?: Solution[]
+    chartView: View
+    setChartView: (view: View) => void
 }
 
 const ChartFrame = styled("div")`
@@ -37,12 +39,21 @@ const Window = styled(Paper)`
 `
 
 export default function PopulationChart(props: Props): JSX.Element {
-    const [solutionId, setSolutionId] = useState<number>(0);
     const [open, setOpen] = useState<boolean>(false)
+    const [activeStep, setActiveStep] = useState<number>(0)
 
-    const handleClick = (id: number) => {
-        setOpen(true)
-        setSolutionId(id)
+    const handleViewChange = (event: any, view: View) => {
+        if (view !== null) {
+            props.setChartView(view)
+        }
+    }
+
+    const onNext = () => {
+        setActiveStep(activeStep + 1)
+    }
+
+    const onBack = () => {
+        setActiveStep(activeStep - 1)
     }
 
     const handleClose = () => {
@@ -51,19 +62,32 @@ export default function PopulationChart(props: Props): JSX.Element {
 
     return <>
         <ChartFrame style={{gridArea: props.gridArea}} width={props.width * 1.5} height={props.height * 1.3}>
-            <GridList cellHeight={155} cols={3}>
-                {props.solutions && props.solutions.map((solution, index) => {
-                    return <GridListTile key={index} cols={1}>
-                        <ChartPreview width={130} height={130} id={index} data={props.data} solution={solution}
-                                      onClick={handleClick}/>
-                    </GridListTile>
-                })}
-            </GridList>
+            {props.solutions && <ViewPanel
+                view={props.chartView}
+                changeView={handleViewChange}
+                activeStep={activeStep}
+                maxSteps={props.solutions.length}
+                handleBack={onBack}
+                handleNext={onNext}
+                subSolve={false}/>}
+
+            {props.chartView === View.Population && <div style={{width: props.width * 1.2, margin: "auto"}}>
+                <GridList cellHeight={"auto"} cols={3}>
+                    {props.solutions && props.solutions.map((solution, index) => {
+                        return <GridListTile key={index} cols={1}>
+                            <ChartPreview width={120} height={120} id={index} data={props.data} solution={solution}/>
+                        </GridListTile>
+                    })}
+                </GridList>
+            </div>}
+            {props.chartView === View.Individual &&
+            <Chart gridArea="middle" data={props.data} width={310} height={295}
+                   solution={props.solutions ? props.solutions[activeStep] : undefined}/>
+            }
         </ChartFrame>
         <Modal open={open} onClose={handleClose}>
             <Window variant="outlined">
-                <Chart gridArea="middle" data={props.data} width={350} height={350}
-                       solution={props.solutions ? props.solutions[solutionId] : undefined}/>
+
             </Window>
         </Modal>
     </>
