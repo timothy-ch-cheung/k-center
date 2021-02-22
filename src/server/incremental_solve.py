@@ -43,7 +43,7 @@ def start():
     return '', 204
 
 
-def process_standard(graph, graph_name, step, time_elapsed):
+def process_standard(graph, graph_name, step):
     solutions, label, solver_state = step
 
     data = []
@@ -55,7 +55,7 @@ def process_standard(graph, graph_name, step, time_elapsed):
 
     solutions_json = []
     for solution in solutions:
-        solutions_json.append({**solution.to_json(graph), **{"timeTaken": time_elapsed}})
+        solutions_json.append({**solution.to_json(graph)})
 
     is_active = solver_state.is_active()
     is_sub_solve = solver_state.is_sub_solve()
@@ -80,16 +80,13 @@ def next_step():
     graph = problem_instance["instance"].graph
     graph_name = problem_instance["name"]
 
-    start = time.time()
     step = next(generator)
     solver_state = step[2]
     while not solver_state.is_main():
         step = next(generator)
         solver_state = step[2]
-    end = time.time()
-    time_elapsed = end - start
 
-    solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
+    solution, is_active = process_standard(graph, graph_name, step)
 
     if not is_active:
         del problem_instances[id]
