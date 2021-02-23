@@ -178,11 +178,17 @@ class SteppedPBS(PBS):
             solutions.append(Solution(clusters=clustered_points, outliers=outliers, cost=individual.cost))
         return solutions
 
+    def yield_candidate(self, individual: Individual):
+        cost = self.find_cost(individual)
+        clustered_points = cluster(self.graph, individual.centers, cost)
+        outliers = self.points.difference(reduce((lambda x, y: x.union(y)), clustered_points.values()))
+        return [Solution(clusters=clustered_points, outliers=outliers, cost=cost)]
+
     def initilise_local_search(self, individual: Individual):
         if len(individual.centers) < self.k:
             center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
             label = PBSSteps.inspect_initialise_local_search(center_coords, self.k, self.current_generation)
-            yield self.yield_population(), label, SolverState.ACTIVE_SUB
+            yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
         while len(individual.centers) < self.k:
             new_center_point = self.get_next_point(individual)
             furthest_point_facility = individual.nearest_centers[new_center_point].nearest
@@ -195,11 +201,11 @@ class SteppedPBS(PBS):
             self.add_center(new_center, individual)
             label = PBSSteps.inspect_initialise_local_search_add(self.graph.nodes()[new_center]["pos"], individual.cost,
                                                                  self.current_generation)
-            yield self.yield_population(), label, SolverState.ACTIVE_SUB
+            yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
         self.find_cost(individual)
         center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
         label = PBSSteps.inspect_end_initialise_local_search(center_coords, self.current_generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
 
     def local_search(self, individual: Individual, generation: int):
         """Local search on an individual in the population to find the locally optimise solution
@@ -217,7 +223,7 @@ class SteppedPBS(PBS):
         stale_iterations = 0
         optimised_individual = individual.copy()
         swapped = set()
-        yield self.yield_population(), PBSSteps.inspect_begin_local_search(
+        yield self.yield_candidate(optimised_individual), PBSSteps.inspect_begin_local_search(
             self.current_generation), SolverState.ACTIVE_SUB
         while stale_iterations < termination_iterations_cost and iteration < termination_iterations_count:
             prev_cost = optimised_individual.cost
@@ -231,11 +237,11 @@ class SteppedPBS(PBS):
                 swapped.add((point_to_remove, point_to_add))
                 label = PBSSteps.inspect_best_pair_swapped(old_center_coords, new_center_coords,
                                                            optimised_individual.cost, self.current_generation)
-                yield self.yield_population(), label, SolverState.ACTIVE_SUB
+                yield self.yield_candidate(optimised_individual), label, SolverState.ACTIVE_SUB
             else:
                 label = PBSSteps.inspect_best_pair_not_swapped(old_center_coords, new_center_coords,
                                                                self.current_generation)
-                yield self.yield_population(), label, SolverState.ACTIVE_SUB
+                yield self.yield_candidate(optimised_individual), label, SolverState.ACTIVE_SUB
 
             iteration += 1
             if optimised_individual.cost >= prev_cost:
@@ -243,7 +249,7 @@ class SteppedPBS(PBS):
 
         center_coords = PBSSteps.nodes_to_coords(self.graph, optimised_individual.centers)
         label = PBSSteps.inspect_local_search_end(center_coords, optimised_individual.cost, iteration, generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(optimised_individual), label, SolverState.ACTIVE_SUB
 
     def update_population(self, candidate: Individual):
         center_coords = PBSSteps.nodes_to_coords(self.graph, candidate.centers)
@@ -358,8 +364,8 @@ class SteppedPBS(PBS):
                 yield step
             self.population.append(candidate)
             candidate_center_coords = PBSSteps.nodes_to_coords(self.graph, candidate.centers)
-            yield self.yield_population(), PBSSteps.inspect_add_generated_candidate(candidate_center_coords,
-                                                                                    self.current_generation), SolverState.ACTIVE_SUB
+            yield self.yield_candidate(candidate), PBSSteps.inspect_add_generated_candidate(candidate_center_coords,
+                                                                                            self.current_generation), SolverState.ACTIVE_SUB
 
     def generator(self):
         self.population = []
