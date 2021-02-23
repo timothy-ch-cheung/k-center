@@ -57,21 +57,29 @@ const SmallButton = styled(Button)`
 `
 
 interface SubStep {
-    isSubSolve: boolean
+    isInspect: boolean
     isActive: boolean
+    isInitialMoveMade: boolean
+    onInspectClick: () => void
+    onSkipClick: () => void
 }
 
 const StepBar = (props: SubStep) => {
+    const inspectEnabled = !props.isInitialMoveMade || (props.isActive && !props.isInspect)
+    const skipEnabled = props.isInitialMoveMade && props.isActive && props.isInspect
     return <ButtonGroup>
-        <SmallButton disabled={!props.isActive || !props.isSubSolve}>Inspect next generation</SmallButton>
-        <SmallButton disabled={!props.isActive || props.isSubSolve}>Skip to next generation</SmallButton>
+        <SmallButton disabled={!inspectEnabled} onClick={props.onInspectClick}>Inspect next
+            generation</SmallButton>
+        <SmallButton disabled={!skipEnabled} onClick={props.onSkipClick}>Skip to next
+            generation</SmallButton>
     </ButtonGroup>
 }
 
 export default function Step(props: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isActive, setIsActive] = useState<boolean>(true)
-    const [isSubSolve, setIsSolveSolve] = useState<boolean>(true)
+    const [isInspect, setIsInspect] = useState<boolean>(false)
+    const [isInitialMoveMade, setIsInitialMoveMade] = useState<boolean>(false)
 
     const handlePrev = () => {
         const newPage = props.pageControl.currentPage - 1
@@ -86,24 +94,33 @@ export default function Step(props: Props) {
         props.pageControl.updateControl(update)
     }
 
+    const apiNext = (path: string, update: UpdatePageControl, newPage: number) => {
+        API.post(path, {id: props.id}).then(function (response) {
+                props.setChartData(response.data)
+                props.updateSolutionHistory(response.data)
+                if (!response.data.step.active) {
+                    update = {...update, ...{maxPage: newPage, nextEnabled: false}}
+                    let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
+                    completedSolution.step.label = response.data.step.label
+                    setIsActive(false)
+                }
+                props.pageControl.updateControl(update)
+                setIsLoading(false)
+            }
+        )
+    }
+
     const handleNext = () => {
         const newPage = props.pageControl.currentPage + 1
         let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
         if (props.pageControl.currentPage == props.solutionHistory.length) {
             setIsLoading(true)
-            API.post("/step/next", {id: props.id}).then(function (response) {
-                    props.setChartData(response.data)
-                    props.updateSolutionHistory(response.data)
-                    if (!response.data.step.active) {
-                        update = {...update, ...{maxPage: newPage, nextEnabled: false}}
-                        let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
-                        completedSolution.step.label = response.data.step.label
-                        setIsActive(false)
-                    }
-                    props.pageControl.updateControl(update)
-                    setIsLoading(false)
-                }
-            )
+            if (isInspect) {
+                apiNext("/step/inspect", update, newPage)
+            } else {
+                apiNext("/step/next", update, newPage)
+            }
+
         } else {
             props.setChartData(props.solutionHistory[newPage - 1])
             if (props.pageControl.maxPage != -1 && newPage == props.pageControl.maxPage) {
@@ -111,6 +128,25 @@ export default function Step(props: Props) {
             }
             props.pageControl.updateControl(update)
         }
+        setIsInitialMoveMade(true)
+    }
+
+    const handleInspect = () => {
+        const newPage = props.pageControl.currentPage + 1
+        let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
+        apiNext("/step/inspect", update, newPage)
+        setIsInspect(true)
+        setIsInitialMoveMade(true)
+    }
+
+    const handleSkip = () => {
+        const newPage = props.pageControl.currentPage + 1
+        let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
+        if (props.pageControl.currentPage == props.solutionHistory.length) {
+            setIsLoading(true)
+            apiNext("/step/next", update, newPage)
+        }
+        setIsInspect(false)
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
@@ -125,7 +161,13 @@ export default function Step(props: Props) {
                 {props.text ? props.text : DEFAULT_STEP_TEXT}
             </TextBox>
             <SectionDivider/>
-            {props.algorithm && algorithms[props.algorithm].type == "genetic" && <StepBar isSubSolve={isSubSolve} isActive={isActive}/>}
+            {props.algorithm && algorithms[props.algorithm].type == "genetic" &&
+            <StepBar isInspect={isInspect}
+                     isActive={isActive}
+                     isInitialMoveMade={isInitialMoveMade}
+                     onInspectClick={handleInspect}
+                     onSkipClick={handleSkip}
+            />}
             <PagingBar currentPage={props.pageControl.currentPage}
                        isNextEnabled={props.pageControl.nextEnabled && !isLoading}
                        isPrevEnabled={props.pageControl.prevEnabled && !isLoading}

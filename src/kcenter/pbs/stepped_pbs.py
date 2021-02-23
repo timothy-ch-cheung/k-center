@@ -29,7 +29,10 @@ class PBSSteps:
 
     @staticmethod
     def inspect_header(generation):
-        return f"INSPECT GENERATION {generation}: "
+        if generation == 0:
+            return "POPULATION GENERATION: "
+        else:
+            return f"INSPECT GENERATION {generation}: "
 
     @staticmethod
     def get_best_individual(solutions):
@@ -79,7 +82,8 @@ class PBSSteps:
     def inspect_best_pair_swapped(old_center: Tuple[float, float], new_center: Tuple[float, float], cost: float,
                                   generation: int):
         return PBSSteps.inspect_header(
-            generation) + f"{old_center} is removed from the set of centers and it is replaced with {new_center}, the new cost is {cost}"
+            generation) + f"""{old_center} is removed from the set of centers and it is replaced with {new_center}, the 
+            new cost is {round(cost, PBSSteps.DECIMAL_PLACES)}"""
 
     @staticmethod
     def inspect_best_pair_not_swapped(old_center: Tuple[float, float], new_center: Tuple[float, float],
@@ -87,6 +91,12 @@ class PBSSteps:
         return PBSSteps.inspect_header(
             generation) + f"""{old_center} and {new_center} we identified as the best center and point pair to swap, 
             but the swap was not made as they have already been swapped before in this invocation of local search"""
+
+    @staticmethod
+    def inspect_local_search_end(centers: Set[Tuple[float, float]], cost: float, iterations: int, generation: int):
+        header = PBSSteps.inspect_header(generation)
+        return header + f"""The local search ended after {iterations} iterations, the new cost of the solution (with 
+        centers {centers}) is {round(cost, PBSSteps.DECIMAL_PLACES)}"""
 
     @staticmethod
     def inspect_population_updated(centers: Set[Tuple[float, float]], generation: int):
@@ -187,7 +197,6 @@ class SteppedPBS(PBS):
                                                                  self.current_generation)
             yield self.yield_population(), label, SolverState.ACTIVE_SUB
         self.find_cost(individual)
-        yield self.yield_population(), PBSSteps.initial_population(), SolverState.ACTIVE_SUB
         center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
         label = PBSSteps.inspect_end_initialise_local_search(center_coords, self.current_generation)
         yield self.yield_population(), label, SolverState.ACTIVE_SUB
@@ -232,7 +241,9 @@ class SteppedPBS(PBS):
             if optimised_individual.cost >= prev_cost:
                 stale_iterations += 1
 
-        yield self.yield_population(), PBSSteps.initial_population(), SolverState.ACTIVE_SUB
+        center_coords = PBSSteps.nodes_to_coords(self.graph, optimised_individual.centers)
+        label = PBSSteps.inspect_local_search_end(center_coords, optimised_individual.cost, iteration, generation)
+        yield self.yield_population(), label, SolverState.ACTIVE_SUB
 
     def update_population(self, candidate: Individual):
         center_coords = PBSSteps.nodes_to_coords(self.graph, candidate.centers)
@@ -250,7 +261,8 @@ class SteppedPBS(PBS):
         label = PBSSteps.inspect_mutation_random(old_center_coords, new_center_coords, generation)
         yield self.yield_population(), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("randomly mutated", generation), SolverState.ACTIVE_SUB
+        yield self.yield_population(), PBSSteps.inspect_local_search_start("randomly mutated",
+                                                                           generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
             yield step
@@ -264,7 +276,8 @@ class SteppedPBS(PBS):
         label = PBSSteps.inspect_mutation_directed(old_center_coords, new_center_coords, generation)
         yield self.yield_population(), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("directed mutated", generation), SolverState.ACTIVE_SUB
+        yield self.yield_population(), PBSSteps.inspect_local_search_start("directed mutated",
+                                                                           generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
             yield step
@@ -286,7 +299,8 @@ class SteppedPBS(PBS):
             yield step
 
         yield next(self.update_population(child))
-        yield self.yield_population(), PBSSteps.inspect_mutation_directed_start("child", generation), SolverState.ACTIVE_SUB
+        yield self.yield_population(), PBSSteps.inspect_mutation_directed_start("child",
+                                                                                generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(child, generation)
         for step in mutation_directed_steps:
             yield step
@@ -301,7 +315,8 @@ class SteppedPBS(PBS):
                                                     first_child_coords, second_child_coords, generation)
         yield self.yield_population(), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("first child", generation), SolverState.ACTIVE_SUB
+        yield self.yield_population(), PBSSteps.inspect_local_search_start("first child",
+                                                                           generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(first_child, generation)
         for step in local_search_steps:
             yield step
