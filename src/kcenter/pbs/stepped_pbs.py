@@ -58,7 +58,7 @@ class PBSSteps:
     @staticmethod
     def inspect_initialise_local_search(centers: Set[Tuple[float, float]], k: int, generation: int):
         header = PBSSteps.inspect_header(generation)
-        return header + f"The current individual {centers} has less than {k} centers, {len(centers) - k} need to be added"
+        return header + f"The current individual {centers} has less than {k} centers, {k - len(centers)} more needs to be added"
 
     @staticmethod
     def inspect_initialise_local_search_add(new_center: Tuple[float, float], cost: float, generation: int):

@@ -81,3 +81,13 @@ def test_stepped_pbs(seed_random):
                        ],
                        "3 generations were completed. The fittest individual was 1 with a cost of 3.785",
                        SolverState.INACTIVE))
+
+def test_stepped_pbs_inspect(seed_random):
+    graph = basic_graph_with_outlier()
+    instance = SteppedPBS(graph, K, RELAXED_CONSTRAINTS)
+    solution = instance.generator()
+
+    assert_step_equal(next(solution),
+                      ([],
+                       "INSPECT GENERATION 0: The current individual {(5.9, 5.2)} has less than 2 centers, 1 more needs to be added",
+                       SolverState.ACTIVE_SUB))
