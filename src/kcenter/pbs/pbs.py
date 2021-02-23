@@ -124,6 +124,7 @@ class PBS(AbstractSolver):
         self.weights = {}
         self.population = []
         self.no_update_count = 0
+        self.current_generation = 0
         for i in self.points:
             for j in self.points:
                 if i == j:
@@ -528,8 +529,10 @@ class PBS(AbstractSolver):
         """
         self.population = self.generate_population()
         self.no_update_count = 0
+        self.current_generation = 0
 
         for generation in range(1, PBS.GENERATIONS + 1):
+            self.current_generation = generation
             for individual in self.population:
                 for sibling in self.population:
                     if individual == sibling:
