@@ -4,6 +4,7 @@ from src.kcenter.solver.abstract_generator import Solution
 from tests.kcenter.solver.pbs.test_pbs import K, RELAXED_CONSTRAINTS
 from tests.kcenter.util.assertion import assert_step_equal
 from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
+from tests.kcenter.util.generator import next_main
 
 
 def test_stepped_pbs(seed_random):
@@ -11,7 +12,7 @@ def test_stepped_pbs(seed_random):
     instance = SteppedPBS(graph, K, RELAXED_CONSTRAINTS)
     solution = instance.generator()
 
-    assert_step_equal(next(solution),
+    assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set()),
@@ -25,7 +26,7 @@ def test_stepped_pbs(seed_random):
                        "The initial population is generated.",
                        SolverState.ACTIVE_MAIN))
 
-    assert_step_equal(next(solution),
+    assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set()),
@@ -39,7 +40,7 @@ def test_stepped_pbs(seed_random):
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
 
-    assert_step_equal(next(solution),
+    assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set()),
@@ -53,7 +54,7 @@ def test_stepped_pbs(seed_random):
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
 
-    assert_step_equal(next(solution),
+    assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set()),
@@ -67,7 +68,7 @@ def test_stepped_pbs(seed_random):
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
 
-    assert_step_equal(next(solution),
+    assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set()),
