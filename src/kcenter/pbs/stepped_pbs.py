@@ -254,20 +254,20 @@ class SteppedPBS(PBS):
     def update_population(self, candidate: Individual):
         center_coords = PBSSteps.nodes_to_coords(self.graph, candidate.centers)
         if super().update_population(candidate):
-            yield self.yield_population(), PBSSteps.inspect_population_updated(center_coords,
-                                                                               self.current_generation), SolverState.ACTIVE_SUB
+            yield self.yield_candidate(candidate), PBSSteps.inspect_population_updated(center_coords,
+                                                                                       self.current_generation), SolverState.ACTIVE_SUB
         else:
-            yield self.yield_population(), PBSSteps.inspect_population_not_updated(center_coords,
-                                                                                   self.current_generation), SolverState.ACTIVE_SUB
+            yield self.yield_candidate(candidate), PBSSteps.inspect_population_not_updated(center_coords,
+                                                                                           self.current_generation), SolverState.ACTIVE_SUB
 
     def mutation_random_step(self, individual: Individual, generation: int):
         old_center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
         individual = self.mutation_random(individual)
         new_center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
         label = PBSSteps.inspect_mutation_random(old_center_coords, new_center_coords, generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("randomly mutated",
+        yield self.yield_candidate(individual), PBSSteps.inspect_local_search_start("randomly mutated",
                                                                            generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
@@ -280,9 +280,9 @@ class SteppedPBS(PBS):
         individual = self.mutation_random(individual)
         new_center_coords = PBSSteps.nodes_to_coords(self.graph, individual.centers)
         label = PBSSteps.inspect_mutation_directed(old_center_coords, new_center_coords, generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("directed mutated",
+        yield self.yield_candidate(individual), PBSSteps.inspect_local_search_start("directed mutated",
                                                                            generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
@@ -297,9 +297,9 @@ class SteppedPBS(PBS):
         child_center_coords = PBSSteps.nodes_to_coords(self.graph, child.centers)
         label = PBSSteps.inspect_crossover_random(first_parent_center_coords, second_parent_center_coords,
                                                   child_center_coords, self.k, generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(child), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("child", generation), SolverState.ACTIVE_SUB
+        yield self.yield_candidate(child), PBSSteps.inspect_local_search_start("child", generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(child, generation)
         for step in local_search_steps:
             yield step
@@ -319,29 +319,29 @@ class SteppedPBS(PBS):
         second_child_coords = PBSSteps.nodes_to_coords(self.graph, second_child.centers)
         label = PBSSteps.inspect_crossover_directed(first_parent_center_coords, second_parent_center_coords,
                                                     first_child_coords, second_child_coords, generation)
-        yield self.yield_population(), label, SolverState.ACTIVE_SUB
+        yield self.yield_candidate(first_child), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("first child",
+        yield self.yield_candidate(first_child), PBSSteps.inspect_local_search_start("first child",
                                                                            generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(first_child, generation)
         for step in local_search_steps:
             yield step
 
         yield next(self.update_population(first_child))
-        yield self.yield_population(), PBSSteps.inspect_mutation_directed_start("first child",
+        yield self.yield_candidate(first_child), PBSSteps.inspect_mutation_directed_start("first child",
                                                                                 generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(first_child, generation)
         for step in mutation_directed_steps:
             yield step
 
-        yield self.yield_population(), PBSSteps.inspect_local_search_start("second child",
+        yield self.yield_candidate(second_parent), PBSSteps.inspect_local_search_start("second child",
                                                                            generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(second_child, generation)
         for step in local_search_steps:
             yield step
 
-        yield next(self.update_population(first_child))
-        yield self.yield_population(), PBSSteps.inspect_mutation_directed_start("second child",
+        yield next(self.update_population(second_child))
+        yield self.yield_candidate(second_child), PBSSteps.inspect_mutation_directed_start("second child",
                                                                                 generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(second_child, generation)
         for step in mutation_directed_steps:

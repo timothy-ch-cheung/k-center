@@ -59,7 +59,7 @@ def process_standard(graph, graph_name, step):
     is_sub_solve = solver_state.is_sub_solve()
     solution = {"data": data,
                 "solutions": solutions_json,
-                "step": {"label": label, "active": is_active, "subSolve": is_sub_solve},
+                "step": {"label": label, "active": is_active, "inspect": is_sub_solve},
                 **GraphLoader.get_json_meta_data(graph_name)
                 }
     return solution, is_active

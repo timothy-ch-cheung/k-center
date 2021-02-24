@@ -32,10 +32,10 @@ const IndividualIcon = styled(SearchIcon)`
 export default function ViewPanel(props: Props): JSX.Element {
     return <div style={{marginBottom: "2px", display: "flex", justifyContent: "space-between"}}>
         <ToggleButtonGroup value={props.view} onChange={props.changeView} aria-label="view-mode" exclusive>
-            <ToggleButton value={View.Population} aria-label="population">
+            <ToggleButton value={View.Population} aria-label="population" disabled={props.subSolve}>
                 <PopulationIcon/>
             </ToggleButton>
-            <ToggleButton value={View.Individual} aria-label="individual">
+            <ToggleButton value={View.Individual} aria-label="individual" disabled={props.subSolve}>
                 <IndividualIcon/>
             </ToggleButton>
         </ToggleButtonGroup>
@@ -57,6 +57,8 @@ export default function ViewPanel(props: Props): JSX.Element {
                     Back
                 </Button>
             }/>}
-        {props.view === View.Individual && <Chip label={`Individual: ${props.activeStep}`} style={{height: "35px"}}/>}
+        {props.view === View.Individual &&
+        <Chip label={props.subSolve? "new individual" :`Individual: ${props.activeStep}`}
+              style={{height: "35px"}}/>}
     </div>
 }

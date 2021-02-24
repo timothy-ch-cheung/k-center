@@ -104,8 +104,14 @@ export default function Step(props: Props) {
                     completedSolution.step.label = response.data.step.label
                     setIsActive(false)
                 }
+                if (response.data.step.inspect) {
+                    setIsInspect(true)
+                } else {
+                    setIsInspect(false)
+                }
                 props.pageControl.updateControl(update)
                 setIsLoading(false)
+                console.log(response.data)
             }
         )
     }
