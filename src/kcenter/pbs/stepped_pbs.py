@@ -311,7 +311,7 @@ class SteppedPBS(PBS):
             yield step
 
         yield next(self.update_population(child))
-        yield self.yield_population(), PBSSteps.inspect_mutation_directed_start("child",
+        yield self.yield_candidate(child), PBSSteps.inspect_mutation_directed_start("child",
                                                                                 generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(child, generation)
         for step in mutation_directed_steps:
