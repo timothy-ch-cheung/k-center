@@ -178,7 +178,7 @@ export default function Step(props: Props) {
             />}
             <PagingBar currentPage={props.pageControl.currentPage}
                        isNextEnabled={props.pageControl.nextEnabled && !isLoading}
-                       isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
+                       isPrevEnabled={props.pageControl.currentPage != 0 && props.pageControl.prevEnabled && !isLoading}
                        handlePrevClick={handlePrev}
                        handleNextClick={handleNext}
                        maxPage={props.pageControl.maxPage}

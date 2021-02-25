@@ -88,7 +88,7 @@ function drawTooltips(data) {
             tooltip.transition()
                 .duration(100)
                 .style('opacity', .9);
-            tooltip.text(`(x: ${d.x}, y: ${d.y}) Class: ${d.colour}`)
+            tooltip.text(`(x: ${d.x.toFixed(3)}, y: ${d.y.toFixed(3)}) Class: ${d.colour}`)
                 .style('left', `${event.pageX + 5}px`)
                 .style('top', `${event.pageY - 20}px`);
         })
@@ -116,9 +116,12 @@ function drawCentersBoundaryToggle(chartWidth) {
         .style('fill', "LightSlateGray")
         .style('outline', "solid 1px Black")
         .on("click", () => {
-                let currentOpacity = d3.selectAll(".radii").style("opacity")
-                d3.selectAll(".radii").transition().style("opacity", currentOpacity == 1 ? 0 : 1)
-                d3.select('.center-toggle').transition().style("opacity", currentOpacity == 1 ? 0.2 : 1)
+                let radii = d3.selectAll(".radii")
+                if (radii.size() != 0) {
+                    let currentOpacity = radii.style("opacity")
+                    d3.selectAll(".radii").transition().style("opacity", currentOpacity == 1 ? 0 : 1)
+                    d3.select('.center-toggle').transition().style("opacity", currentOpacity == 1 ? 0.2 : 1)
+                }
             }
         );
 
