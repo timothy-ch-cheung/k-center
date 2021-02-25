@@ -88,6 +88,6 @@ def test_stepped_pbs_inspect(seed_random):
     solution = instance.generator()
 
     assert_step_equal(next(solution),
-                      ([],
-                       "INSPECT GENERATION 0: The current individual {(5.9, 5.2)} has less than 2 centers, 1 more needs to be added",
+                      ([Solution(clusters={3: {0, 1, 2, 3, 4}}, cost=5.6303, outliers=set())],
+                       "POPULATION GENERATION: The current individual {(5.9, 5.2)} has less than 2 centers, 1 more needs to be added",
                        SolverState.ACTIVE_SUB))
