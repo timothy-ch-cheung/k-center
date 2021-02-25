@@ -17,15 +17,20 @@ class PBSSteps:
     DECIMAL_PLACES = 3
 
     @staticmethod
+    def round_coord(coord: Tuple[float, float]):
+        return round(coord[0], PBSSteps.DECIMAL_PLACES), round(coord[1], PBSSteps.DECIMAL_PLACES)
+
+    @staticmethod
     def nodes_to_coords(graph: nx.Graph, centers: Set[int]) -> Set[Tuple[float, float]]:
         coordinates = set()
         for center in centers:
-            coordinates.add(tuple(graph.nodes()[center]["pos"]))
+            coord = tuple(graph.nodes()[center]["pos"])
+            coordinates.add(PBSSteps.round_coord(coord))
         return coordinates
 
     @staticmethod
     def node_to_coord(graph: nx.Graph, center: int):
-        return tuple(graph.nodes()[center]["pos"])
+        return PBSSteps.round_coord(tuple(graph.nodes()[center]["pos"]))
 
     @staticmethod
     def inspect_header(generation):
@@ -199,7 +204,7 @@ class SteppedPBS(PBS):
                 nwk = list(set(PBS.get_nwk(self.graph, new_center_point, k)).difference(individual.centers))
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
-            label = PBSSteps.inspect_initialise_local_search_add(self.graph.nodes()[new_center]["pos"], individual.cost,
+            label = PBSSteps.inspect_initialise_local_search_add(PBSSteps.node_to_coord(self.graph, new_center), individual.cost,
                                                                  self.current_generation)
             yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
         self.find_cost(individual)
@@ -268,7 +273,7 @@ class SteppedPBS(PBS):
         yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
 
         yield self.yield_candidate(individual), PBSSteps.inspect_local_search_start("randomly mutated",
-                                                                           generation), SolverState.ACTIVE_SUB
+                                                                                    generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
             yield step
@@ -283,7 +288,7 @@ class SteppedPBS(PBS):
         yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
 
         yield self.yield_candidate(individual), PBSSteps.inspect_local_search_start("directed mutated",
-                                                                           generation), SolverState.ACTIVE_SUB
+                                                                                    generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(individual, generation)
         for step in local_search_steps:
             yield step
@@ -299,7 +304,8 @@ class SteppedPBS(PBS):
                                                   child_center_coords, self.k, generation)
         yield self.yield_candidate(child), label, SolverState.ACTIVE_SUB
 
-        yield self.yield_candidate(child), PBSSteps.inspect_local_search_start("child", generation), SolverState.ACTIVE_SUB
+        yield self.yield_candidate(child), PBSSteps.inspect_local_search_start("child",
+                                                                               generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(child, generation)
         for step in local_search_steps:
             yield step
@@ -322,27 +328,27 @@ class SteppedPBS(PBS):
         yield self.yield_candidate(first_child), label, SolverState.ACTIVE_SUB
 
         yield self.yield_candidate(first_child), PBSSteps.inspect_local_search_start("first child",
-                                                                           generation), SolverState.ACTIVE_SUB
+                                                                                     generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(first_child, generation)
         for step in local_search_steps:
             yield step
 
         yield next(self.update_population(first_child))
         yield self.yield_candidate(first_child), PBSSteps.inspect_mutation_directed_start("first child",
-                                                                                generation), SolverState.ACTIVE_SUB
+                                                                                          generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(first_child, generation)
         for step in mutation_directed_steps:
             yield step
 
         yield self.yield_candidate(second_parent), PBSSteps.inspect_local_search_start("second child",
-                                                                           generation), SolverState.ACTIVE_SUB
+                                                                                       generation), SolverState.ACTIVE_SUB
         local_search_steps = self.local_search(second_child, generation)
         for step in local_search_steps:
             yield step
 
         yield next(self.update_population(second_child))
         yield self.yield_candidate(second_child), PBSSteps.inspect_mutation_directed_start("second child",
-                                                                                generation), SolverState.ACTIVE_SUB
+                                                                                           generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(second_child, generation)
         for step in mutation_directed_steps:
             yield step
@@ -356,7 +362,7 @@ class SteppedPBS(PBS):
 
         while len(self.population) < PBS.POPULATION_SIZE:
             candidate, init_center = generate_candidate(self)
-            init_center_coord = self.graph.nodes()[init_center]["pos"]
+            init_center_coord = PBSSteps.node_to_coord(self.graph, init_center)
             label = PBSSteps.inspect_generate_candidate(init_center_coord, self.k, self.current_generation)
             self.yield_population(), label, SolverState.ACTIVE_SUB
             local_search_steps = self.local_search(candidate, self.current_generation)

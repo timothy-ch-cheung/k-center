@@ -39,7 +39,12 @@ interface Props {
     id: string
     algorithm?: string
     pageControl: PageControl
-
+    isInspect: boolean
+    setIsInspect: (isInspect: boolean) => void
+    isInitialMoveMade: boolean
+    setIsInitialMoveMade: (isInitialMoveMade: boolean) => void
+    isActive: boolean
+    setIsActive: (isActive: boolean) => void
 }
 
 
@@ -77,9 +82,6 @@ const StepBar = (props: SubStep) => {
 
 export default function Step(props: Props) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [isActive, setIsActive] = useState<boolean>(true)
-    const [isInspect, setIsInspect] = useState<boolean>(false)
-    const [isInitialMoveMade, setIsInitialMoveMade] = useState<boolean>(false)
 
     const handlePrev = () => {
         const newPage = props.pageControl.currentPage - 1
@@ -102,12 +104,12 @@ export default function Step(props: Props) {
                     update = {...update, ...{maxPage: newPage, nextEnabled: false}}
                     let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
                     completedSolution.step.label = response.data.step.label
-                    setIsActive(false)
+                    props.setIsActive(false)
                 }
                 if (response.data.step.inspect) {
-                    setIsInspect(true)
+                    props.setIsInspect(true)
                 } else {
-                    setIsInspect(false)
+                    props.setIsInspect(false)
                 }
                 props.pageControl.updateControl(update)
                 setIsLoading(false)
@@ -121,7 +123,7 @@ export default function Step(props: Props) {
         let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
         if (props.pageControl.currentPage == props.solutionHistory.length) {
             setIsLoading(true)
-            if (isInspect) {
+            if (props.isInspect) {
                 apiNext("/step/inspect", update, newPage)
             } else {
                 apiNext("/step/next", update, newPage)
@@ -134,15 +136,15 @@ export default function Step(props: Props) {
             }
             props.pageControl.updateControl(update)
         }
-        setIsInitialMoveMade(true)
+        props.setIsInitialMoveMade(true)
     }
 
     const handleInspect = () => {
         const newPage = props.pageControl.currentPage + 1
         let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
         apiNext("/step/inspect", update, newPage)
-        setIsInspect(true)
-        setIsInitialMoveMade(true)
+        props.setIsInspect(true)
+        props.setIsInitialMoveMade(true)
     }
 
     const handleSkip = () => {
@@ -152,7 +154,7 @@ export default function Step(props: Props) {
             setIsLoading(true)
             apiNext("/step/next", update, newPage)
         }
-        setIsInspect(false)
+        props.setIsInspect(false)
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
@@ -168,9 +170,9 @@ export default function Step(props: Props) {
             </TextBox>
             <SectionDivider/>
             {props.algorithm && algorithms[props.algorithm].type == "genetic" &&
-            <StepBar isInspect={isInspect}
-                     isActive={isActive}
-                     isInitialMoveMade={isInitialMoveMade}
+            <StepBar isInspect={props.isInspect}
+                     isActive={props.isActive}
+                     isInitialMoveMade={props.isInitialMoveMade}
                      onInspectClick={handleInspect}
                      onSkipClick={handleSkip}
             />}
