@@ -15,41 +15,27 @@ def test_stepped_pbs(seed_random):
     assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
-                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={1: {0, 1}, 2: {2, 3}}, cost=5.5109, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
+                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4})
                        ],
-                       "The initial population is generated.",
+                       "The initial population is generated, the evolution phase can now be started",
                        SolverState.ACTIVE_MAIN))
 
     assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
-                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={1: {0, 1}, 2: {2, 3}}, cost=5.5109, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
-                       ],
-                       "The best individual in this generation is 0 with a cost of 0.707",
-                       SolverState.ACTIVE_MAIN))
-
-    assert_step_equal(next_main(solution),
-                      ([
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
-                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={1: {0, 1}, 2: {2, 3}}, cost=5.5109, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4})
                        ],
                        "The best individual in this generation is 0 with a cost of 0.707",
                        SolverState.ACTIVE_MAIN))
@@ -57,13 +43,13 @@ def test_stepped_pbs(seed_random):
     assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
-                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={1: {0, 1}, 2: {2, 3}}, cost=5.5109, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4})
                        ],
                        "The best individual in this generation is 0 with a cost of 0.707",
                        SolverState.ACTIVE_MAIN))
@@ -71,13 +57,27 @@ def test_stepped_pbs(seed_random):
     assert_step_equal(next_main(solution),
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6302, outliers=set()),
-                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={1: {0, 1}, 2: {2, 3}}, cost=5.5109, outliers={4}),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={0: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2})
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4})
+                       ],
+                       "The best individual in this generation is 0 with a cost of 0.707",
+                       SolverState.ACTIVE_MAIN))
+
+    assert_step_equal(next_main(solution),
+                      ([
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
+                           Solution(clusters={0: {0, 1, 3}, 2: {2}}, cost=5.2839, outliers={4})
                        ],
                        "3 generations were completed. The fittest individual was 0 with a cost of 0.707",
                        SolverState.INACTIVE))
