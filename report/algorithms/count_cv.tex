@@ -1,0 +1,19 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Count Critical Vertices}
+\label{alg:count_cv}
+\begin{algorithmic}[1]
+\Require $C$: the set of centers in a solution, $r$: cost of solution, $D_i^0$: neighbourhood structure defining the distance from each point to its nearest center (described further in \cref{section:pbs})
+\Ensure count: number of \emph{critical vertices}
+\Function{Count\textunderscore CV}{$C,r$}
+    \State {count $\gets 0$}
+    \For{$v\in C$}
+        \If{$D_v^0=r$}
+            \State{count $\gets$ count$+1$}
+        \EndIf
+    \EndFor
+    \State \Return count
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

@@ -1,0 +1,29 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{\emph{Gon} algorithm (\cite{gonzalez_clustering_1985})}
+\label{alg:greedy_gonzalez}
+\begin{algorithmic}[1]
+\Require $V=\{v_1,\ldots, v_n\}$: vertices to cluster, $k$: max number of centers
+\Ensure $C$: set of cluster centers, $B$: set of clusters 
+\Procedure{Approx}{$V, k$}
+    \State {$B$ $\gets$ $\{V\}$}\Comment{A set of sets, $\{B_1,...,B_k\}$ representing clusters (inital value is all points in $V$)}
+    \State {$C$ $\gets$ \{{$v_1$}\}}\Comment The set of centers $\{c_1,...,c_k\}$ (corresponding to the clusters they belong to)
+    \For{$i \gets 1$ to $k-1$}
+        \State {$h, v_x$ $\gets$ {$max\{dist(v_x, C_y)| v_x\in B_y, 1\leq y \leq i\}$}}
+        \State {$B_{i+1} \gets\{v_x\}$}
+        \State {$B \gets B \cup B_{i+1}                            $}
+        \State {$C \gets C \cup v_x$}
+        \For{$j \gets 1$ to $i$}                    
+            \For{$v_t \in B_j$}
+                \If{$dist(v_t, C_{i+1})\leq dist(v_t, C_j)$}
+                    \State{$B_j\gets B_j\setminus{\{v_t\}}$}
+                    \State{$B_{i+1}\gets B_{i+1}\cup{\{v_t\}}$}
+                \EndIf
+            \EndFor
+        \EndFor
+    \EndFor
+    \State \Return {$B, C$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore
