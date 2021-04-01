@@ -17,9 +17,9 @@ class TSPLIBGraphLoader:
         :return: id, x_coord, y_coord
         """
         node = node.strip().split(" ")
-        id = int(edge[0])
-        x_coord = int(edge[1])
-        y_coord = float(edge[2])
+        id = int(node[0])
+        x_coord = int(node[1])
+        y_coord = float(node[2])
         return id, x_coord, y_coord
 
     @staticmethod

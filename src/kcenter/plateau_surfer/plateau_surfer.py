@@ -12,7 +12,7 @@ from kcenter.verify.verify import cluster
 
 
 class PlateauSurfer(BruteForceKCenter, AbstractSolver):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.25, beta: float = 0.5):
         super().__init__(graph, k, constraints)
         self.weights = {}
         for i in self.points:
@@ -20,6 +20,11 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                 if i == j:
                     graph.add_edge(i, j, weight=0)
                 self.weights[(i, j)] = graph[i][j]["weight"]
+
+        if constraints is None:
+            self.constraints = {Colour.BLUE: 0, Colour.RED: 0}
+        self.alpha = alpha
+        self.beta = beta
 
     def calc_nearest_centers(self, P: Set[int]):
         nearest_centers = {}
@@ -39,9 +44,9 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
         critical_vertices = [x for x in nearest_centers.values() if math.isclose(x.cost, cost)]
         return len(critical_vertices)
 
-    def randomized_build(self, alpha: float = 0.25, beta: float = 0.5):
+    def randomized_build(self):
         P = set()
-        num_initial = random.randint(1, math.ceil(self.k * alpha))
+        num_initial = 0 if self.alpha == 0 else random.randint(1, math.ceil(self.k * self.alpha))
         greedy_costs = {i: 0 for i in self.points}
         for i in range(num_initial):
             f = random.choice(tuple(self.points.difference(P)))
@@ -56,7 +61,7 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                     z_min = cost
                 if z_max < cost:
                     z_max = cost
-            mu = z_min + beta * (z_max - z_min)
+            mu = z_min + self.beta * (z_max - z_min)
             RCL = [i for i in self.points.difference(P) if greedy_costs[i] <= mu]
             P.add(random.choice(RCL))
         return P
@@ -75,7 +80,7 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                         best_new_sol_value = new_cost
                         best_flip = point
                     elif best_flip is None and math.isclose(new_cost, best_new_sol_value) and (
-                    cv := self.max_delta(self.calc_nearest_centers(new_P), new_cost)) < best_cv:
+                            cv := self.max_delta(self.calc_nearest_centers(new_P), new_cost)) < best_cv:
                         # likely mistake in algorithm in paper for not ensuring new_cost=best_new_sol_value
                         best_cv = cv
                         best_cv_flip = point
