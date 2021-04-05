@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[letterpaper, left=0.8in, right=0.8in, bottom=1in, top=0.75in]{geometry}
+\usepackage{parskip}
+\usepackage[citestyle=authoryear]{biblatex}
+\usepackage{csquotes}
+\addbibresource{footer/ref.bib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{appendix}
+\usepackage{cleveref}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{stmaryrd}
+
+\makeatletter
+\algrenewcommand\ALG@beginalgorithmic{\footnotesize}
+\makeatother
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Output:}}
+
+\setlength{\parskip}{1em}
+\renewcommand{\baselinestretch}{1.2}
+\newcommand{\textbox}[1]{\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\itshape}{#1}}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{On the Colourful $k$-center problem}
+\author{Timothy Cheung}
+\date{March 2021}
+
+\begin{document}
+%TC:ignore
+\maketitle
+\newpage
+\begin{abstract}
+\input{1_introduction/abstract}
+\end{abstract}
+\newpage
+
+\newpage
+\tableofcontents
+\newpage
+%TC:endignore
+\section{Introduction}
+\input{1_introduction/introduction}
+
+\section{Literature Review}\label{section:lit_review}
+    \subsection{Overview}
+    \input{1_introduction/overview}
+    
+    \subsection{The $k$-center problem}\label{section:k_center}
+    \input{1_introduction/k_center}
+    
+    \subsection{The robust $k$-center problem}
+    \input{1_introduction/robust_k_center}
+    
+    \subsection{The colourful $k$-center problem}
+    \input{1_introduction/colourful_k_center}
+    
+    \subsection{The significance of $k$-center}
+    \input{1_introduction/significance}
+    
+    \subsection{Aims and Motivations}
+    \input{1_introduction/project_aims}
+    
+    \subsection{Related Work}
+    \input{1_introduction/related_work}
+
+\section{Background}\label{section:background}
+\subsection{Approaches to solving the k-center problem}
+\input{2_body/background/solving_k_center}
+
+    \subsubsection{A Greedy Approximation Algorithm}\label{section:greedy}
+    \input{2_body/background/greedy}
+    
+    \subsubsection{A Memetic Genetic Algorithm (PBS)}\label{section:pbs}
+    \input{2_body/background/memetic_genetic}
+    
+    \subsubsection{A Randomized Algorithm (GRASP) and Plateau Surfer Local Search}\label{section:plateau_surfer}
+    \input{2_body/background/grasp_local_search}
+
+\subsection{Approaches to solving the colourful k-center}
+
+    \subsubsection{A Constant Colourful Algorithm}\label{section:colourful_k_center}
+    \input{2_body/background/constant_colourful}
+
+\section{Design}\label{section:design}
+
+\section{Results}\label{section:results}
+
+\section{Evaluation}\label{section:evaluation}
+
+\section{Reflection}
+\subsection{Knowledge Gained}
+\input{4_evaluation/learning}
+\newpage
+%TC:ignore
+\section{References}
+\printbibliography[heading=none]
+
+\appendix
+\section{Brute Force Algorithms}
+\subsection{k-center}
+\label{brute-force-k-center}
+\input{algorithms/brute_force_k_center}
+\subsection{colourful k-center}
+\input{algorithms/brute_force_colourful_k_center}
+\section{Determining parameters for GRASP}\label{appendix:grasp_param}
+%TC:endignore
+\end{document}
