@@ -29,7 +29,7 @@ jobs:
       - name: run tests
         run: pytest --cache-clear --cov=src tests/ > pytest-coverage.txt
 
-      - name: pytest-coverage-commentator
-          uses: coroo/pytest-coverage-commentator@v1.0.2
-          with:
-            pytest-coverage: pytest-coverage.txt
+      - name: comment coverage
+        uses: coroo/pytest-coverage-commentator@v1.0.2
+        with:
+          pytest-coverage: pytest-coverage.txt
