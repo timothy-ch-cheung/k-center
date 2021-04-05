@@ -9,7 +9,7 @@ from matplotlib import cm
 from server.tsplib_graph_loader import TSPLIBGraphLoader
 
 """
-Calculate mean percentage above optimal cost for each alpha-beta parameter combination
+Calculate mean percentage above optimal cost for each alpha-beta parameter combination and plot them on a heatmap
 """
 
 
