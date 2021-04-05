@@ -1,14 +1,17 @@
 import math
+import time
 from itertools import chain
 from typing import Dict, Tuple, Set, Generator, Optional, List
 
 import networkx as nx
 
+from src.kcenter.solver.abstract_target_solver import AbstractTargetSolver
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS, Individual
+from src.util.logger import Logger
 
 
-class TargetPBS(PBS):
+class TargetPBS(PBS, AbstractTargetSolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
 
@@ -60,13 +63,29 @@ class TargetPBS(PBS):
                     yield candidate if self.update_population(candidate) else None
             generation += 1
 
-    def target_solve(self, target_cost: float) -> Tuple[Dict[int, Set[int]], Set[int], float]:
+    def target_solve(self, target_cost: float, timeout: Optional[float] = None, log: bool = False) -> Tuple[
+        Dict[int, Set[int]], Set[int], float]:
+
+        start_time = time.time()
+        logger = Logger("pbs", len(self.points), self.k, start_time)
+        best_cost = self.MAX_WEIGHT
         generator = chain(self.generate_population(), self.evolve())
         solution = None
         for candidate in generator:
-            if candidate is not None and (math.isclose(candidate.cost, target_cost) or candidate.cost < target_cost):
-                solution = candidate
+            if candidate is not None:
+                if candidate.cost < best_cost:
+                    solution = candidate
+                    best_cost = candidate.cost
+                    if log is True:
+                        logger.append(best_cost)
+                if math.isclose(candidate.cost, target_cost) or candidate.cost < target_cost:
+                    solution = candidate
+                    break
+            if timeout is not None and time.time() - start_time > timeout:
                 break
+
+        if log is True:
+            logger.dump()
 
         clusters = {center: set() for center in solution.centers}
         outliers = set()

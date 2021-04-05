@@ -1,0 +1,52 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Find cost of K-Center Solution}
+\label{alg:brute_force_k_center}
+\begin{algorithmic}[1]
+\Statex
+\Function{Find\_K\_Center\_Cost}{$S$}
+    \State {$max\_cost$ $\gets$ {$0$}}
+    \For{$p \gets 1$ to $N$}
+        \State {$min\_cost$ $\gets$ {$max(d_{ij})$}}
+        \For{$s \gets 1$ to $|S|$}
+            \State {$cost$ $\gets$ {$dist(P_i, P_s)$}}
+            \If{$cost < min\_cost$}
+                \State {$min\_cost$ $\gets$ {$cost$}}
+            \EndIf
+        \EndFor
+        \If{$min\_cost$ $>$ {$max\_cost$}}
+            \State {$max\_cost$ $\gets$ {$min\_cost$}}
+        \EndIf
+    \EndFor
+    \State \Return {$max\_cost$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H] 
+\caption{Brute force Colourful K-Center solution}
+\label{alg:k_center_cost}
+\begin{algorithmic}[1]
+\Statex
+\Function{Candidate\_Combination}{$L, k, Partial$}
+    \If{$k < 1$}
+        \State {$cost$ $\gets$ {$Find\_K\_Center\_Cost(Partial)$}}
+        \If{$cost < min\_cost$}
+            \State {$min\_cost$ $\gets$ {$p$}}
+            \State {$best\_solution$ $\gets$ {$Partial$}}
+        \EndIf
+    \EndIf
+    \For{$i \gets 1$ to $|L|$}
+        \State {$Candidate\_Combination(L_{i+1,|L|}, k-1, Partial + L_i)$}
+    \EndFor
+\EndFunction
+\Statex
+\Procedure{Brute\_Force\_K\_Center}{}
+    \State {$min\_cost$ $\gets$ {$max(d_{ij})$}}
+    \State {$best\_solution$ $\gets$ {$\emptyset$}}
+    \State {$Candidate\_Combination(P, k,\emptyset)$}
+    
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore
