@@ -1,4 +1,5 @@
 import os
+import glob
 from typing import Tuple, Dict
 
 import networkx as nx
@@ -63,3 +64,8 @@ class ORLIBGraphLoader:
                 optimal = float(line[1])
                 opt[problem_instance] = optimal
         return opt
+
+    @staticmethod
+    def get_problem_list():
+        problems = glob.glob("os.path.dirname(__file__)}/dataset/ORLIB/pmed*.txt")
+        return problems
