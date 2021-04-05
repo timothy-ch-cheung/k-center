@@ -84,7 +84,8 @@ class TargetPBS(PBS, AbstractTargetSolver):
             if timeout is not None and time.time() - start_time > timeout:
                 break
 
-        logger.dump()
+        if log is True:
+            logger.dump()
 
         clusters = {center: set() for center in solution.centers}
         outliers = set()

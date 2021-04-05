@@ -179,6 +179,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
             if math.isclose(cost, target_cost) or cost < target_cost or time.time() - start_time > timeout:
                 break
 
-        logger.dump()
+        if log is True:
+            logger.dump()
+
         best_cluster = cluster(self.graph, best_solution, best_cost)
         return best_cluster, set(), best_cost
