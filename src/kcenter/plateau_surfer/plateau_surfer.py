@@ -14,7 +14,7 @@ from src.util.logger import Logger
 
 class PlateauSurfer(BruteForceKCenter, AbstractSolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.25,
-                 beta: float = 0.5):
+                 beta: float = 0.25):
         super().__init__(graph, k, constraints)
         self.weights = {}
         self.points = set(graph.nodes())
