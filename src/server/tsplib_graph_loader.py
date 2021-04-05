@@ -4,7 +4,7 @@ from typing import Tuple, Dict
 import networkx as nx
 import numpy
 
-from server.graph_loader import calculate_edges
+from src.server.graph_loader import calculate_edges
 
 
 class TSPLIBGraphLoader:

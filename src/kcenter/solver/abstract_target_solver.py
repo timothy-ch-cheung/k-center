@@ -1,17 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple, Set
-
-import networkx as nx
-
-from src.kcenter.constant.colour import Colour
+from typing import Dict, Tuple, Set, Optional
 
 
-class AbstractSolver(ABC):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        self.graph = graph
-        self.k = k
-        self.constraints = constraints
+class AbstractTargetSolver(ABC):
 
     @abstractmethod
-    def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
+    def target_solve(self, target_cost: float, timeout: Optional[float] = None, log: bool = False) -> Tuple[
+        Dict[int, Set[int]], Set[int], float]:
         pass

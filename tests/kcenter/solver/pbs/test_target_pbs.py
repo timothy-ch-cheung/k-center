@@ -7,7 +7,7 @@ from src.server.orlib_graph_loader import ORLIBGraphLoader
 from tests.kcenter.solver.pbs.test_pbs import FLOAT_ERROR_MARGIN
 
 
-def test_target_pbs(seed_random):
+def test_target_pbs_no_timeout(seed_random):
     graph = ORLIBGraphLoader.get_graph("pmed1")
     k = graph.graph["k"]
     constraints = {Colour.BLUE: 100, Colour.RED: 0}
