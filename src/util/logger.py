@@ -20,7 +20,6 @@ class Logger:
         self.n = n
         self.k = k
         self.start_time = start_time or time.time()
-        print(os.getcwd())
 
     def append(self, cost: float):
         current_time = time.time()

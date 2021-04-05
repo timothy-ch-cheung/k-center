@@ -161,7 +161,7 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
         Dict[int, Set[int]], Set[int], float]:
 
         start_time = time.time()
-        logger = Logger("pbs", len(self.points), self.k, start_time)
+        logger = Logger("grasp", len(self.points), self.k, start_time)
         best_cost = self.MAX_WEIGHT
         best_solution = None
 
@@ -179,5 +179,6 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
             if math.isclose(cost, target_cost) or cost < target_cost or time.time() - start_time > timeout:
                 break
 
+        logger.dump()
         best_cluster = cluster(self.graph, best_solution, best_cost)
         return best_cluster, set(), best_cost
