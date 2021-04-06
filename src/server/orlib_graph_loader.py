@@ -1,6 +1,7 @@
-import os
 import glob
-from typing import Tuple, Dict
+import os
+import re
+from typing import Tuple, Dict, List
 
 import networkx as nx
 
@@ -67,5 +68,12 @@ class ORLIBGraphLoader:
 
     @staticmethod
     def get_problem_list():
-        problems = glob.glob("os.path.dirname(__file__)}/dataset/ORLIB/pmed*.txt")
-        return problems
+        problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/ORLIB/pmed*.txt")
+        problem_names: List[str] = []
+        reg = re.compile("(?<=ORLIB\\\\).*(?=.txt)")
+        for path in problems:
+            result = reg.search(path)
+            name = result.group(0)
+            problem_names.append(name)
+
+        return problem_names
