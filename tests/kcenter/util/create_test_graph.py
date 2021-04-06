@@ -100,3 +100,17 @@ def grid_graph() -> nx.Graph:
 
     calculate_edges(G)
     return G
+
+def basic_grid_graph() -> nx.Graph:
+    G = nx.Graph()
+    G.add_node(0, pos=numpy.array((1.0, 1.0)), colour=Colour.BLUE)
+    G.add_node(1, pos=numpy.array((1.0, 2.0)), colour=Colour.BLUE)
+    G.add_node(2, pos=numpy.array((1.5, 1.5)), colour=Colour.BLUE)
+    G.add_node(3, pos=numpy.array((2.0, 1.0)), colour=Colour.BLUE)
+    G.add_node(4, pos=numpy.array((2.5, 1.5)), colour=Colour.BLUE)
+    G.add_node(5, pos=numpy.array((3.0, 1.0)), colour=Colour.BLUE)
+    G.add_node(6, pos=numpy.array((3.0, 2.0)), colour=Colour.BLUE)
+
+    G.graph["k"] = 2
+    calculate_edges(G)
+    return G

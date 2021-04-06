@@ -1,4 +1,4 @@
-from server.orlib_graph_loader import ORLIBGraphLoader
+from src.server.orlib_graph_loader import ORLIBGraphLoader
 
 
 def test_list_problems():
