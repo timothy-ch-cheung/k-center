@@ -1,4 +1,6 @@
 import math
+import os
+import sys
 from collections import namedtuple
 from pathlib import Path
 
@@ -8,10 +10,9 @@ InstanceConfig = namedtuple("InstanceConfig", ["nodes", "count", "k_values"])
 def build_gowalla_data_set():
     locations = dict()
 
-    gowalla_checkins_full = Path("loc-gowalla_totalCheckins.txt", "r")
-    if not gowalla_checkins_full.is_file():
-        print("The original Gowalla dataset is too large to upload to git, it can be downloaded at \
-        https://snap.stanford.edu/data/loc-gowalla.html")
+    if not os.path.isfile("./loc-gowalla_totalCheckins.txt") and not os.path.isfile("./gowalla_checkins.txt"):
+        print("The original Gowalla dataset is too large to upload to git, it can be downloaded at https://snap.stanford.edu/data/loc-gowalla.html")
+        sys.exit(-1)
 
     with open("loc-gowalla_totalCheckins.txt", "r") as f:
         for line in f.readlines():
@@ -50,17 +51,16 @@ def divide_data_set():
         InstanceConfig(nodes=900, count=3, k_values=[5, 10, 90])
     ]
 
-    gowalla_checkins = Path("gowalla_checkins.txt", "r")
-    if not gowalla_checkins.is_file():
+    if not os.path.isfile("./gowalla_checkins.txt"):
         build_gowalla_data_set()
 
     with open("gowalla_checkins.txt", "r") as f:
         iteration = 1
         for instance in queue:
             for i in range(instance.count):
-                file_name = f"gow_{iteration}.txt"
-                with open(file_name) as file:
-                    file.write(f"{instance.nodes} {instance.k_values[i]}\n")
+                file_name = f"gow_{str(iteration).zfill(2)}.txt"
+                iteration += 1
+                with open(file_name, "w") as file:
                     checkins = []
                     for j in range(instance.nodes):
                         line = f.readline().strip().split(" ")
@@ -70,6 +70,8 @@ def divide_data_set():
                         num_checkins = line[3]
                         checkins.append(int(num_checkins))
                         file.write(f"{loc_id} {latitude} {longitude} {num_checkins}\n")
+                        f.flush()
+                        os.fsync(f)
 
                 mean_checkins = sum(checkins) / len(checkins)
                 above_avg = [x for x in checkins if x > mean_checkins]
@@ -81,11 +83,13 @@ def divide_data_set():
                 min_blue = math.floor(num_blue * COVERAGE_RATIO)
                 min_red = math.floor(num_red * COVERAGE_RATIO)
 
-                header = f"{instance.count} {num_blue} {num_red} {instance.k_values[i]} {mean_checkins} {min_blue} {min_red}\n"
+                header = f"{instance.nodes} {num_blue} {num_red} {instance.k_values[i]} {mean_checkins} {min_blue} {min_red}\n"
                 with open(file_name, 'r') as original:
                     data = original.read()
                 with open(file_name, 'w') as modified:
                     modified.write(header + data)
+
+                print(f"Created instance with {instance.nodes} nodes, k={instance.k_values[i]}, {num_blue} above average visited locations and {num_red} below average visited locations")
 
 
 if __name__ == "__main__":
