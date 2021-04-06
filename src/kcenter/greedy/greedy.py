@@ -12,7 +12,6 @@ class Greedy(AbstractSolver):
     Based on the algorithm shown in "Clustering to minimize
     the maximum inter-cluster distance (Gonzalez 1985)".
     """
-    INITIAL_HEAD = 0
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
         super().__init__(graph, k, constraints)
@@ -46,8 +45,11 @@ class Greedy(AbstractSolver):
             for node in nodes_moved:
                 cluster.remove(node)
 
+    def get_initial(self):
+        return list(self.graph.nodes())[0]
+
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], float]:
-        clusters = {Greedy.INITIAL_HEAD: set(self.graph.nodes)}
+        clusters = {self.get_initial(): set(self.graph.nodes)}
 
         for i in range(1, self.k):
             max_node, max_dist, owning_center = Greedy.max_dist(self.graph, clusters)

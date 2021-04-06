@@ -39,6 +39,7 @@ class ORLIBGraphLoader:
         with open(f"{os.path.dirname(__file__)}/dataset/ORLIB/{graph_name}.txt", "r") as f:
             num_vertices, num_edges, k = ORLIBGraphLoader.parse_header(f.readline())
             G.graph["k"] = k
+            G.graph["n"] = num_vertices
 
             for vertex in range(1, num_vertices + 1):
                 G.add_node(vertex)
