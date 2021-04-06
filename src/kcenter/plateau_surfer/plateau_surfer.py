@@ -108,7 +108,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
             P.add(random.choice(RCL))
         return P
 
-    def plateau_surf_local_search(self, P: Set[int]):
+    def plateau_surf_local_search(self, P: Set[int], time_left: Optional[float] = None):
+        start_time = time.time()
         nearest_centers, nearest_costs = self.calc_nearest_centers(P)
 
         while True:
@@ -140,6 +141,10 @@ class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
                     modified = True
                 else:
                     P = self.add_center(nearest_centers, nearest_costs, P, center)
+
+                if time_left is not None and time.time() - start_time > time_left:
+                    return P
+
             if not modified:
                 break
 
@@ -168,7 +173,12 @@ class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
 
         while True:
             initial_solution = self.randomized_build()
-            solution = self.plateau_surf_local_search(initial_solution)
+            if timeout is not None:
+                time_left = timeout - time.time() - start_time
+                solution = self.plateau_surf_local_search(initial_solution, time_left)
+            else:
+                solution = self.plateau_surf_local_search(initial_solution)
+
             cost = self.find_candidate_cost(solution)
 
             if cost < best_cost:
