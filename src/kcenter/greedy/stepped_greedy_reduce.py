@@ -1,11 +1,12 @@
-from typing import Dict, Generator, Tuple, Set
+from typing import Dict
 
 import networkx as nx
 
-from src.kcenter.solver.abstract_generator import Solution, AbstractGenerator
 from src.kcenter.constant.colour import Colour
+from src.kcenter.constant.solver_state import SolverState
 from src.kcenter.greedy.greedy_reduce import GreedyReduce
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
+from src.kcenter.solver.abstract_generator import Solution, AbstractGenerator
 from src.kcenter.verify.verify import verify_solution
 
 
@@ -35,13 +36,13 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
         solutions = []
         generator = super().generator()
         for step in generator:
-            solutions, label, active = step
-            if not active:
+            solutions, label, solver_state = step
+            if not solver_state.is_active():
                 break
-            yield solutions, label, True
+            yield solutions, label, SolverState.ACTIVE_MAIN
 
         solution = solutions[0]
-        yield solutions, GreedyReduceSteps.intermediate_cost(solution.cost, self.k), True
+        yield solutions, GreedyReduceSteps.intermediate_cost(solution.cost, self.k), SolverState.ACTIVE_MAIN
 
         weights = GreedyReduce.get_weights(self.graph, solution.cost)
 
@@ -50,9 +51,10 @@ class SteppedGreedyReduce(GreedyReduce, SteppedGreedy):
         for weight in weights:
             if verify_solution(self.graph, self.constraints, self.k, weight, centers):
                 new_weight = weight
-                yield [Solution(solution.clusters, new_weight)], GreedyReduceSteps.decrease_cost(new_weight), True
+                yield [Solution(solution.clusters, new_weight)], GreedyReduceSteps.decrease_cost(
+                    new_weight), SolverState.ACTIVE_MAIN
             else:
                 break
 
         radius = new_weight if new_weight is not None else solution.cost
-        yield [Solution(solution.clusters, radius)], GreedyReduceSteps.final_cost(radius), False
+        yield [Solution(solution.clusters, radius)], GreedyReduceSteps.final_cost(radius), SolverState.INACTIVE

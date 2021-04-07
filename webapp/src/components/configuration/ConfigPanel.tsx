@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {ChartData, ChartFrame} from "../chart/Chart";
 import API from "../../API";
 import {H3, SectionDivider} from "./Layout";
-import ConfigFormBody from "./ConfigFormBody";
+import ConfigFormBody, {Mode} from "./ConfigFormBody";
 import {AlertData} from "../../pages/solve/Solve";
 
 interface Props {
@@ -48,6 +48,7 @@ function ConfigPanel(props: Props) {
             chartData={props.chartData}
             setChartData={props.setChartData}
             isProcessing={isSolving}
+            mode={Mode.Solve}
         />
     </ChartFrame>
 }
