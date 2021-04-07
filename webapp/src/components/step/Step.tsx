@@ -1,10 +1,14 @@
 import {ChartFrame} from "../chart/Chart";
-import {H3, SectionDivider} from "../configuration/Layout";
+import {SectionDivider} from "../configuration/Layout";
 import PagingBar from "../Pagination/PagingBar";
-import React from "react";
+import React, {useState} from "react";
 import styled from "@emotion/styled";
 import {SolutionStep} from "../../pages/steps/Steps";
 import API from "../../API";
+import {algorithms} from "../../constants/algorithms";
+import {Dimensions} from "../../interfaces";
+import TitlePanel from "../title_panel/TitlePanel";
+import {Button, ButtonGroup} from "@material-ui/core";
 
 export interface PageSetting {
     nextEnabled: boolean
@@ -38,24 +42,36 @@ interface Props {
 
 }
 
-interface Dimensions {
-    width: number
-    height: number
-}
-
 
 const DEFAULT_STEP_TEXT = ""
 
 const TextBox = styled("p")`
-    width: ${(props: Dimensions) => props.width}px;
-    height: ${(props: Dimensions) => props.height}px;
+  width: ${(props: Dimensions) => props.width}px;
+  flex: 2;
 `
 
-const Subtitle = styled("h5")`
-    margin: 5px 20px;
+const SmallButton = styled(Button)`
+  font-size: 0.6em;
+  padding: 5px;
+  width: 50%;
 `
+
+interface SubStep {
+    isSubSolve: boolean
+    isActive: boolean
+}
+
+const StepBar = (props: SubStep) => {
+    return <ButtonGroup>
+        <SmallButton disabled={!props.isActive || !props.isSubSolve}>Inspect next generation</SmallButton>
+        <SmallButton disabled={!props.isActive || props.isSubSolve}>Skip to next generation</SmallButton>
+    </ButtonGroup>
+}
 
 export default function Step(props: Props) {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isActive, setIsActive] = useState<boolean>(true)
+    const [isSubSolve, setIsSolveSolve] = useState<boolean>(true)
 
     const handlePrev = () => {
         const newPage = props.pageControl.currentPage - 1
@@ -74,6 +90,7 @@ export default function Step(props: Props) {
         const newPage = props.pageControl.currentPage + 1
         let update: UpdatePageControl = {prevEnabled: true, currentPage: newPage}
         if (props.pageControl.currentPage == props.solutionHistory.length) {
+            setIsLoading(true)
             API.post("/step/next", {id: props.id}).then(function (response) {
                     props.setChartData(response.data)
                     props.updateSolutionHistory(response.data)
@@ -81,8 +98,10 @@ export default function Step(props: Props) {
                         update = {...update, ...{maxPage: newPage, nextEnabled: false}}
                         let completedSolution = JSON.parse(JSON.stringify(props.solutionHistory[props.pageControl.currentPage - 1]))
                         completedSolution.step.label = response.data.step.label
+                        setIsActive(false)
                     }
                     props.pageControl.updateControl(update)
+                    setIsLoading(false)
                 }
             )
         } else {
@@ -95,19 +114,25 @@ export default function Step(props: Props) {
     }
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
-        <H3>Step-By-Step Walkthrough</H3>
-        <Subtitle>{props.algorithm ? `${props.algorithm} algorithm` : ""}</Subtitle>
-        <SectionDivider/>
-        <TextBox width={props.width} height={320}>
-            {props.text ? props.text : DEFAULT_STEP_TEXT}
-        </TextBox>
-        <SectionDivider/>
-        <PagingBar currentPage={props.pageControl.currentPage}
-                   isNextEnabled={props.pageControl.nextEnabled}
-                   isPrevEnabled={props.pageControl.prevEnabled}
-                   handlePrevClick={handlePrev}
-                   handleNextClick={handleNext}
-                   maxPage={props.pageControl.maxPage}
-        />
+        <div style={{display: "flex", flexFlow: "column", height: props.height}}>
+            <TitlePanel
+                title={"Step-By-Step Walkthrough"}
+                subtitle={props.algorithm ? algorithms[props.algorithm].short_name : ""}
+                loading={isLoading}
+                dimensions={{width: props.width, height: 50}}/>
+            <SectionDivider/>
+            <TextBox width={props.width} height={320}>
+                {props.text ? props.text : DEFAULT_STEP_TEXT}
+            </TextBox>
+            <SectionDivider/>
+            {props.algorithm && algorithms[props.algorithm].type == "genetic" && <StepBar isSubSolve={isSubSolve} isActive={isActive}/>}
+            <PagingBar currentPage={props.pageControl.currentPage}
+                       isNextEnabled={props.pageControl.nextEnabled && !isLoading}
+                       isPrevEnabled={props.pageControl.prevEnabled && !isLoading}
+                       handlePrevClick={handlePrev}
+                       handleNextClick={handleNext}
+                       maxPage={props.pageControl.maxPage}
+            />
+        </div>
     </ChartFrame>
 }

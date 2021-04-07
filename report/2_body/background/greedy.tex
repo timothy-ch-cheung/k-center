@@ -1,0 +1,36 @@
+\textcite{gonzalez_clustering_1985} and \textcite{hochbaum_best_1985} proposed 2-approximation algorithms for the k-center problem. \textcite{hochbaum_best_1985} concluded, given that $P\neq NP$, there is no hope of an approximation factor lower than two. \textcite{gonzalez_clustering_1985} devised a 2-approximation algorithm, using a greedy heuristic; at each iteration, the client which is furthest away from its nearest center is picked as a new center to be added to $C$, we will refer to this heuristic as \emph{farthest first}.
+
+\input{algorithms/greedy_2_approx}
+
+The algorithm arbitrarily selects an initial point as a center (line 3), and selects the point ($v_x$) using the \emph{farthest first} heuristic (line 5). It creates a new cluster $B_{i+1}$ using $v_x$ (line 6) and moves all points which are closer to the new center $v_x$ than its current center $C_j$ (lines 9-16). This is repeated until there are k centers in the solution ($|C| = k$). Note that the cost of the solution is equal to $h$ (line 5) in the final iteration of the algorithm. We describe the proof that the \emph{Gon} algorithm gives a 2-approximation, first described by \textcite{gonzalez_clustering_1985}, below:
+
+To understand their proof, we need to define the notion of a clique on a graph; a clique on a graph $G(V, E)$ is a subset $T$ of $V$ such that all any two pairs of vertices in T are adjacent. In other words, $T$ forms a sub graph of $G$ which is complete. \textcite{gonzalez_clustering_1985} extends the definition of a clique to define a weighted clique of a given size. A clique T is a $(k+1)$-clique of weight $h$ if satisfies two conditions:
+\begin{enumerate}
+    \item The cardinality of $T$ is $k+1$ ($|T|=k+1$)
+    \item Every pair of distinct vertices $(x,y)$ in $T$ are at least $h$ distance apart ($\forall _{x\in V}\forall _{y\in V\setminus \{x\}}d(x,y)\geq h$)
+\end{enumerate}
+
+\begin{lemma}\label{lemma:clique_k+1}
+if there exists a clique of size $k+1$ for the set of vertices $V$ of weight $h$, then $OPT(V)\geq h$
+\end{lemma} 
+
+The proof for lemma \ref{lemma:clique_k+1} is as follows. Suppose that we have a ($k+1$)-clique $T\subseteq V$ with vertices $\{v_1, ...,v_k,v_{k+1}\}$ of weight $h$, we would like to choose $k$ centers from $V$ such that all points are covered. It is not possible to select $k$ centers such that the cost to cover all vertices in $T$ is less than $h$, since by the definition of $T$ all pairwise distinct vertices are at least $h$ distance apart. Hence $OPT(V)\geq h$.
+
+\begin{lemma}\label{lemma:clique_non_increasing}
+The sequence of distances $h$ of new centers added $v_x$ added to the partial solution $C$ is non-increasing ($h_1\geq h_2 ...\geq h_{k-1}$)
+\end{lemma}
+
+At each $i^{th}$ iteration, the new center $v_x$ added is chosen by the \emph{farthest first} heuristic with distance $h_i$, since $v_x$ was never picked as a new center before then every other distance $h_1,...,h_{i-1}$ calculated before must be at least $h_i$.
+
+\begin{theorem} 
+the \emph{Gon} algorithm generates a solution with a cost $r$ such that $r\leq 2 * OPT(V)$
+\end{theorem}
+
+To prove this theorem we show that the \emph{Gon} algorithm produces a $(k+1)$-clique of weight $h$. At the end of iteration $k-1$, we have $k$ centers $\{C_1, ...,C_k\}$. Suppose we calculate the next potential center $v_y$ using the same metric as line 5, with cost $h$. Since the Graph $G$ satisfies triangular inequality, the cost of the solution is less than or equal to $2*h$. Let $T$ be $\{C_1, ...,C_k\}\cup\{v_y\}$, by lemma \ref{lemma:clique_non_increasing} it is clear that this is a $(k+1)$-clique of weight $h$. The Graph $G$ satisfies triangular inequality, therefore the cost of the solution $r\leq 2*h$. Therefore we have the following inequalities:
+\begin{itemize}
+    \item $r\leq 2*h$
+    \item $2 * OPT(V)\geq 2*h$ (by scaling lemma \ref{lemma:clique_k+1} by 2) 
+\end{itemize}
+Combining the two inequalities we have $r\leq 2*h\leq 2 * OPT(V)$. Hence $r\leq 2 * OPT(V)$.
+
+This algorithm iterates $k-1$ times, at each iteration it performns two operations that take $\mathcal{O}(n)$ time each: calculate the \emph{farthest first} vertex (line 5) and update the clusters (lines 9-16). Therefore the time complexity is $\mathcal{O}(nk)$.

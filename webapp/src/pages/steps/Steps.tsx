@@ -9,10 +9,9 @@ import {IconButton} from "@material-ui/core";
 import {useHistory} from "react-router-dom";
 import Parameters from "../../components/stats/parameters/Parameters";
 import Step, {PageSetting, UpdatePageControl} from "../../components/step/Step";
-
-interface Props {
-
-}
+import {algorithms} from "../../constants/algorithms";
+import PopulationChart from "../../population_chart/PopulationChart";
+import {View} from "../../components/view_panel/ViewPanel";
 
 interface Step {
     active: boolean
@@ -21,16 +20,18 @@ interface Step {
 
 export interface SolutionStep extends ChartData {
     step?: Step
+    active?: boolean
+    subSolve?: boolean
 }
 
 const ChartContainer = styled("div")`
-    display: grid;
-    grid-template-rows: 115px 200px 175px;
-    grid-template-columns: 240px 580px 260px;
-    grid-gap: 5px;
-    margin: 30px auto;
-    width: 1250px;
-    grid-template-areas:
+  display: grid;
+  grid-template-rows: 115px 200px 175px;
+  grid-template-columns: 240px 580px 260px;
+  grid-gap: 5px;
+  margin: 30px auto;
+  width: 1250px;
+  grid-template-areas:
     "top-left middle right"
     "mid-left middle right"
     "bot-left middle right";
@@ -44,13 +45,14 @@ const DEFAULT_STEP_PAGE_SETTINGS = {
 }
 
 
-export default function Steps(props: Props) {
+export default function Steps() {
     const history = useHistory();
     const [id, setId] = useState<string>(uuid());
     const [solutionHistory, setSolutionHistory] = useState<SolutionStep[]>([])
     const [solveRequestData, setSolveRequestData] = useState<StepSolveRequestData>()
     const [chartData, setChartData] = useState<SolutionStep>()
     const [pageSetting, setPageSetting] = useState<PageSetting>(DEFAULT_STEP_PAGE_SETTINGS)
+    const [chartView, setChartView] = useState<View>(View.Population)
 
     const updatePageControl = (update: UpdatePageControl) => {
         setPageSetting({...pageSetting, ...update})
@@ -59,6 +61,7 @@ export default function Steps(props: Props) {
     const resetPageControl = () => {
         setPageSetting(DEFAULT_STEP_PAGE_SETTINGS)
         setSolutionHistory([])
+        setChartView(View.Population)
     }
 
     const handleBackButtonClick = () => {
@@ -67,6 +70,17 @@ export default function Steps(props: Props) {
 
     const updateSolutionHistory = (solution: SolutionStep) => {
         setSolutionHistory(solutionHistory.concat(solution))
+    }
+
+    const renderGraphVisualisation = () => {
+        const isGenetic = solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "genetic"
+        if (!isGenetic) {
+            return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
+                          solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
+        } else {
+            return <PopulationChart gridArea="middle" data={chartData?.data} width={360} height={350}
+                                    solutions={chartData?.solutions} chartView={chartView} setChartView={setChartView}/>
+        }
     }
 
     return <Container>
@@ -87,9 +101,9 @@ export default function Steps(props: Props) {
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
-            <Chart gridArea="middle" chart={chartData} width={350} height={350}/>
+            {renderGraphVisualisation()}
             <Step gridArea="right"
-                  width={260} height={455}
+                  width={320} height={455}
                   solutionHistory={solutionHistory}
                   updateSolutionHistory={updateSolutionHistory}
                   setChartData={setChartData}

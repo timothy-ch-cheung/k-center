@@ -5,7 +5,6 @@ from typing import Tuple, Dict, Set, Generator, List
 import networkx as nx
 
 from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.similarity import CompareSolution
 from src.kcenter.solver.abstract_solver import AbstractSolver
 
 
@@ -131,12 +130,7 @@ class PBS(AbstractSolver):
                     graph.add_edge(i, j, weight=0)
                 self.weights[(i, j)] = graph[i][j]["weight"]
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
-
-        min_point = min(graph.nodes()[x]["pos"][0] for x in self.points), min(
-            graph.nodes()[x]["pos"][1] for x in self.points)
-        max_point = max(graph.nodes()[x]["pos"][0] for x in self.points), max(
-            graph.nodes()[x]["pos"][1] for x in self.points)
-        self.compare = CompareSolution(graph, min_value=min_point, max_value=max_point)
+        self.DEFAULT_POINT = list(graph.nodes())[0]
 
         super().__init__(graph, k, constraints)
         PBS.order_edges(self.graph)
@@ -317,7 +311,7 @@ class PBS(AbstractSolver):
         :return: The point which is furthest from its nearest center
         """
         max_cost = 0
-        max_point = 0
+        max_point = self.DEFAULT_POINT
         for p in self.points:
             nearest = individual.nearest_centers[p].nearest
             if nearest is not None:
@@ -336,10 +330,10 @@ class PBS(AbstractSolver):
             new_center_point = self.get_next_point(individual)
             furthest_point_facility = individual.nearest_centers[new_center_point].nearest
             if furthest_point_facility is None:
-                nwk = list(self.graph.nodes())
+                nwk = list(self.points.difference(individual.centers))
             else:
                 k = PBS.linear_search(self.graph.nodes()[new_center_point]["neighbours"], furthest_point_facility.point)
-                nwk = PBS.get_nwk(self.graph, new_center_point, k)
+                nwk = list(set(PBS.get_nwk(self.graph, new_center_point, k)).difference(individual.centers))
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
         self.find_cost(individual)
@@ -478,21 +472,16 @@ class PBS(AbstractSolver):
         second_child = generate_child(self, second_child_centers)
         return first_child, second_child
 
-    def is_diverse(self, candidate: Individual):
-        def is_between(lower_bound: float, upper_bound: float, value: float):
-            return lower_bound <= value <= upper_bound
-
-        COST_THRESHHOLD = 0.01
+    def is_diverse(self, candidate: Individual, population: List[Individual] = None):
+        population = population or self.population
         is_diverse = True
-        for individual in self.population:
-            lower = candidate.cost * (1 - COST_THRESHHOLD)
-            upper = candidate.cost * (1 + COST_THRESHHOLD)
-            if is_between(lower, upper, individual.cost):
+        for individual in population:
+            if math.isclose(individual.cost, candidate.cost):
                 is_diverse = False
                 break
         return is_diverse
 
-    def update_population(self, candidate: Individual):
+    def update_population(self, candidate: Individual) -> bool:
         """Add the candidate to the solution if the candidate improves the population
 
         W. Pullan stated: "To maintain diversity in the population, no new p-center solution S is added (+) to P if it
@@ -505,20 +494,28 @@ class PBS(AbstractSolver):
             if self.population[index_max].cost > candidate.cost:
                 self.population[index_max] = candidate
                 self.no_update_count = 0
-                return self.population
+                return True
 
         self.no_update_count += 1
-        return self.population
+        return False
+
+    def generate_candidate(self):
+        init_center = {random.choice(tuple(self.points))}
+        candidate = Individual(init_center)
+        self.init_individual(candidate)
+        return self.local_search(candidate, 1)
 
     def generate_population(self) -> List[Individual]:
-        population = []
+        population: List[Individual] = []
+        MAX_FAIL_COUNT = 8
+        num_fail = 0
         while len(population) < PBS.POPULATION_SIZE:
-            init_center = {random.choice(tuple(self.points))}
-            candidate = Individual(init_center)
-            self.init_individual(candidate)
-            candidate = self.local_search(candidate, 0)
-            if self.is_diverse(candidate):
+            candidate = self.generate_candidate()
+            if self.is_diverse(candidate, population) or num_fail >= MAX_FAIL_COUNT:
                 population.append(candidate)
+                num_fail = 0
+            else:
+                num_fail += 1
         return population
 
     def generator(self) -> Generator[Tuple[Dict[int, Set[int]], int, str], None, None]:

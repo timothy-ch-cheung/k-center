@@ -139,3 +139,7 @@ cython_debug/
 
 # IDE
 .idea/
+
+# Misc
+loc-gowalla_totalCheckins.txt
+pytest-coverage.txt

@@ -1,0 +1,35 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Greedy Randomised Build (\cite{battiti_new_2017})}
+\label{alg:greedy_construction}
+\begin{algorithmic}[1]
+\Require $\alpha$: proportion of initial centers to pick ($\alpha\in [0, 1]$), $\beta$: proportion of threshold to select RCL ($\beta\in [0, 1]$) 
+\Ensure $C$: a candidate solution with $|C|=k$ centers
+\Function{Greedy\textunderscore Randomised\textunderscore Construction}{$V, k, \alpha, \beta$}
+    \State {$C\gets\varnothing$ }
+    \State {num\textunderscore initial\textunderscore centers$\gets\alpha\cdot$ $k$}
+    \For{$i \gets 1$ to num\textunderscore initial\textunderscore centers}
+        \State {$f\gets$ SelectRandom($V\setminus C$)}
+        \State {$C\gets C\cup\{f\}$}
+    \EndFor
+    \While {$|C|\leq k$}
+        \State $z_{min}\gets +\infty$
+        \State $z_{max}\gets -\infty$
+        \For {$v_i\in V\setminus C$}
+            \If {$z_{min}>Cost(C\cup \{v_i\})$}
+                \State $z_{min}\gets Cost(C\cup \{v_i\})$
+            \EndIf
+            \If {$z_{max}>Cost(C\cup \{v_i\})$}
+                \State $z_{max}\gets Cost(C\cup \{v_i\})$
+            \EndIf
+        \EndFor
+        \State {$\mu\gets z_{min} +\beta\cdot (z_{max}-z_{min})$}\Comment{The threshold of maximum cost for candidates to be in RCL}
+        \State {$RCL\gets\{v_i\in V\setminus|Cost(C\cup \{v_i\})\leq\mu\}$}
+        \State {$f\gets$SelectRandom($RCL$)}
+        \State {$C\gets C\cup\{f\}$}
+    \EndWhile
+    \State \Return $C$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

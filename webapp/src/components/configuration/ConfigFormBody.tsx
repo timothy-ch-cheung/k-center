@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, CircularProgress, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {Button, CircularProgress, FormControl, FormHelperText, InputLabel, MenuItem, Select} from "@material-ui/core";
 import NumberSlider from "../number_slider/NumberSlider";
 import styled from "@emotion/styled";
 import PaletteIcon from "@material-ui/icons/Palette";
@@ -7,6 +7,12 @@ import {HorizontalGroup, SectionDivider, Spacer} from "./Layout";
 import {ChartData} from "../chart/Chart";
 import API from "../../API";
 import {SolveRequestData} from "./ConfigPanel";
+import {algorithms} from "../../constants/algorithms";
+
+export enum Mode {
+    Solve,
+    Step
+}
 
 interface Props {
     submitButtonText: string
@@ -14,20 +20,33 @@ interface Props {
     chartData?: ChartData
     setChartData: (data: any) => void
     isProcessing: boolean
+    mode: Mode
 }
 
 const FormControlNoWrap = styled(FormControl)`
-    display: flex;
-    wrap: nowrap;
-    margin-bottom: 10px;
+  display: flex;
+  wrap: nowrap;
+  margin-bottom: 10px;
 `
 
 const BluePaletteIcon = styled(PaletteIcon)`
-    color: blue
+  color: blue
 `
 
 const RedPaletteIcon = styled(PaletteIcon)`
-    color: red
+  color: red
+`
+
+const ErrorText = styled(FormHelperText)`
+  color: red;
+  margin-top: 0;
+`
+
+const SelectInputLabel = styled(InputLabel)`
+  background-color: white;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 4px;
 `
 
 export default function (props: Props) {
@@ -36,6 +55,10 @@ export default function (props: Props) {
     const [red, setRed] = useState<number>(1)
     const [problemInstance, setProblemInstance] = useState<string>('')
     const [algorithm, setAlgorithm] = useState<string>('')
+    const [problemInstanceValid, setProblemInstanceValid] = useState<boolean>(false)
+    const [isProblemInstanceChanged, setProblemInstanceChanged] = useState<boolean>(false)
+    const [algorithmValid, setAlgorithmValid] = useState<boolean>(false)
+    const [isAlgorithmChanged, setAlgorithmChanged] = useState<boolean>(false)
 
     const handleProblemInstanceSelectChange = (event: any) => {
         const problemInstance = event.target.value
@@ -47,28 +70,60 @@ export default function (props: Props) {
                 setRed(response.data.optimalSolution.minRed)
             }
         )
+        if (problemInstance !== "") {
+            setProblemInstanceValid(true)
+        }
     }
 
     const handleAlgorithmSelectChange = (event: any) => {
         setAlgorithm(event.target.value)
+        if (event.target.value !== "") {
+            setAlgorithmValid(true)
+        }
+    }
+
+    const handleAlgorithmClose = () => {
+        setAlgorithmChanged(true)
+        if (!algorithm) {
+            setAlgorithmValid(false)
+        }
+    }
+
+    const handleProblemInstanceClose = () => {
+        setProblemInstanceChanged(true)
+        if (!problemInstance) {
+            setProblemInstanceValid(false)
+        }
     }
 
     const handleSubmit = (event: any) => {
         event.preventDefault()
-        const requestBody: SolveRequestData = {
-            k: k,
-            blue: blue,
-            red: red,
-            graph: problemInstance,
-            algorithm: algorithm
+        if (!problemInstanceValid) {
+            setProblemInstanceChanged(true)
         }
-        props.handleSubmit(requestBody)
+        if (!algorithmValid) {
+            setAlgorithmChanged(true)
+        }
+        if (problemInstanceValid && algorithmValid) {
+            const requestBody: SolveRequestData = {
+                k: k,
+                blue: blue,
+                red: red,
+                graph: problemInstance,
+                algorithm: algorithm
+            }
+            props.handleSubmit(requestBody)
+        }
     }
 
     return <form onSubmit={handleSubmit}>
-        <FormControlNoWrap>
-            <InputLabel>Problem instance</InputLabel>
-            <Select onChange={handleProblemInstanceSelectChange}>
+        <Spacer height={5}/>
+        <FormControlNoWrap variant={"outlined"} margin={"dense"}>
+            <SelectInputLabel>Problem Instance</SelectInputLabel>
+            <Select onChange={handleProblemInstanceSelectChange}
+                    error={isProblemInstanceChanged && !problemInstanceValid}
+                    onClose={handleProblemInstanceClose}
+            >
                 <MenuItem value={"basic"}>basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                 <MenuItem value={"medium"}>medium</MenuItem>
@@ -79,18 +134,20 @@ export default function (props: Props) {
                 <MenuItem value={"five_thousand"}>Five Thousand</MenuItem>
                 <MenuItem value={"ten_thousand"}>Ten Thousand</MenuItem>
             </Select>
+            <ErrorText>{isProblemInstanceChanged && !problemInstanceValid ? "please select a problem instance" : "."}</ErrorText>
         </FormControlNoWrap>
-        <FormControlNoWrap>
-            <InputLabel>Algorithm</InputLabel>
-            <Select onChange={handleAlgorithmSelectChange}>
-                <MenuItem value={"greedy"}>greedy</MenuItem>
-                <MenuItem value={"greedy_reduce"}>greedy (modified to optimise radii)</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay"}>O(1)-colourful (Bandyapadhyay et al. 2019)</MenuItem>
-                <MenuItem value={"pbs"}>PBS (Pullan 2008)</MenuItem>
-                <MenuItem value={"colourful_pbs"}>Colourful PBS</MenuItem>
+        <FormControlNoWrap variant={"outlined"} margin={"dense"}>
+            <SelectInputLabel>Algorithm</SelectInputLabel>
+            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid} onClose={handleAlgorithmClose}>
+                {Object.entries(algorithms).map(([algorithm_name, algorithm_properties]) => {
+                    if (props.mode === Mode.Step && !algorithm_properties.stepped_enabled) {
+                        return null
+                    }
+                    return <MenuItem value={algorithm_name}>{algorithm_properties.name}</MenuItem>
+                })}
             </Select>
+            <ErrorText>{isAlgorithmChanged && !algorithmValid ? "please select an algorithm" : "."}</ErrorText>
         </FormControlNoWrap>
-        <Spacer/>
         <NumberSlider
             label="Number of centers"
             min={1}

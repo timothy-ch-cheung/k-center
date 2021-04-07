@@ -1,0 +1,39 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Plateau Surfer Local Search (\cite{battiti_new_2017})}
+\label{alg:plateau_surfer_local_search}
+\begin{algorithmic}[1]
+\Require $Max$\textunderscore$Iterations$: number of iterations to perform GRASP
+\Ensure $C$: the solution locally optimised with local search
+\Function{Local\textunderscore Search}{$V,C, k$}
+    \Repeat
+        \State {modified$\gets$false}
+        \For{$v_i\in C$}
+            \State {best\textunderscore flip$\gets$undefined}
+            \State {best\textunderscore cv\textunderscore flip$\gets$undefined}
+            \State {best\textunderscore new\textunderscore cost$\gets$ Cost($C$)}
+            \State {best\textunderscore cv$\gets$ CountCV($C$, Cost($C$))}
+            \For{$v_j\in V\setminus C$}
+                \State {$\bar{C}\gets C\setminus \{i\} \cup \{j\}$}
+                \If{Cost($\bar{C}$) < best\textunderscore new\textunderscore cost}
+                    \State {best\textunderscore cv$\gets$Cost($\bar{P}$)}
+                    \State {best\textunderscore flip$\gets j$}
+                \ElsIf {best\textunderscore flip != undefined \textbf{and} CountCV($\bar{C}$, Cost($\bar{C}$))$<$best\textunderscore cv}
+                    \State {best\textunderscore cv$\gets$ CountCV($\bar{C}$, Cost($\bar{C}$))}
+                    \State {best\textunderscore flip$\gets j$}
+                \EndIf
+            \EndFor
+            \If {best\textunderscore flip != undefined}
+                \State {$C\gets C\setminus \{i\} \cup $\{best\textunderscore flip\}}
+                \State {modified$\gets$true}
+            \ElsIf {best\textunderscore cv\textunderscore flip != undefined}
+                \State {$C\gets C\setminus \{i\} \cup $\{best\textunderscore cv\textunderscore flip\}}
+                \State {modified$\gets$true}
+            \EndIf
+        \EndFor
+    \Until{modified=false}
+    \State \Return $C$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

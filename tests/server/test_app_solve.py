@@ -49,18 +49,19 @@ def test_solve_basic_graph_with_greedy(basic_graph):
             "minRed": 2,
             "outliers": 0,
             "radius": 0.728},
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 6.4, 'y': 4.7}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(0.854, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
-            {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
+            {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 2.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
 
@@ -82,18 +83,19 @@ def test_solve_basic_graph_with_greedy_reduce(basic_graph):
             "outliers": 0,
             "radius": 0.728
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 6.4, 'y': 4.7}],
             "k": 2,
             "outliers": 1,
             "radius": pytest.approx(0.707, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
-            {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
+            {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 2.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
 
@@ -114,18 +116,19 @@ def test_solve_basic_graph_with_bandyapadhyay_algorithm(basic_graph):
             "outliers": 0,
             "radius": 0.728
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 5.9, 'y': 5.2}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(1.456, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
             {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
-            {"center": True, "colour": "blue", "x": 0.5, "y": 2.3},
+            {"colour": "blue", "x": 0.5, "y": 2.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
 
@@ -146,17 +149,18 @@ def test_solve_basic_graph_with_pbs_algorithm(basic_graph, seed_random):
             "outliers": 0,
             "radius": 0.728
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.2, 'y': 2.1}, {'x': 5.9, 'y': 5.2}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(0.728, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
             {"colour": "blue", "x": 1.3, "y": 2.6},
-            {"center": True, "colour": "blue", "x": 1.2, "y": 2.1},
+            {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 2.3},
-            {"center": True, "colour": "red", "x": 5.9, "y": 5.2},
+            {"colour": "red", "x": 5.9, "y": 5.2},
             {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
@@ -178,18 +182,19 @@ def test_solve_basic_outlier_graph_with_greedy(basic_graph_with_outlier):
             "outliers": 1,
             "radius": 0.707
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 6.4, 'y': 4.7}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(3.785, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
-            {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
+            {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 6.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
 
@@ -227,23 +232,24 @@ def test_solve_basic_outlier_graph_with_greedy_reduce(basic_graph_with_outlier):
             "outliers": 1,
             "radius": 0.707
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 5.9, 'y': 5.2}],
             "k": 2,
             "outliers": 1,
             "radius": pytest.approx(1.414, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
             {"colour": "blue", "x": 1.3, "y": 2.6},
-            {"center": True, "colour": "blue", "x": 1.2, "y": 2.1},
+            {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 6.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
 
 
-def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier):
+def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier, seed_random):
     basic_graph_with_outlier["algorithm"] = "pbs"
     response = test_client.post("/api/v1/solve", json=basic_graph_with_outlier)
 
@@ -259,17 +265,18 @@ def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier):
             "outliers": 1,
             "radius": 0.707
         },
-        "solution": {
+        "solutions": [{
+            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 6.4, 'y': 4.7}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(3.785, FLOAT_ERROR_MARGIN),
             "timeTaken": ignore
-        },
+        }],
         "data": [
-            {"center": True, "colour": "blue", "x": 1.3, "y": 2.6},
+            {"colour": "blue", "x": 1.3, "y": 2.6},
             {"colour": "blue", "x": 1.2, "y": 2.1},
             {"colour": "blue", "x": 0.5, "y": 6.3},
             {"colour": "red", "x": 5.9, "y": 5.2},
-            {"center": True, "colour": "red", "x": 6.4, "y": 4.7}
+            {"colour": "red", "x": 6.4, "y": 4.7}
         ]
     }
