@@ -27,10 +27,9 @@ jobs:
         run: sudo apt-get install glpk-utils
 
       - name: run tests
-        run: pytest --cov=src tests/ > pytest-coverage.txt
+        run: pytest --cov-config=.coveragerc --cov=src tests/ > pytest-coverage.txt
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./pytest-coverage.txt
