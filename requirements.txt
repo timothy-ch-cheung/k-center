@@ -1,7 +1,10 @@
 Flask_Cors==3.0.9
 PyUtilib==6.0.0
 pytest==5.3.5
+pytest-cov==2.11.1
 numpy==1.19.3
 networkx==2.5
 Flask==1.1.2
 Pyomo==5.7.1
+scipy==1.6.2
+matplotlib==3.3.3
