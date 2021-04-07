@@ -1,7 +1,7 @@
 # Final Year Project on Fair K-Center Clustering
 By Timothy Cheung
 
-There are two methods to run the server:
+**There are two methods to run the server:**
 - Docker: minimal setup
 - Install all dependencies: better for development
 
