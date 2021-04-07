@@ -386,7 +386,7 @@ class SteppedPBS(PBS):
                 for sibling in self.population:
                     if individual == sibling:
                         continue
-                    mutation_random_steps = self.mutation_random_step(individual, generation)
+                    mutation_random_steps = self.mutation_random_step(sibling, generation)
                     crossover_random_steps = self.crossover_random_steps(individual, sibling, generation)
                     crossover_directed_steps = self.crossover_directed_step(individual, sibling, generation)
                     generation_steps = itertools.chain(mutation_random_steps,

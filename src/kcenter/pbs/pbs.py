@@ -537,7 +537,7 @@ class PBS(AbstractSolver):
                 for sibling in self.population:
                     if individual == sibling:
                         continue
-                    self.update_population(self.local_search(self.mutation_random(individual), generation))
+                    self.update_population(self.local_search(self.mutation_random(sibling), generation))
                     self.update_population(
                         self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
                                           generation))

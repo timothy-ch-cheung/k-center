@@ -100,7 +100,7 @@ def test_step_through_basic_graph_pbs_inspect(basic_graph_pbs, seed_random):
     assert response.get_json()["step"] == {
         "active": True,
         "inspect": True,
-        "label": """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (6.4, 4.7)}"""}
+        "label": """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(6.4, 4.7), (1.3, 2.6)}, where a subset of the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (6.4, 4.7)}"""}
 
 
 def test_inspect_invalid(basic_graph):
