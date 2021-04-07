@@ -3,7 +3,7 @@ import {ChartData, ChartFrame} from "../chart/Chart";
 import {Button, Modal, Paper} from "@material-ui/core";
 import {H3, SectionDivider} from "./Layout";
 import styled from "@emotion/styled";
-import ConfigFormBody from "./ConfigFormBody";
+import ConfigFormBody, {Mode} from "./ConfigFormBody";
 import {SolveRequestData} from "./ConfigPanel";
 import API from "../../API";
 import {SolutionStep} from "../../pages/steps/Steps";
@@ -71,6 +71,7 @@ export default function ConfigModal(props: Props) {
                     chartData={props.chartData}
                     setChartData={props.setChartData}
                     isProcessing={isLoading}
+                    mode={Mode.Step}
                 />
             </Window>
         </Modal>

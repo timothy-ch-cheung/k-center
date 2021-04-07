@@ -76,7 +76,7 @@ export default function PopulationChart(props: Props): JSX.Element {
             </GridList>
         </div>}
         {props.chartView === View.Individual &&
-        <Chart gridArea="middle" data={props.data} width={310} height={295}
+        <Chart gridArea="middle" data={props.data} width={320} height={295}
                solution={props.solutions ? props.solutions[activeStep] : undefined}/>
         }
     </ChartFrame>

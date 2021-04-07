@@ -3,10 +3,11 @@ from typing import Dict
 
 import networkx as nx
 
+from src.kcenter.constant.colour import Colour
+from src.kcenter.constant.solver_state import SolverState
+from src.kcenter.pbs.pbs import PBS
 from src.kcenter.solver.abstract_generator import Solution
 from src.kcenter.verify.verify import cluster
-from src.kcenter.constant.colour import Colour
-from src.kcenter.pbs.pbs import PBS
 
 
 class PBSSteps:
@@ -53,7 +54,7 @@ class SteppedPBS(PBS):
     def generator(self):
         self.population = self.generate_population()
         self.no_update_count = 0
-        yield self.yield_population(), PBSSteps.initial_population(), True
+        yield self.yield_population(), PBSSteps.initial_population(), SolverState.ACTIVE_MAIN
 
         for generation in range(1, PBS.GENERATIONS + 1):
             for individual in self.population:
@@ -69,7 +70,7 @@ class SteppedPBS(PBS):
                     self.update_population(self.local_search(self.mutation_directed(first_child), generation))
                     self.update_population(self.local_search(self.mutation_directed(second_child), generation))
             solutions = self.yield_population()
-            yield solutions, PBSSteps.end_of_generation(solutions), True
+            yield solutions, PBSSteps.end_of_generation(solutions), SolverState.ACTIVE_MAIN
 
         solutions = self.yield_population()
-        yield solutions, PBSSteps.finished_evolving(PBS.GENERATIONS, solutions), False
+        yield solutions, PBSSteps.finished_evolving(PBS.GENERATIONS, solutions), SolverState.INACTIVE
