@@ -1,0 +1,18 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{GRASP (\cite{feo_greedy_1995})}
+\label{alg:grasp}
+\begin{algorithmic}[1]
+\Require $Max$\textunderscore$Iterations$: number of iterations to perform GRASP, Seed: seed to initialise random number generator
+\Ensure $Best$\textunderscore$Solution$: the solution with the best cost after $Max$\textunderscore$Iterations$ have been completed
+\Procedure{GRASP}{$Max$\textunderscore$Iterations$}
+    \For{$i \gets 1$ to {Max\textunderscore Iterations}}
+        \State {Solution$\gets$ Greedy\textunderscore Randomised\textunderscore Construction(Seed)}
+        \State {Solution$\gets$ Local\textunderscore Search(Solution)}
+        \State {Update\textunderscore Solution(Solution, Best\textunderscore Solution)}
+    \EndFor
+    \State \Return Best\textunderscore Solution
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore
