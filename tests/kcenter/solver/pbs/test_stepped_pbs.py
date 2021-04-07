@@ -145,8 +145,7 @@ def test_stepped_pbs_inspect_single_generation(seed_random):
 
     assert_step_equal(next(solution),
                       ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
-                       """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of
-         the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (6.4, 4.7)}""",
+                       """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (6.4, 4.7)}""",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
@@ -393,6 +392,5 @@ def test_stepped_pbs_inspect_single_generation(seed_random):
 
     assert_step_equal(next(solution),
                       ([Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
-                       """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of
-         the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (1.2, 2.1)}""",
+                       """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (1.2, 2.1)}""",
                        SolverState.ACTIVE_SUB))

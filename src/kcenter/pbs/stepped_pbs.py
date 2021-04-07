@@ -117,8 +117,7 @@ class PBSSteps:
     def inspect_mutation_random(old_centers: Set[Tuple[float, float]], new_centers: Set[Tuple[float, float]],
                                 generation: int):
         header = PBSSteps.inspect_header(generation)
-        return header + f"""A random mutation operator is applied to the set of centers {old_centers}, where a subset of
-         the original centers is combined with points sampled random to get the new center set {new_centers}"""
+        return header + f"""A random mutation operator is applied to the set of centers {old_centers}, where a subset of the original centers is combined with points sampled random to get the new center set {new_centers}"""
 
     @staticmethod
     def inspect_mutation_directed(old_centers: Set[Tuple[float, float]], new_centers: Set[Tuple[float, float]],
@@ -204,7 +203,8 @@ class SteppedPBS(PBS):
                 nwk = list(set(PBS.get_nwk(self.graph, new_center_point, k)).difference(individual.centers))
             new_center = random.choice(nwk)
             self.add_center(new_center, individual)
-            label = PBSSteps.inspect_initialise_local_search_add(PBSSteps.node_to_coord(self.graph, new_center), individual.cost,
+            label = PBSSteps.inspect_initialise_local_search_add(PBSSteps.node_to_coord(self.graph, new_center),
+                                                                 individual.cost,
                                                                  self.current_generation)
             yield self.yield_candidate(individual), label, SolverState.ACTIVE_SUB
         self.find_cost(individual)
@@ -312,7 +312,7 @@ class SteppedPBS(PBS):
 
         yield next(self.update_population(child))
         yield self.yield_candidate(child), PBSSteps.inspect_mutation_directed_start("child",
-                                                                                generation), SolverState.ACTIVE_SUB
+                                                                                    generation), SolverState.ACTIVE_SUB
         mutation_directed_steps = self.mutation_directed_step(child, generation)
         for step in mutation_directed_steps:
             yield step

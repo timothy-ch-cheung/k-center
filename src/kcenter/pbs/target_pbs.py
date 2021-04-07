@@ -103,7 +103,5 @@ class TargetPBS(PBS, AbstractTargetSolver):
                     nearest_center = center
             if nearest_center is not None:
                 clusters[nearest_center].add(point)
-            else:
-                outliers.add(point)
 
         return clusters, outliers, solution.cost
