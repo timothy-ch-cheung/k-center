@@ -87,8 +87,7 @@ class PBSSteps:
     def inspect_best_pair_swapped(old_center: Tuple[float, float], new_center: Tuple[float, float], cost: float,
                                   generation: int):
         return PBSSteps.inspect_header(
-            generation) + f"""{old_center} is removed from the set of centers and it is replaced with {new_center}, the 
-            new cost is {round(cost, PBSSteps.DECIMAL_PLACES)}"""
+            generation) + f"""{old_center} is removed from the set of centers and it is replaced with {new_center}, the new cost is {round(cost, PBSSteps.DECIMAL_PLACES)}"""
 
     @staticmethod
     def inspect_best_pair_not_swapped(old_center: Tuple[float, float], new_center: Tuple[float, float],

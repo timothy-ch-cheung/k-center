@@ -1,4 +1,5 @@
 from src.kcenter.constant.solver_state import SolverState
+from src.kcenter.pbs.pbs import Individual
 from src.kcenter.pbs.stepped_pbs import SteppedPBS
 from src.kcenter.solver.abstract_generator import Solution
 from tests.kcenter.solver.pbs.test_pbs import K, RELAXED_CONSTRAINTS
@@ -123,6 +124,7 @@ def test_stepped_pbs_inspect_population_generation(seed_random):
                       ([Solution(clusters={0: {0, 1, 2, 3, 4}}, cost=5.5154, outliers=set())],
                        "POPULATION GENERATION: The current individual {(1.3, 2.6)} has less than 2 centers, 1 more needs to be added",
                        SolverState.ACTIVE_SUB))
+
 
 def test_stepped_pbs_inspect_single_generation(seed_random):
     graph = basic_graph_with_outlier()
@@ -393,4 +395,43 @@ def test_stepped_pbs_inspect_single_generation(seed_random):
     assert_step_equal(next(solution),
                       ([Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
                        """INSPECT GENERATION 1: A random mutation operator is applied to the set of centers {(5.9, 5.2), (1.2, 2.1)}, where a subset of the original centers is combined with points sampled random to get the new center set {(5.9, 5.2), (1.2, 2.1)}""",
+                       SolverState.ACTIVE_SUB))
+
+
+def test_local_search_repeated_swap(seed_random):
+    graph = basic_graph_with_outlier()
+    instance = SteppedPBS(graph, K, RELAXED_CONSTRAINTS)
+    individual = Individual(centers={0, 1})
+    individual.init_nearest_centers(instance.points, instance.weights)
+    solution = instance.local_search(individual, 4)
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={0: {0, 2, 3, 4}, 1: {1}}, cost=5.5154, outliers=set())],
+                       "POPULATION GENERATION: At the end of local search initialisation, the set of centers is {(1.3, 2.6), (1.2, 2.1)}",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={0: {0, 2, 3, 4}, 1: {1}}, cost=5.5154, outliers=set())],
+                       "POPULATION GENERATION: We now enter a phase where we make swaps between points and centers.",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set())],
+                       """POPULATION GENERATION: [1.2 2.1] is removed from the set of centers and it is replaced with [6.4 4.7], the new cost is 3.785""",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
+                       """POPULATION GENERATION: [1.3 2.6] is removed from the set of centers and it is replaced with [0.5 6.3], the new cost is 4.258""",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set())],
+                       """POPULATION GENERATION: [0.5 6.3] is removed from the set of centers and it is replaced with [1.3 2.6], the new cost is 3.785""",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set())],
+                       """POPULATION GENERATION: [1.3 2.6] and [0.5 6.3] we identified as the best center and point pair to swap, 
+            but the swap was not made as they have already been swapped before in this invocation of local search""",
                        SolverState.ACTIVE_SUB))
