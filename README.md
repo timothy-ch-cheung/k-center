@@ -34,3 +34,6 @@ Run server ```python3 run.py```
 
 ## Run tests
 ```python3 -m pytest tests```
+
+## Stats
+[![codecov](https://codecov.io/gh/timothy-ch-cheung/k-center/branch/master/graph/badge.svg?token=n5JVnL4MUa)](https://codecov.io/gh/timothy-ch-cheung/k-center)
