@@ -58,7 +58,7 @@ def divide_data_set():
         iteration = 1
         for instance in queue:
             for i in range(instance.count):
-                file_name = f"gow_{str(iteration).zfill(2)}.txt"
+                file_name = f"gow{str(iteration).zfill(2)}.txt"
                 iteration += 1
                 with open(file_name, "w") as file:
                     checkins = []
