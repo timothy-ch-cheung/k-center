@@ -30,7 +30,7 @@ def test_stepped_pbs(seed_random):
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set()),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
@@ -44,7 +44,7 @@ def test_stepped_pbs(seed_random):
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set()),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
@@ -58,7 +58,7 @@ def test_stepped_pbs(seed_random):
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set()),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
@@ -72,7 +72,7 @@ def test_stepped_pbs(seed_random):
                       ([
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={0: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
+                           Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set()),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 3: {3, 4}}, cost=0.7071, outliers={2}),
                            Solution(clusters={1: {0, 1}, 4: {3, 4}}, cost=0.7071, outliers={2}),

@@ -14,13 +14,13 @@ def test_generate_population_medium_graph(seed_random):
 
     expected_population = [
         {3, 2, 15, 21},
-        {1, 4, 9, 21},
-        {2, 6, 8, 23},
-        {2, 3, 14, 23},
-        {1, 2, 16, 23},
-        {2, 8, 15, 23},
-        {1, 2, 16, 23},
-        {2, 7, 9, 21}
+        {3, 4, 15, 23},
+        {2, 9, 13, 23},
+        {3, 6, 2, 23},
+        {4, 9, 13, 23},
+        {2, 6, 9, 23},
+        {3, 2, 15, 21},
+        {1, 2, 8, 23}
     ]
     for i, individual in enumerate(population):
         assert individual.centers == expected_population[i]
@@ -37,4 +37,4 @@ def test_generate_population_medium_graph_is_cost_diverse(seed_random):
             assert math.isclose(i.cost, j.cost) == False, f"{i} is too similar to {j}"
 
     np.testing.assert_allclose([individual.cost for individual in population],
-                               [53.4217, 66.4290, 66.4697, 79.3426, 66.9643, 76.7321, 56.5485, 76.954], rtol=1e-03)
+                               [53.4218, 66.4291, 66.4698, 66.9643, 68.7666, 74.399, 73.4314, 75.1955], rtol=1e-03)
