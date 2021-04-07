@@ -53,6 +53,9 @@ export default function Steps() {
     const [chartData, setChartData] = useState<SolutionStep>()
     const [pageSetting, setPageSetting] = useState<PageSetting>(DEFAULT_STEP_PAGE_SETTINGS)
     const [chartView, setChartView] = useState<View>(View.Population)
+    const [isInspect, setIsInspect] = useState<boolean>(false)
+    const [isInitialMoveMade, setIsInitialMoveMade] = useState<boolean>(false)
+    const [isActive, setIsActive] = useState<boolean>(true)
 
     const updatePageControl = (update: UpdatePageControl) => {
         setPageSetting({...pageSetting, ...update})
@@ -62,6 +65,9 @@ export default function Steps() {
         setPageSetting(DEFAULT_STEP_PAGE_SETTINGS)
         setSolutionHistory([])
         setChartView(View.Population)
+        setIsInspect(false)
+        setIsInitialMoveMade(false)
+        setIsActive(true)
     }
 
     const handleBackButtonClick = () => {
@@ -111,6 +117,12 @@ export default function Steps() {
                   id={id}
                   algorithm={solveRequestData?.algorithm}
                   pageControl={Object.assign(pageSetting, {updateControl: updatePageControl})}
+                  isInspect={isInspect}
+                  setIsInspect={setIsInspect}
+                  isInitialMoveMade={isInitialMoveMade}
+                  setIsInitialMoveMade={setIsInitialMoveMade}
+                  isActive={isActive}
+                  setIsActive={setIsActive}
             />
         </ChartContainer>
     </Container>
