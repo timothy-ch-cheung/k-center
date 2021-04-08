@@ -347,7 +347,7 @@ class PBS(AbstractSolver):
         :return: A new individual with optimised solution
         """
         self.initilise_local_search(individual)
-        termination_iterations_cost = math.floor(0.1 * generation * self.graph.number_of_nodes())
+        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
         stale_iterations = 0
@@ -537,7 +537,7 @@ class PBS(AbstractSolver):
                 for sibling in self.population:
                     if individual == sibling:
                         continue
-                    self.update_population(self.local_search(self.mutation_random(individual), generation))
+                    self.update_population(self.local_search(self.mutation_random(sibling), generation))
                     self.update_population(
                         self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
                                           generation))

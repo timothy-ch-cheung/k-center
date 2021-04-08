@@ -221,7 +221,7 @@ class SteppedPBS(PBS):
         initialise_local_search = self.initilise_local_search(individual)
         for step in initialise_local_search:
             yield step
-        termination_iterations_cost = math.floor(0.1 * generation * self.graph.number_of_nodes())
+        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
         stale_iterations = 0
@@ -386,7 +386,7 @@ class SteppedPBS(PBS):
                 for sibling in self.population:
                     if individual == sibling:
                         continue
-                    mutation_random_steps = self.mutation_random_step(individual, generation)
+                    mutation_random_steps = self.mutation_random_step(sibling, generation)
                     crossover_random_steps = self.crossover_random_steps(individual, sibling, generation)
                     crossover_directed_steps = self.crossover_directed_step(individual, sibling, generation)
                     generation_steps = itertools.chain(mutation_random_steps,
