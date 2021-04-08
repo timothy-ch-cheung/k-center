@@ -9,9 +9,9 @@ from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import Individual, PBS
 
 
-def calculate_offspring_size():
+def calculate_offspring_size(population_size):
     div = 4
-    offspring_div = [PBS.POPULATION_SIZE // div + (1 if x < PBS.POPULATION_SIZE % div else 0) for x in range(div)]
+    offspring_div = [population_size // div + (1 if x < population_size % div else 0) for x in range(div)]
     num_x1, num_x2, num_m1, num_m2 = offspring_div[0], offspring_div[1], offspring_div[2], offspring_div[3]
     return num_x1, num_x2, num_m1, num_m2
 
@@ -99,7 +99,7 @@ class AbstractGeneticColourfulPBS(TargetColourfulPBS):
             new_population = []
 
             # Create new population with [25% crossover 1][25% crossover 2][25% mutation 1][25% mutation 2]
-            num_x1, num_x2, num_m1, num_m2 = calculate_offspring_size()
+            num_x1, num_x2, num_m1, num_m2 = calculate_offspring_size(PBS.POPULATION_SIZE)
 
             crossover_1 = self.gen_offspring_crossover_1(mating_pool, num_x1, generation)
             crossover_2 = self.gen_offspring_crossover_2(mating_pool, num_x2, generation)
