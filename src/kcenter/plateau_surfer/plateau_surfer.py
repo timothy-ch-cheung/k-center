@@ -14,7 +14,7 @@ from src.util.logger import Logger
 
 
 class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.25,
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.5,
                  beta: float = 0.25):
         super().__init__(graph, k, constraints)
         self.weights = {}
