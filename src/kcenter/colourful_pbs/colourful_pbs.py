@@ -9,7 +9,10 @@ from src.kcenter.pbs.pbs import PBS, Individual, min2, Neighbour
 
 class ColourfulPBS(PBS):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
-        super().__init__(graph, k, constraints, name="colourful_pbs")
+        if name is None:
+            super().__init__(graph, k, constraints, name="colourful_pbs")
+        else:
+            super().__init__(graph, k, constraints, name=name)
 
     def find_cost(self, individual: Individual) -> float:
         """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
