@@ -2,7 +2,7 @@ import itertools
 import math
 import random
 from functools import reduce
-from typing import Dict, Set, Tuple, List
+from typing import Dict, Set, Tuple, List, Optional
 
 import networkx as nx
 
@@ -169,8 +169,11 @@ class PBSSteps:
 
 
 class SteppedPBS(PBS):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
+        if name is None:
+            super().__init__(graph, k, constraints)
+        else:
+            super().__init__(graph, k, constraints, name=name)
 
     def yield_population(self):
         solutions = []

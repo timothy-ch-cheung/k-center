@@ -1,5 +1,5 @@
 import random
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
 import networkx as nx
 
@@ -8,8 +8,8 @@ from src.kcenter.pbs.pbs import PBS, Individual, min2, Neighbour
 
 
 class ColourfulPBS(PBS):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
+        super().__init__(graph, k, constraints, name="colourful_pbs")
 
     def find_cost(self, individual: Individual) -> float:
         """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
@@ -28,7 +28,8 @@ class ColourfulPBS(PBS):
         nearest_centers = [(point, neighbour.nearest) for point, neighbour in individual.nearest_centers.items()]
         nearest_centers.sort(key=lambda x: x[1].cost)
         for point, nearest in nearest_centers:
-            if total[Colour.BLUE] >= self.constraints[Colour.BLUE] and total[Colour.RED] >= self.constraints[Colour.RED]:
+            if total[Colour.BLUE] >= self.constraints[Colour.BLUE] and total[Colour.RED] >= self.constraints[
+                Colour.RED]:
                 break
             if point not in clustered_points:
                 total[self.graph.nodes()[point]["colour"]] += 1
