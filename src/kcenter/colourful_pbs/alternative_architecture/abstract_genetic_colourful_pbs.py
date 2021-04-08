@@ -1,4 +1,4 @@
-import random
+from abc import abstractmethod
 from itertools import chain
 from typing import Dict, Generator, Optional, List
 
@@ -16,25 +16,15 @@ def calculate_offspring_size():
     return num_x1, num_x2, num_m1, num_m2
 
 
-class RouletteColourfulPBS(TargetColourfulPBS):
+class AbstractGeneticColourfulPBS(TargetColourfulPBS):
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], mating_pool_size: int = 4):
         super().__init__(graph, k, constraints)
         self.MATING_POOL_SIZE = mating_pool_size
 
-    def roulette_select(self):
-        mating_pool = []
-        fitness = [x.cost for x in self.population]
-        population_pool = list(self.population)
-        for i in range(self.MATING_POOL_SIZE):
-            pos = random.choices(
-                range(len(population_pool)),
-                fitness,
-                k=1
-            )[0]
-            mating_pool.append(population_pool[pos])
-            del population_pool[pos], fitness[pos]
-        return mating_pool
+    @abstractmethod
+    def selection(self):
+        pass
 
     def gen_offspring_crossover_1(self, mating_pool: List[Individual], num_offspring: int, generation: int):
         offspring_count = 0
@@ -105,7 +95,7 @@ class RouletteColourfulPBS(TargetColourfulPBS):
         generation = 1
 
         while not target_reached:
-            mating_pool = self.roulette_select()
+            mating_pool = self.selection()
             new_population = []
 
             # Create new population with [25% crossover 1][25% crossover 2][25% mutation 1][25% mutation 2]

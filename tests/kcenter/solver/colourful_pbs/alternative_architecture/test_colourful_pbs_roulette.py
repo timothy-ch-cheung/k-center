@@ -1,6 +1,6 @@
 import pytest
 
-from src.kcenter.colourful_pbs.alternative_architecture.colourful_pbs_roulette import RouletteColourfulPBS
+from src.kcenter.colourful_pbs.alternative_architecture.roulette_colourful_pbs import RouletteColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import Individual, PBS
 from tests.kcenter.util.assertion import FLOAT_ERROR_MARGIN
@@ -29,13 +29,13 @@ def instance_two():
 
 
 def test_roulette_selection(seed_random, instance):
-    mating_pool = instance.roulette_select()
+    mating_pool = instance.selection()
     assert len(mating_pool) == 4
     assert mating_pool == [Individual({3, 4}), Individual({2, 3}), Individual({1, 2}), Individual({0, 1})]
 
 
 def test_gen_crossover_1_offspring(seed_random, instance_two):
-    mating_pool = instance_two.roulette_select()
+    mating_pool = instance_two.selection()
 
     offspring = []
     offspring_gen = instance_two.gen_offspring_crossover_1(mating_pool, 4, generation=1)
@@ -46,7 +46,7 @@ def test_gen_crossover_1_offspring(seed_random, instance_two):
 
 
 def test_gen_crossover_2_offspring(seed_random, instance_two):
-    mating_pool = instance_two.roulette_select()
+    mating_pool = instance_two.selection()
 
     offspring = []
     offspring_gen = instance_two.gen_offspring_crossover_2(mating_pool, 3, generation=1)
@@ -57,7 +57,7 @@ def test_gen_crossover_2_offspring(seed_random, instance_two):
 
 
 def test_gen_mutation_1_offspring(seed_random, instance_two):
-    mating_pool = instance_two.roulette_select()
+    mating_pool = instance_two.selection()
 
     offspring = []
     offspring_gen = instance_two.gen_offspring_mutation_1(mating_pool, 2, generation=1)
@@ -68,7 +68,7 @@ def test_gen_mutation_1_offspring(seed_random, instance_two):
 
 
 def test_gen_mutation_2_offspring(seed_random, instance_two):
-    mating_pool = instance_two.roulette_select()
+    mating_pool = instance_two.selection()
 
     offspring = []
     offspring_gen = instance_two.gen_offspring_mutation_2(mating_pool, 1, generation=1)
