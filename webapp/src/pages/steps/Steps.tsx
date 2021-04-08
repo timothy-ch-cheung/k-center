@@ -20,6 +20,8 @@ interface Step {
 
 export interface SolutionStep extends ChartData {
     step?: Step
+    active?: boolean
+    subSolve?: boolean
 }
 
 const ChartContainer = styled("div")`
@@ -51,6 +53,9 @@ export default function Steps() {
     const [chartData, setChartData] = useState<SolutionStep>()
     const [pageSetting, setPageSetting] = useState<PageSetting>(DEFAULT_STEP_PAGE_SETTINGS)
     const [chartView, setChartView] = useState<View>(View.Population)
+    const [isInspect, setIsInspect] = useState<boolean>(false)
+    const [isInitialMoveMade, setIsInitialMoveMade] = useState<boolean>(false)
+    const [isActive, setIsActive] = useState<boolean>(true)
 
     const updatePageControl = (update: UpdatePageControl) => {
         setPageSetting({...pageSetting, ...update})
@@ -60,6 +65,9 @@ export default function Steps() {
         setPageSetting(DEFAULT_STEP_PAGE_SETTINGS)
         setSolutionHistory([])
         setChartView(View.Population)
+        setIsInspect(false)
+        setIsInitialMoveMade(false)
+        setIsActive(true)
     }
 
     const handleBackButtonClick = () => {
@@ -71,11 +79,12 @@ export default function Steps() {
     }
 
     const renderGraphVisualisation = () => {
-        if (solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type != "genetic") {
+        const isGenetic = solveRequestData?.algorithm && algorithms[solveRequestData.algorithm].type == "genetic"
+        if (!isGenetic) {
             return <Chart gridArea="middle" data={chartData?.data} width={350} height={350}
                           solution={chartData?.solutions ? chartData?.solutions[0] : undefined}/>
         } else {
-            return <PopulationChart gridArea="middle" data={chartData?.data} width={350} height={350}
+            return <PopulationChart gridArea="middle" data={chartData?.data} width={360} height={350}
                                     solutions={chartData?.solutions} chartView={chartView} setChartView={setChartView}/>
         }
     }
@@ -100,7 +109,7 @@ export default function Steps() {
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
             {renderGraphVisualisation()}
             <Step gridArea="right"
-                  width={300} height={455}
+                  width={320} height={455}
                   solutionHistory={solutionHistory}
                   updateSolutionHistory={updateSolutionHistory}
                   setChartData={setChartData}
@@ -108,6 +117,12 @@ export default function Steps() {
                   id={id}
                   algorithm={solveRequestData?.algorithm}
                   pageControl={Object.assign(pageSetting, {updateControl: updatePageControl})}
+                  isInspect={isInspect}
+                  setIsInspect={setIsInspect}
+                  isInitialMoveMade={isInitialMoveMade}
+                  setIsInitialMoveMade={setIsInitialMoveMade}
+                  isActive={isActive}
+                  setIsActive={setIsActive}
             />
         </ChartContainer>
     </Container>

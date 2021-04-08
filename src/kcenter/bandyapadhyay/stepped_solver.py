@@ -2,6 +2,7 @@ from typing import Dict
 
 import networkx as nx
 
+from src.kcenter.constant.solver_state import SolverState
 from src.kcenter.solver.abstract_generator import AbstractGenerator
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
@@ -25,14 +26,14 @@ class SteppedConstantColourful(ConstantPseudoColourful, AbstractGenerator):
         instance = SteppedConstantPseudoColourful(self.graph, self.k, self.constraints)
         solution = instance.generator()
         for step in solution:
-            solutions, label, active = step
-            if not active:
+            solutions, label, solver_state = step
+            if not solver_state.is_active():
                 break
             yield step
 
         if solutions is not None and len(solutions[0].clusters.keys()) > self.k:
-            yield solutions, label, True
-            yield solutions, ConstantColourfulSteps.retry_with_k_minus_one(self.k), True
+            yield solutions, label, SolverState.ACTIVE_MAIN
+            yield solutions, ConstantColourfulSteps.retry_with_k_minus_one(self.k), SolverState.ACTIVE_MAIN
 
             instance = SteppedConstantPseudoColourful(self.graph, self.k - 1, self.constraints)
             solution = instance.generator()
@@ -40,4 +41,4 @@ class SteppedConstantColourful(ConstantPseudoColourful, AbstractGenerator):
             for step in solution:
                 yield step
         else:
-            yield solutions, label, False
+            yield solutions, label, SolverState.INACTIVE

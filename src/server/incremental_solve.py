@@ -1,10 +1,8 @@
-import time
-
 from flask import request, Blueprint, jsonify
 
-from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
+from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
@@ -43,8 +41,8 @@ def start():
     return '', 204
 
 
-def process_standard(graph, graph_name, step, time_elapsed):
-    solutions, label, is_active = step
+def process_standard(graph, graph_name, step):
+    solutions, label, solver_state = step
 
     data = []
     nodes = list(graph.nodes())
@@ -55,14 +53,24 @@ def process_standard(graph, graph_name, step, time_elapsed):
 
     solutions_json = []
     for solution in solutions:
-        solutions_json.append({**solution.to_json(graph), **{"timeTaken": time_elapsed}})
+        solutions_json.append({**solution.to_json(graph)})
 
+    is_active = solver_state.is_active()
+    is_sub_solve = solver_state.is_sub_solve()
     solution = {"data": data,
                 "solutions": solutions_json,
-                "step": {"label": label, "active": is_active},
+                "step": {"label": label, "active": is_active, "inspect": is_sub_solve},
                 **GraphLoader.get_json_meta_data(graph_name)
                 }
     return solution, is_active
+
+
+def get_problem_instance(id: int):
+    problem_instance = problem_instances[id]
+    generator = problem_instance["generator"]
+    graph = problem_instance["instance"].graph
+    graph_name = problem_instance["name"]
+    return generator, graph, graph_name
 
 
 @step.route('/api/v1/step/next', methods=["POST"])
@@ -73,18 +81,33 @@ def next_step():
     if id not in problem_instances:
         return jsonify({"message": f"{id} is not an active problem instance"}), 404
 
-    problem_instance = problem_instances[id]
-    generator = problem_instance["generator"]
-    graph = problem_instance["instance"].graph
-    graph_name = problem_instance["name"]
+    generator, graph, graph_name = get_problem_instance(id)
 
-    start = time.time()
     step = next(generator)
-    end = time.time()
-    time_elapsed = end - start
+    solver_state = step[2]
+    while not solver_state.is_main():
+        step = next(generator)
+        solver_state = step[2]
 
-    solution, is_active = process_standard(graph, graph_name, step, time_elapsed)
+    solution, is_active = process_standard(graph, graph_name, step)
 
+    if not is_active:
+        del problem_instances[id]
+
+    return jsonify(solution)
+
+
+@step.route('/api/v1/step/inspect', methods=["POST"])
+def inspect_step():
+    request_data = request.get_json()
+    id = request_data["id"]
+
+    if id not in problem_instances:
+        return jsonify({"message": f"{id} is not an active problem instance"}), 404
+
+    generator, graph, graph_name = get_problem_instance(id)
+    step = next(generator)
+    solution, is_active = process_standard(graph, graph_name, step)
     if not is_active:
         del problem_instances[id]
 
