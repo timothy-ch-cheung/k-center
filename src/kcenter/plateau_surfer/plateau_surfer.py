@@ -187,7 +187,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
                 if log is True:
                     logger.append(best_cost)
 
-            if math.isclose(cost, target_cost) or cost < target_cost or time.time() - start_time > timeout:
+            if math.isclose(cost, target_cost) or cost < target_cost or (
+                    timeout is not None and time.time() - start_time > timeout):
                 break
 
         if log is True:
