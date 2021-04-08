@@ -119,7 +119,8 @@ class PBS(AbstractSolver):
     POPULATION_SIZE = 8
     GENERATIONS = 3
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: str = "pbs"):
+        self.name = name
         self.points = set(graph.nodes())
         self.weights = {}
         self.population = []

@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 import networkx as nx
 
@@ -28,8 +28,11 @@ class ColourfulPBSSteps:
 
 
 class SteppedColourfulPBS(ColourfulPBS, SteppedPBS):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
+        if name is None:
+            super().__init__(graph, k, constraints)
+        else:
+            super().__init__(graph, k, constraints, name=name)
 
     def local_search(self, individual: Individual, generation: int):
         local_search_steps = SteppedPBS.local_search(self, individual, generation)

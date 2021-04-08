@@ -120,3 +120,9 @@ def test_stepped_pbs_inspect_local_search(seed_random):
          The. A radius of 0.707 is required to cover 
          2 blue points and 2 red points""",
                        SolverState.ACTIVE_SUB))
+
+
+def test_set_name():
+    graph = basic_graph_with_outlier()
+    instance = SteppedColourfulPBS(graph, K, RELAXED_CONSTRAINTS, name="test_name")
+    assert instance.name == "test_name"

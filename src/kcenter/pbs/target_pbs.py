@@ -12,8 +12,11 @@ from src.util.logger import Logger
 
 
 class TargetPBS(PBS, AbstractTargetSolver):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
+        if name is None:
+            super().__init__(graph, k, constraints)
+        else:
+            super().__init__(graph, k, constraints, name=name)
 
     def generate_population(self) -> Generator[Optional[Individual], None, None]:
         self.population = []
@@ -67,7 +70,7 @@ class TargetPBS(PBS, AbstractTargetSolver):
         Dict[int, Set[int]], Set[int], float]:
 
         start_time = time.time()
-        logger = Logger("pbs", len(self.points), self.k, start_time)
+        logger = Logger(self.name, len(self.points), self.k, start_time)
         best_cost = self.MAX_WEIGHT
         generator = chain(self.generate_population(), self.evolve())
         solution = None
