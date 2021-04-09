@@ -100,3 +100,19 @@ def grid_graph() -> nx.Graph:
 
     calculate_edges(G)
     return G
+
+
+def extreme_point_graph() -> nx.Graph:
+    G = nx.Graph()
+    G.add_node(0, pos=numpy.array((1.2, 2.1)), colour=Colour.RED)
+    G.add_node(1, pos=numpy.array((1.3, 2.9)), colour=Colour.RED)
+    G.add_node(2, pos=numpy.array((2.5, 3.1)), colour=Colour.RED)
+    G.add_node(3, pos=numpy.array((2.0, 2.5)), colour=Colour.RED)
+    G.add_node(4, pos=numpy.array((2.9, 1.9)), colour=Colour.BLUE)
+    G.add_node(5, pos=numpy.array((7.1, 2.5)), colour=Colour.BLUE)
+    G.add_node(6, pos=numpy.array((7.6, 3.4)), colour=Colour.BLUE)
+    G.add_node(7, pos=numpy.array((8.0, 2.5)), colour=Colour.BLUE)
+    G.add_node(8, pos=numpy.array((8.6, 3.3)), colour=Colour.BLUE)
+    G.add_node(9, pos=numpy.array((8.8, 1.7)), colour=Colour.RED)
+    calculate_edges(G)
+    return G

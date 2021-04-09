@@ -2,6 +2,7 @@ import pytest
 
 from src.kcenter.pbs.pbs import Individual, Neighbour, NearestCenters
 from tests.kcenter.constant.consts import FLOAT_ERROR
+from tests.kcenter.util.assertion import FLOAT_ERROR_MARGIN
 
 
 def test_inividual_equality():
@@ -97,3 +98,5 @@ def test_individual_init_centers():
     ]
     for point, expected in enumerate(expected_nearest_centers):
         assert str(individual.nearest_centers[point]) == str(expected)
+
+    assert individual.cost == pytest.approx(0.8544, FLOAT_ERROR_MARGIN)

@@ -142,3 +142,4 @@ cython_debug/
 
 # Misc
 loc-gowalla_totalCheckins.txt
+pytest-coverage.txt

@@ -9,12 +9,18 @@ import API from "../../API";
 import {SolveRequestData} from "./ConfigPanel";
 import {algorithms} from "../../constants/algorithms";
 
+export enum Mode {
+    Solve,
+    Step
+}
+
 interface Props {
     submitButtonText: string
     handleSubmit: (event: any) => void
     chartData?: ChartData
     setChartData: (data: any) => void
     isProcessing: boolean
+    mode: Mode
 }
 
 const FormControlNoWrap = styled(FormControl)`
@@ -29,10 +35,6 @@ const BluePaletteIcon = styled(PaletteIcon)`
 
 const RedPaletteIcon = styled(PaletteIcon)`
   color: red
-`
-
-const SelectFormControl = styled(FormControlNoWrap)`
-  margin-bottom: 2px;
 `
 
 const ErrorText = styled(FormHelperText)`
@@ -136,18 +138,13 @@ export default function (props: Props) {
         </FormControlNoWrap>
         <FormControlNoWrap variant={"outlined"} margin={"dense"}>
             <SelectInputLabel>Algorithm</SelectInputLabel>
-            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid}
-                    onClose={handleAlgorithmClose}>
-                <MenuItem value={"greedy"}>{algorithms.greedy.name}</MenuItem>
-                <MenuItem value={"greedy_reduce"}>{algorithms.greedy_reduce.name}</MenuItem>
-                <MenuItem
-                    value={"colourful_bandyapadhyay_pseudo"}>{algorithms.colourful_bandyapadhyay_pseudo.name}</MenuItem>
-                <MenuItem value={"colourful_bandyapadhyay"}>{algorithms.colourful_bandyapadhyay.name}</MenuItem>
-                <MenuItem value={"pbs"}>{algorithms.pbs.name}</MenuItem>
-                <MenuItem value={"colourful_pbs"}>{algorithms.colourful_pbs.name}</MenuItem>
-                <MenuItem value={"brute_force_k_center"}>{algorithms.brute_force_k_center.name}</MenuItem>
-                <MenuItem
-                    value={"brute_force_colourful_k_center"}>{algorithms.brute_force_colourful_k_center.name}</MenuItem>
+            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid} onClose={handleAlgorithmClose}>
+                {Object.entries(algorithms).map(([algorithm_name, algorithm_properties]) => {
+                    if (props.mode === Mode.Step && !algorithm_properties.stepped_enabled) {
+                        return null
+                    }
+                    return <MenuItem value={algorithm_name}>{algorithm_properties.name}</MenuItem>
+                })}
             </Select>
             <ErrorText>{isAlgorithmChanged && !algorithmValid ? "please select an algorithm" : "."}</ErrorText>
         </FormControlNoWrap>

@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
+          python-version: '3.9.x'
 
       - uses: actions/cache@v2
         with:
@@ -27,4 +27,9 @@ jobs:
         run: sudo apt-get install glpk-utils
 
       - name: run tests
-        run: pytest tests/
+        run: pytest --cov-config=.coveragerc --cov=src tests/ > pytest-coverage.txt
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,10 +1,10 @@
 import {ChartItem} from "../components/chart/ChartInterfaces";
 import Chart, {Solution} from "../components/chart/Chart";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ChartPreview from "../components/chart_preview/ChartPreview";
 import styled from "@emotion/styled";
 import {Dimensions} from "../interfaces";
-import {GridList, GridListTile, Paper} from "@material-ui/core";
+import {GridList, GridListTile} from "@material-ui/core";
 import ViewPanel, {View} from "../components/view_panel/ViewPanel";
 
 interface Props {
@@ -32,12 +32,6 @@ const ChartFrame = styled("div")`
   overflow: hidden;
 `
 
-const Window = styled(Paper)`
-  width: 600px;
-  padding: 20px;
-  margin: 150px auto;
-`
-
 export default function PopulationChart(props: Props): JSX.Element {
     const [activeStep, setActiveStep] = useState<number>(0)
 
@@ -55,6 +49,25 @@ export default function PopulationChart(props: Props): JSX.Element {
         setActiveStep(activeStep - 1)
     }
 
+    const getFocusSolution = () => {
+        if (props.solutions) {
+            if (props.solutions.length === 1) {
+                return props.solutions[0]
+            } else {
+                return props.solutions[activeStep]
+            }
+        }
+        return undefined
+    }
+
+    useEffect(() => {
+        if (props.solutions?.length === 1) {
+            props.setChartView(View.Individual)
+        } else {
+            props.setChartView(View.Population)
+        }
+    }, props.solutions)
+
 
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width * 1.5} height={props.height * 1.3}>
         {props.solutions && <ViewPanel
@@ -64,7 +77,7 @@ export default function PopulationChart(props: Props): JSX.Element {
             maxSteps={props.solutions.length}
             handleBack={onBack}
             handleNext={onNext}
-            subSolve={false}/>}
+            subSolve={props.solutions.length === 1}/>}
 
         {props.chartView === View.Population && <div style={{width: props.width * 1.2, margin: "auto"}}>
             <GridList cellHeight={"auto"} cols={3}>
@@ -76,8 +89,8 @@ export default function PopulationChart(props: Props): JSX.Element {
             </GridList>
         </div>}
         {props.chartView === View.Individual &&
-        <Chart gridArea="middle" data={props.data} width={310} height={295}
-               solution={props.solutions ? props.solutions[activeStep] : undefined}/>
+        <Chart gridArea="middle" data={props.data} width={320} height={295}
+               solution={getFocusSolution()}/>
         }
     </ChartFrame>
 }

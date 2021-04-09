@@ -150,7 +150,7 @@ def test_solve_basic_graph_with_pbs_algorithm(basic_graph, seed_random):
             "radius": 0.728
         },
         "solutions": [{
-            "centers": [{'x': 1.2, 'y': 2.1}, {'x': 5.9, 'y': 5.2}],
+            "centers": [{'x': 5.9, 'y': 5.2}, {'x': 1.2, 'y': 2.1}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(0.728, FLOAT_ERROR_MARGIN),
@@ -266,7 +266,7 @@ def test_solve_basic_outlier_graph_with_pbs(basic_graph_with_outlier, seed_rando
             "radius": 0.707
         },
         "solutions": [{
-            "centers": [{'x': 1.3, 'y': 2.6}, {'x': 6.4, 'y': 4.7}],
+            "centers": [{'x': 5.9, 'y': 5.2}, {'x': 1.3, 'y': 2.6}],
             "k": 2,
             "outliers": 0,
             "radius": pytest.approx(3.785, FLOAT_ERROR_MARGIN),

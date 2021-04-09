@@ -75,6 +75,7 @@ class Individual:
         :param points: nodes in a graph
         :param weights: the weight between any two given points
         """
+        max_cost = 0
         for point in points:
             nearest_center = None
             second_nearest_center = None
@@ -97,6 +98,10 @@ class Individual:
                 nearest_center = Neighbour(point=point, cost=0)
 
             self.nearest_centers[point] = NearestCenters(nearest_center, second_nearest_center)
+            if nearest_center is not None and nearest_center.cost > max_cost:
+                max_cost = nearest_center.cost
+
+        self.cost = max_cost
 
     def copy(self):
         return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
@@ -119,11 +124,13 @@ class PBS(AbstractSolver):
     POPULATION_SIZE = 8
     GENERATIONS = 3
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: str = "pbs"):
+        self.name = name
         self.points = set(graph.nodes())
         self.weights = {}
         self.population = []
         self.no_update_count = 0
+        self.current_generation = 0
         for i in self.points:
             for j in self.points:
                 if i == j:
@@ -346,7 +353,7 @@ class PBS(AbstractSolver):
         :return: A new individual with optimised solution
         """
         self.initilise_local_search(individual)
-        termination_iterations_cost = math.floor(0.1 * generation * self.graph.number_of_nodes())
+        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
         termination_iterations_count = 2 * self.graph.number_of_nodes()
         iteration = 0
         stale_iterations = 0
@@ -528,13 +535,15 @@ class PBS(AbstractSolver):
         """
         self.population = self.generate_population()
         self.no_update_count = 0
+        self.current_generation = 0
 
         for generation in range(1, PBS.GENERATIONS + 1):
+            self.current_generation = generation
             for individual in self.population:
                 for sibling in self.population:
                     if individual == sibling:
                         continue
-                    self.update_population(self.local_search(self.mutation_random(individual), generation))
+                    self.update_population(self.local_search(self.mutation_random(sibling), generation))
                     self.update_population(
                         self.local_search(self.mutation_directed(self.crossover_random(individual, sibling)),
                                           generation))
