@@ -36,7 +36,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -50,7 +50,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -64,7 +64,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -78,7 +78,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "3 generations were completed. The fittest individual was 1 with a cost of 3.785",
                        SolverState.INACTIVE))
@@ -326,46 +326,51 @@ def test_stepped_pbs_inspect_single_generation(seed_random):
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
                        "INSPECT GENERATION 1: After the first child solution has been locally optimised, it is passed through a directed mutation operator",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
                        """INSPECT GENERATION 1: A directed mutation operator is applied to the set of centers {(0.5, 6.3), (5.9, 5.2)}, where the two 
-        closest centers {(5.9, 5.2)} are deleted from the solution, resulting in the set of 
-        centers {(0.5, 6.3), (6.4, 4.7)}""",
+        closest centers {(0.5, 6.3)} are deleted from the solution, resulting in the set of 
+        centers {(5.9, 5.2), (6.4, 4.7)}""",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
                        "INSPECT GENERATION 1: Local search is ran on the directed mutated solution",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
-                       "INSPECT GENERATION 1: At the end of local search initialisation, the set of centers is {(0.5, 6.3), (6.4, 4.7)}",
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
+                       "INSPECT GENERATION 1: At the end of local search initialisation, the set of centers is {(5.9, 5.2), (6.4, 4.7)}",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
                        "INSPECT GENERATION 1: We now enter a phase where we make swaps between points and centers.",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
-                       "INSPECT GENERATION 1: [0.5 6.3] is removed from the set of centers and it is replaced with [1.2 2.1], the new cost is 4.258",
+                      ([Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set())],
+                       "INSPECT GENERATION 1: [5.9 5.2] is removed from the set of centers and it is replaced with [1.3 2.6], the new cost is 3.785",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
-                       """INSPECT GENERATION 1: The local search ended after 1 iterations, the new cost of the solution (with 
-        centers {(6.4, 4.7), (1.2, 2.1)}) is 4.258""",
+                      ([Solution(clusters={4: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
+                       "INSPECT GENERATION 1: [1.3 2.6] is removed from the set of centers and it is replaced with [0.5 6.3], the new cost is 4.258",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
-                       "INSPECT GENERATION 1: {(6.4, 4.7), (1.2, 2.1)} will not improve the population so it is not added",
+                      ([Solution(clusters={4: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
+                       """INSPECT GENERATION 1: The local search ended after 2 iterations, the new cost of the solution (with 
+        centers {(0.5, 6.3), (6.4, 4.7)}) is 4.258""",
+                       SolverState.ACTIVE_SUB))
+
+    assert_step_equal(next(solution),
+                      ([Solution(clusters={4: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
+                       "INSPECT GENERATION 1: {(0.5, 6.3), (6.4, 4.7)} will not improve the population so it is not added",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
@@ -384,65 +389,65 @@ def test_stepped_pbs_inspect_single_generation(seed_random):
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={0: {0, 1, 2}, 3: {3, 4}}, cost=3.7855, outliers=set())],
-                       "INSPECT GENERATION 1: [1.2 2.1] is removed from the set of centers and it is replaced with [5.9 5.2], the new cost is 3.785",
+                      ([Solution(clusters={0: {0, 1, 2}, 4: {3, 4}}, cost=3.7855, outliers=set())],
+                       "INSPECT GENERATION 1: [1.2 2.1] is removed from the set of centers and it is replaced with [6.4 4.7], the new cost is 3.785",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
                        "INSPECT GENERATION 1: [1.3 2.6] is removed from the set of centers and it is replaced with [0.5 6.3], the new cost is 4.258",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
                        """INSPECT GENERATION 1: The local search ended after 2 iterations, the new cost of the solution (with 
-        centers {(0.5, 6.3), (5.9, 5.2)}) is 4.258""",
+        centers {(0.5, 6.3), (6.4, 4.7)}) is 4.258""",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
-                       "INSPECT GENERATION 1: {(0.5, 6.3), (5.9, 5.2)} will improve the population; it replaces the lowest ranked individual in the population",
+                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
+                       "INSPECT GENERATION 1: {(0.5, 6.3), (6.4, 4.7)} will improve the population; it replaces the lowest ranked individual in the population",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())],
                        "INSPECT GENERATION 1: After the second child solution has been locally optimised, it is passed through a directed mutation operator",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
-                       """INSPECT GENERATION 1: A directed mutation operator is applied to the set of centers {(0.5, 6.3), (5.9, 5.2)}, where the two 
-        closest centers set() are deleted from the solution, resulting in the set of 
-        centers {(0.5, 6.3), (5.9, 5.2)}""",
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
+                       """INSPECT GENERATION 1: A directed mutation operator is applied to the set of centers {(0.5, 6.3), (6.4, 4.7)}, where the two 
+        closest centers {(0.5, 6.3)} are deleted from the solution, resulting in the set of 
+        centers {(5.9, 5.2), (6.4, 4.7)}""",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
                        "INSPECT GENERATION 1: Local search is ran on the directed mutated solution",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
-                       "INSPECT GENERATION 1: At the end of local search initialisation, the set of centers is {(0.5, 6.3), (5.9, 5.2)}",
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
+                       "INSPECT GENERATION 1: At the end of local search initialisation, the set of centers is {(5.9, 5.2), (6.4, 4.7)}",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {0, 1, 2, 3}, 4: {4}}, cost=5.6303, outliers=set())],
                        "INSPECT GENERATION 1: We now enter a phase where we make swaps between points and centers.",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
                       ([Solution(clusters={0: {0, 1, 2}, 3: {3, 4}}, cost=3.7855, outliers=set())],
-                       "INSPECT GENERATION 1: [0.5 6.3] is removed from the set of centers and it is replaced with [1.3 2.6], the new cost is 3.785",
+                       "INSPECT GENERATION 1: [6.4 4.7] is removed from the set of centers and it is replaced with [1.3 2.6], the new cost is 3.785",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
                        "INSPECT GENERATION 1: [1.3 2.6] is removed from the set of centers and it is replaced with [0.5 6.3], the new cost is 4.258",
                        SolverState.ACTIVE_SUB))
 
     assert_step_equal(next(solution),
-                      ([Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())],
+                      ([Solution(clusters={3: {3, 4}, 2: {0, 1, 2}}, cost=4.2579, outliers=set())],
                        """INSPECT GENERATION 1: The local search ended after 2 iterations, the new cost of the solution (with 
         centers {(0.5, 6.3), (5.9, 5.2)}) is 4.258""",
                        SolverState.ACTIVE_SUB))

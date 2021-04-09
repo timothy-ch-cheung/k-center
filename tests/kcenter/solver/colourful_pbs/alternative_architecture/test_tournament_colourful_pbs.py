@@ -20,4 +20,4 @@ def instance():
 def test_tournament_selection(seed_random, instance):
     mating_pool = instance.selection()
     assert len(mating_pool) == 4
-    assert mating_pool == [Individual({3, 4}), Individual({0, 1}), Individual({1, 2}), Individual({2, 3})]
+    assert mating_pool == [Individual({3, 2}), Individual({0, 1}), Individual({1, 2}), Individual({0, 1})]
