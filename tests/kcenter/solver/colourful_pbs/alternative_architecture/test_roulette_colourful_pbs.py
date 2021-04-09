@@ -31,7 +31,7 @@ def instance_two():
 def test_roulette_selection(seed_random, instance):
     mating_pool = instance.selection()
     assert len(mating_pool) == 4
-    assert mating_pool == [Individual({3, 4}), Individual({2, 3}), Individual({1, 2}), Individual({0, 1})]
+    assert mating_pool == [Individual({3, 4}), Individual({0, 1}), Individual({1, 2}), Individual({0, 1})]
 
 
 def test_gen_crossover_1_offspring(seed_random, instance_two):
@@ -42,7 +42,7 @@ def test_gen_crossover_1_offspring(seed_random, instance_two):
     for child in offspring_gen:
         offspring.append(child)
     assert len(offspring) == 4
-    assert offspring == [Individual({1, 3}), Individual({0, 4}), Individual({3, 2}), Individual({0, 4})]
+    assert offspring == [Individual({0, 3}), Individual({3, 1}), Individual({3, 1}), Individual({3, 1})]
 
 
 def test_gen_crossover_2_offspring(seed_random, instance_two):
@@ -53,7 +53,7 @@ def test_gen_crossover_2_offspring(seed_random, instance_two):
     for child in offspring_gen:
         offspring.append(child)
     assert len(offspring) == 3
-    assert offspring == [Individual({1, 4}), Individual({0, 4}), Individual({0, 3})]
+    assert offspring == [Individual({4, 2}), Individual({3, 1}), Individual({3, 1})]
 
 
 def test_gen_mutation_1_offspring(seed_random, instance_two):
@@ -64,7 +64,7 @@ def test_gen_mutation_1_offspring(seed_random, instance_two):
     for child in offspring_gen:
         offspring.append(child)
     assert len(offspring) == 2
-    assert offspring == [Individual({2, 4}), Individual({1, 3})]
+    assert offspring == [Individual({2, 4}), Individual({1, 4})]
 
 
 def test_gen_mutation_2_offspring(seed_random, instance_two):
@@ -83,8 +83,8 @@ def test_evolve(seed_random, instance):
     new_population = []
     for i in range(PBS.POPULATION_SIZE):
         new_population.append(next(generator))
-    assert new_population == [Individual({0, 4}), Individual({1, 3}), Individual({0, 3}), Individual({0, 4}),
-                              Individual({0, 3}), Individual({1, 3}), Individual({1, 4}), Individual({0, 4})]
+    assert new_population == [Individual({3, 1}), Individual({2, 0}), Individual({0, 3}), Individual({1, 4}),
+                              Individual({0, 3}), Individual({1, 4}), Individual({1, 4}), Individual({3, 1})]
 
 
 def test_target_solve(seed_random):

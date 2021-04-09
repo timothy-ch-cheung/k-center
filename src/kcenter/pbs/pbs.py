@@ -75,6 +75,7 @@ class Individual:
         :param points: nodes in a graph
         :param weights: the weight between any two given points
         """
+        max_cost = 0
         for point in points:
             nearest_center = None
             second_nearest_center = None
@@ -97,6 +98,10 @@ class Individual:
                 nearest_center = Neighbour(point=point, cost=0)
 
             self.nearest_centers[point] = NearestCenters(nearest_center, second_nearest_center)
+            if nearest_center is not None and nearest_center.cost > max_cost:
+                max_cost = nearest_center.cost
+
+        self.cost = max_cost
 
     def copy(self):
         return Individual(centers=self.centers, cost=self.cost, nearest_centers=self.nearest_centers)
