@@ -5,6 +5,7 @@ import networkx as nx
 import pyomo.environ as pyo
 
 from src.kcenter.constant.colour import Colour
+import logging
 
 
 class RadiusChecker:
@@ -16,6 +17,7 @@ class RadiusChecker:
     """
 
     def __init__(self, graph: nx.Graph, k: int, min_red_coverage: int, min_blue_coverage: int):
+        logging.getLogger('pyomo.core').setLevel(logging.ERROR)
         self.graph = graph
         self.k = k
         self.min_red_coverage = min_red_coverage
