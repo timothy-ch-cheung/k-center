@@ -1,4 +1,4 @@
-from server.gow_graph_loader import GowGraphLoader
+from src.server.gow_graph_loader import GowGraphLoader
 
 
 def test_list_problems():

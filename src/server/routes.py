@@ -3,7 +3,7 @@ import time
 import networkx as nx
 from flask import render_template, request, jsonify, Blueprint
 
-from kcenter.pbs.target_pbs import TargetPBS
+from src.kcenter.pbs.target_pbs import TargetPBS
 from src.kcenter.plateau_surfer.plateau_surfer import PlateauSurfer
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
 from src.kcenter.bandyapadhyay.solver import ConstantColourful
