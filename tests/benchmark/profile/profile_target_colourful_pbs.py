@@ -1,37 +1,26 @@
 import cProfile
 import pstats
 
-from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
+from kcenter.colourful_pbs.alternative_architecture.roulette_colourful_pbs import RouletteColourfulPBS
 from kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from kcenter.verify.verify import verify_solution
 from src.kcenter.constant.colour import Colour
 from src.server.graph_loader import GraphLoader
 
-# graph = GraphLoader.get_graph("k_center")
-# constraints = {Colour.BLUE: 0, Colour.RED: 20}
-# k = 5
+problem_name = "train_col_n100_k10"
+graph = GraphLoader.get_graph(f"TRAIN_COLOURFUL/{problem_name}")
+k = graph.graph["k"]
+min_blue = graph.graph["min_blue"]
+min_red = graph.graph["min_red"]
+optimal_cost = graph.graph["opt"]
+constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
 
-graph = GraphLoader.get_graph("large")
-constraints = {Colour.BLUE: 50, Colour.RED: 50}
-k = 5
-
-# graph = GraphLoader.get_graph("medium")
-# constraints = {Colour.BLUE: 10, Colour.RED: 10}
-# k = 4
-
-# graph = GraphLoader.get_graph("basic")
-# constraints = {Colour.BLUE: 2, Colour.RED: 2}
-# k = 2
-
-# graph = GraphLoader.get_graph("thousand")
-# constraints = {Colour.BLUE: 500, Colour.RED: 500}
-# k = 50
-
-instance = ColourfulPBS(graph, k, constraints)
+# instance = TargetColourfulPBS(graph, k, constraints)
+instance = RouletteColourfulPBS(graph, k, constraints)
 
 profiler = cProfile.Profile()
 profiler.enable()
-clusters, outliers, radius = instance.solve()
+clusters, outliers, radius = instance.target_solve(target_cost=optimal_cost, timeout=40, log=True)
 profiler.disable()
 stats = pstats.Stats(profiler).sort_stats('cumtime')
 stats.print_stats()
