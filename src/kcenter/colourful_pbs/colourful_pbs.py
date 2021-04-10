@@ -4,6 +4,7 @@ from typing import Dict, Tuple, Optional, List
 
 import networkx as nx
 
+from kcenter.bandyapadhyay.solver import ConstantColourful
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS, Individual, min2, Neighbour
 
@@ -14,6 +15,17 @@ class ColourfulPBS(PBS):
             super().__init__(graph, k, constraints, name="colourful_pbs")
         else:
             super().__init__(graph, k, constraints, name=name)
+
+    def generate_seed_candidate(self):
+        inital_solver = ConstantColourful(self.graph, self.k, self.constraints)
+        clusters, outliers, radius = inital_solver.solve()
+        seed_candidate = Individual(centers=set(clusters.keys()))
+        seed_candidate.init_nearest_centers(self.points, self.weights)
+        seed_candidate.cost = self.find_cost(seed_candidate)
+        return seed_candidate
+
+    def generate_population(self, seed_population: Optional[List[Individual]] = None) -> List[Individual]:
+        return super().generate_population([self.generate_seed_candidate()])
 
     def find_cost(self, individual: Individual) -> float:
         """Calculates the cost of Colourful K-Center cover given the constraints of covering specified colours
