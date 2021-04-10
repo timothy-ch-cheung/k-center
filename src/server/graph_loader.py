@@ -125,6 +125,11 @@ class GraphLoader:
         node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
 
         G = nx.Graph()
+        G.graph["k"] = k
+        G.graph["min_blue"] = min_blue
+        G.graph["min_red"] = min_red
+        G.graph["opt"] = opt
+
         for i in range(node_count):
             x, y, colour = GraphLoader.parse_row(f.readline())
             G.add_node(i, pos=numpy.array((x, y)), colour=Colour[colour.upper()])
