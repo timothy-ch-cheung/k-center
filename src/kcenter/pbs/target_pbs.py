@@ -76,7 +76,7 @@ class TargetPBS(PBS, AbstractTargetSolver):
         solution = None
         for candidate in generator:
             if candidate is not None:
-                if candidate.cost < best_cost:
+                if candidate.cost < best_cost or (candidate.cost <= best_cost and solution is None):
                     solution = candidate
                     best_cost = candidate.cost
                     if log is True:

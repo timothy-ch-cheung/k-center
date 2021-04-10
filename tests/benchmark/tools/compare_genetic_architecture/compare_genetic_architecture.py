@@ -1,3 +1,4 @@
+import math
 import os
 import time
 from pathlib import Path
@@ -6,15 +7,19 @@ from kcenter.colourful_pbs.alternative_architecture.roulette_colourful_pbs impor
 from kcenter.colourful_pbs.alternative_architecture.tournament_colourful_pbs import TournamentColourfulPBS
 from kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from kcenter.constant.colour import Colour
+from kcenter.verify.verify import verify_solution
 from server.graph_loader import GraphLoader
-from tests.benchmark.tools.benchmark.benchmark_orlib import calc_timeout, get_latest_log, get_last_valid_result
-from util.logger import LogEntry
+from tests.benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
 
 algorithms = {
     "target_pbs_original": TargetColourfulPBS,
     "target_pbs_roulette": RouletteColourfulPBS,
     "target_pbs_tournament": TournamentColourfulPBS
 }
+
+
+def calc_timeout(n, k):
+    return math.ceil(0.15 * n + 0.5 * k)
 
 
 def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
@@ -25,7 +30,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
     min_red = graph.graph["min_red"]
     optimal_cost = graph.graph["opt"]
     constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
-    solver = algorithms[algorithm](graph, k, {Colour.BLUE: 0, Colour.RED: 0})
+    solver = algorithms[algorithm](graph, k, constraints, name=algorithm)
     timeout = calc_timeout(n, k)
 
     results = []
@@ -36,6 +41,8 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
         results.append(entry)
         if os.path.isfile(log):
             os.remove(log)
+
+        verify_solution(graph, constraints, k, radius, set(clusters.keys()))
 
     with open(f"{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
@@ -52,9 +59,8 @@ def run_suite():
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
-    problem_list = problem_list[0:1]
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results.txt")
+        my_file = Path(f"{ALGORITHM}/{problem}_results_2.txt")
         if my_file.is_file():
             continue
 

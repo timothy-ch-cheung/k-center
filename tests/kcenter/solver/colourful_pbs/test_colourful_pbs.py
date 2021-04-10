@@ -94,7 +94,6 @@ def test_colourful_pbs_find_pair_large_almost_solved(seed_random):
     assert individual.cost == pytest.approx(16.62087, FLOAT_ERROR_MARGIN)
 
 
-
 def test_pbs_colourful_basic_graph_outlier(seed_random):
     constraints = {Colour.BLUE: 2, Colour.RED: 2}
     k = 2
@@ -106,3 +105,27 @@ def test_pbs_colourful_basic_graph_outlier(seed_random):
     assert clusters == {1: {0, 1}, 4: {3, 4}}
     assert outliers == {2}
     assert verify_solution(graph, constraints, k, radius, set(clusters.keys())) is True
+
+
+def test_local_search_large_instance(seed_random):
+    graph = GraphLoader.get_graph(f"TRAIN_COLOURFUL/train_col_n300_k40")
+    k = graph.graph["k"]
+    min_blue = graph.graph["min_blue"]
+    min_red = graph.graph["min_red"]
+    constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
+
+    instance = ColourfulPBS(graph, k, constraints)
+
+    centers = {4, 136, 142, 271, 274, 25, 26, 292, 40, 168, 42, 44, 176, 49, 178, 52, 54, 57, 58, 187, 188, 62, 66, 195,
+               198, 77, 208, 83, 84, 90, 247, 93, 223, 227, 230, 105, 106, 109, 119, 120}
+    candidate = Individual(centers=centers)
+    candidate.init_nearest_centers(instance.points, instance.weights)
+    candidate.cost = instance.find_cost(candidate)
+
+    assert candidate.cost == pytest.approx(1003.9398, FLOAT_ERROR_MARGIN)
+
+    candidate = instance.local_search(candidate, generation=2)
+    assert candidate.cost == pytest.approx(1003.9398, FLOAT_ERROR_MARGIN)
+    assert candidate.centers == {4, 25, 26, 40, 42, 44, 49, 52, 57, 58, 62, 66, 77, 83, 84, 90, 93, 105, 109, 119, 120,
+                                 136, 142, 154, 168, 176, 178, 187, 195, 198, 201, 208, 223, 227, 230, 247, 271, 274,
+                                 289, 292}

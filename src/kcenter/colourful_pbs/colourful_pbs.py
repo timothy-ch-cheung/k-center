@@ -1,5 +1,6 @@
+import math
 import random
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 
 import networkx as nx
 
@@ -131,7 +132,7 @@ class ColourfulPBS(PBS):
                 nearest = nearest_centers.nearest
 
                 min_dist = min2(self.weights[(point, i)], second_nearest.cost)
-                if min_dist > individual.cost:
+                if min_dist > individual.cost and nearest.cost <= individual.cost:
                     M[nearest.point] += 1
 
             for center in individual.centers:
@@ -146,6 +147,24 @@ class ColourfulPBS(PBS):
         return random.choice(tuple(L))
 
     def local_search(self, individual: Individual, generation: int) -> Individual:
-        optimised_individual = super().local_search(individual, generation)
-        optimised_individual.cost = self.find_cost(optimised_individual)
+        self.initilise_local_search(individual)
+        termination_iterations_cost = math.floor(0.1 * (generation + 1) * self.graph.number_of_nodes())
+        termination_iterations_count = 2 * self.graph.number_of_nodes()
+        iteration = 0
+        stale_iterations = 0
+        optimised_individual = individual.copy()
+        swapped = set()
+        while stale_iterations < termination_iterations_cost and iteration < termination_iterations_count:
+            prev_cost = optimised_individual.cost
+            furthest_point = self.get_furthest_point(optimised_individual)
+            point_to_remove, point_to_add = self.find_pair(furthest_point, optimised_individual)
+            if (point_to_remove, point_to_add) not in swapped:
+                self.remove_center(point_to_remove, optimised_individual)
+                self.add_center(point_to_add, optimised_individual)
+                swapped.add((point_to_remove, point_to_add))
+
+            iteration += 1
+            optimised_individual.cost = self.find_cost(optimised_individual)
+            if optimised_individual.cost >= prev_cost:
+                stale_iterations += 1
         return optimised_individual
