@@ -30,7 +30,7 @@ def cluster(graph: nx.Graph, centers: Set[int], radius: float) -> Dict[int, Set[
                 min_dist = weight
                 nearest_center = center
 
-        if min_dist < radius or math.isclose(min_dist, radius):
+        if min_dist <= radius or math.isclose(min_dist, radius):
             clusters[nearest_center].add(node)
     return clusters
 

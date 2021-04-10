@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 from kcenter.constant.colour import Colour
+from kcenter.verify.verify import verify_solution
 from server.gow_graph_loader import GowGraphLoader
 from server.routes import k_center_algorithms
 from util.logger import LogEntry, log_filename
@@ -43,7 +44,8 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
     k = graph.graph["k"]
     min_blue = graph.graph["min_blue"]
     min_red = graph.graph["min_red"]
-    solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: min_blue, Colour.RED: min_red})
+    constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
+    solver = k_center_algorithms[algorithm](graph, k, constraints)
     timeout = calc_timeout(n, k)
 
     results = []
@@ -52,14 +54,16 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
             clusters, outliers, radius = solver.target_solve(timeout=timeout, log=True)
             log = get_latest_log(algorithm, n, k)
             entry = get_last_valid_result(log, timeout)
-            results.append(entry)
             if os.path.isfile(log):
                 os.remove(log)
         else:
             start_time = time.time()
             clusters, outliers, radius = solver.solve()
             end_time = time.time()
-            results.append(LogEntry(cost=radius, time=end_time - start_time))
+            entry = LogEntry(cost=radius, time=end_time - start_time)
+
+        assert verify_solution(graph, constraints, k, radius, set(clusters.keys()))
+        results.append(entry)
 
     with open(f"{algorithm}/{problem_name}_results_1.txt", "w") as f:
         for result in results:
@@ -70,12 +74,12 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
 
 def run_suite():
     TRIALS = 1
-    ALGORITHM = "colourful_bandyapadhyay_pseudo"
+    ALGORITHM = "colourful_bandyapadhyay"
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results.txt")
+        my_file = Path(f"{ALGORITHM}/{problem}_results_1.txt")
         if my_file.is_file():
             continue
 
