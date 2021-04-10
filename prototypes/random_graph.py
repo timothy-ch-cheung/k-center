@@ -142,11 +142,13 @@ class GraphGenerator:
 
 if __name__ == "__main__":
     gen = GraphGenerator(min_x=100, min_y=100, max_x=30000, max_y=30000)
-    b = 50
-    r = 50
-    k = 5
-    opt = 15.5
-    graph = gen.generate(b, r, k, opt, 200, center_seperation=3, outlier_seperation=1)
+    b = 170
+    r = 170
+    outliers = 60
+    n = b + r + outliers
+    k = 20
+    opt = 33.5
+    graph = gen.generate(b, r, k, opt, num_outliers=outliers, center_seperation=3, outlier_seperation=1)
     print(graph)
 
-    GraphLoader.save_json(graph, "large")
+    GraphLoader.save_json(graph, f"col_n{n}_k{k}")
