@@ -73,7 +73,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
 
 
 def run_suite():
-    TRIALS = 1
+    TRIALS = 50
     ALGORITHM = "colourful_bandyapadhyay"
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
