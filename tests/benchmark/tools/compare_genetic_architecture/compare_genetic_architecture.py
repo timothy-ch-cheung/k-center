@@ -51,11 +51,10 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
         os.fsync(f)
 
 
-def run_suite():
+def run_suite(ALGORITHM):
     PROBLEM_SET = "TRAIN_COLOURFUL"
     problem_list = GraphLoader.get_problem_list(PROBLEM_SET)
-    TRIALS = 1
-    ALGORITHM = "target_pbs_original"
+    TRIALS = 50
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
@@ -71,4 +70,5 @@ def run_suite():
 
 
 if __name__ == "__main__":
-    run_suite()
+    for alg in algorithms.keys():
+        run_suite(alg)
