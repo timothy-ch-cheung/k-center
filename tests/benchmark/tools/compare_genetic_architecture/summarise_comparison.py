@@ -1,6 +1,7 @@
 import numpy as np
 
 from server.graph_loader import GraphLoader
+from tests.benchmark.tools.compare_genetic_architecture.compare_genetic_architecture import algorithms
 
 problems = GraphLoader.get_problem_list("TRAIN_COLOURFUL")
 
@@ -23,8 +24,9 @@ def summarise(algorithm: str):
     with open(f"{algorithm}_summary.txt", "w") as f:
         f.write("PROBLEM\tMIN\tMEAN\tSTD\n")
         for problem in problems:
-            minimum, mean, std = sum(algorithm, problem)
+            minimum, mean, std = summarise_file(algorithm, problem)
             f.write(f"{problem} {minimum} {mean} {std}\n")
 
 if __name__ == "__main__":
-    summarise("")
+    for alg in algorithms:
+        summarise(alg)

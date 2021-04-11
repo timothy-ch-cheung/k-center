@@ -46,7 +46,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
 
     with open(f"{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
-            f.write(f"{result.cost}, {result.time}\n")
+            f.write(f"{result.cost} {result.time}\n")
         f.flush()
         os.fsync(f)
 
