@@ -108,7 +108,7 @@ def test_inspect_invalid(basic_graph):
     assert response.get_json() == {"message": "4567 is not an active problem instance"}
 
 
-def test_inspect_terminate_generator(basic_graph_pbs):
+def test_inspect_terminate_generator(basic_graph_pbs, seed_random):
     test_client.post("/api/v1/step/start", json=basic_graph_pbs)
 
     test_client.post("/api/v1/step/next", json={"id": "1234"})
