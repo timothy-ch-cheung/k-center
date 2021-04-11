@@ -24,7 +24,7 @@ class TournamentColourfulPBS(AbstractGeneticColourfulPBS):
         fitness = [x.cost for x in self.population]
         population_pool = list(self.population)
         for i in range(self.MATING_POOL_SIZE):
-            pos = random.sample(set([x for x in range(len(population_pool))]), 2)
+            pos = random.sample([x for x in range(len(population_pool))], 2)
             contestant_1, contestant_2 = population_pool[pos[0]], population_pool[pos[1]]
             if contestant_1.cost < contestant_2.cost:
                 mating_pool.append(contestant_1)
