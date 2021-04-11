@@ -36,7 +36,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -50,7 +50,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -64,7 +64,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "The best individual in this generation is 1 with a cost of 3.785",
                        SolverState.ACTIVE_MAIN))
@@ -78,7 +78,7 @@ def test_stepped_pbs(seed_random):
                            Solution(clusters={1: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
                            Solution(clusters={1: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set()),
-                           Solution(clusters={2: {0, 1, 2}, 4: {3, 4}}, cost=4.2579, outliers=set())
+                           Solution(clusters={2: {0, 1, 2}, 3: {3, 4}}, cost=4.2579, outliers=set())
                        ],
                        "3 generations were completed. The fittest individual was 1 with a cost of 3.785",
                        SolverState.INACTIVE))

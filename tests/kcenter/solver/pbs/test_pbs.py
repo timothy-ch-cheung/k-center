@@ -34,7 +34,7 @@ def test_pbs_basic_graph(seed_random):
     instance = PBS(graph, K, constraints)
     clusters, outliers, radius = instance.solve()
 
-    assert clusters == {1: {0, 1, 2}, 3: {3, 4}}
+    assert clusters == {1: {0, 1, 2}, 4: {3, 4}}
     assert outliers == set()
     assert radius == pytest.approx(0.728, FLOAT_ERROR)
     assert verify_solution(graph, constraints, K, radius, set(clusters.keys())) is True

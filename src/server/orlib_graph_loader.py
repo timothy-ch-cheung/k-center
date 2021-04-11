@@ -71,7 +71,7 @@ class ORLIBGraphLoader:
     def get_problem_list():
         problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/ORLIB/pmed*.txt")
         problem_names: List[str] = []
-        reg = re.compile("(?<=ORLIB\\\\).*(?=.txt)")
+        reg = re.compile(f"(?<=ORLIB{os.path.sep}).*(?=.txt)")
         for path in problems:
             result = reg.search(path)
             name = result.group(0)
