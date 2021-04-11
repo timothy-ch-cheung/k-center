@@ -69,8 +69,10 @@ class GowGraphLoader:
     @staticmethod
     def get_problem_list():
         problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/GOWALLA/gow*.txt")
+        folder_name = f"GOWALLA{os.path.sep}"
+        problems = [x[x.index(folder_name) + len(folder_name):] for x in problems]
         problem_names: List[str] = []
-        reg = re.compile(f"(?<=GOWALLA{os.path.sep}).*(?=.txt)")
+        reg = re.compile(f".*(?=.txt)")
         for path in problems:
             result = reg.search(path)
             name = result.group(0)
