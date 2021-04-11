@@ -7,7 +7,7 @@ y <- matrix(c( 5,  4,  1,
                5,  6,  7,
               10,  9,  1,
               19, 18, 1,
-              10,  8,  6),
+              10,  9,  6),
             nrow = 7, byrow = TRUE,
             dimnames =
             list(Problem = c("pmed01","pmed02","pmed03","pmed04","pmed05","pmed06","pmed07"),
