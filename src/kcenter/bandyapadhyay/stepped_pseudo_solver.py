@@ -128,7 +128,7 @@ class SteppedConstantPseudoColourful(ConstantPseudoColourful, AbstractGenerator)
 
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
-        centers = ConstantPseudoColourful.choose_centers(solution)
+        centers = ConstantPseudoColourful.choose_centers(solution, self.k)
 
         unused_centers = set(clusters.keys()).difference(centers)
 

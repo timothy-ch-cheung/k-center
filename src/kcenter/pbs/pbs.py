@@ -383,8 +383,8 @@ class PBS(AbstractSolver):
         """
         q = random.randint(self.k // 2, self.k)
         other_points = self.points.difference(individual.centers)
-        retained_centers = random.sample(individual.centers, q)
-        new_centers = random.sample(other_points, self.k - q)
+        retained_centers = random.sample(list(individual.centers), q)
+        new_centers = random.sample(list(other_points), self.k - q)
         child_solution = Individual(centers=set(retained_centers + new_centers))
         self.init_individual(child_solution)
         return child_solution
@@ -417,7 +417,7 @@ class PBS(AbstractSolver):
         :param second_parent: An individual from the population
         :return: A single child solution
         """
-        new_centers = set(random.sample(first_parent.centers.union(second_parent.centers), self.k))
+        new_centers = set(random.sample(list(first_parent.centers.union(second_parent.centers)), self.k))
         child_solution = Individual(centers=new_centers)
         self.init_individual(child_solution)
         return child_solution
@@ -445,7 +445,7 @@ class PBS(AbstractSolver):
         def generate_child(pbs: PBS, centers: Set[int]):
             child = Individual(centers=centers)
             if len(child.centers) > pbs.k:
-                child.centers = set(random.sample(child.centers, pbs.k))
+                child.centers = set(random.sample(list(child.centers), pbs.k))
                 pbs.init_individual(child)
             else:
                 pbs.init_individual(child)

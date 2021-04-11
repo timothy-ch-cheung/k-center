@@ -42,5 +42,11 @@ heroku container:push web --app <app_name>
 heroku container:release web --app <app_name>
 ```
 
+## Benchmarking
+To benchmark the algorithms, we provide a command line script
+
+### Analysis
+To perform analysis you must have R language installed.
+
 ## Stats
 [![codecov](https://codecov.io/gh/timothy-ch-cheung/k-center/branch/master/graph/badge.svg?token=n5JVnL4MUa)](https://codecov.io/gh/timothy-ch-cheung/k-center)

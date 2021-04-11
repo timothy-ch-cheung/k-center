@@ -36,3 +36,16 @@ def test_greedy_basic_graph_with_outlier_clustering():
     assert outliers == {2}
     assert verify_solution(graph, {Colour.BLUE: 2, Colour.RED: 2}, k=2, radius=radius,
                            centers=set(clusters.keys())) is True
+
+
+radius_checker_data = [
+({0: 1.0, 1: 0, 2: 0, 3: 1.0, 4: 1.0, 5: 1.0}, {0, 3, 4, 5}),
+    ({0: 1.0, 1: 0, 2: 0, 3: 1e-14, 4: 1e-13, 5: 1.0, 6: 1.0}, {0, 3, 4, 5, 6}),
+    ({0: 1.0, 1: 0, 2: 0, 3: 1e-14, 4: 1e-13, 5: 1.0, 6: 1.0, 7: 1.0}, {0, 7, 4, 5, 6})
+]
+
+
+@pytest.mark.parametrize("lp_solution, expected", radius_checker_data)
+def test_choose_centers_k4(lp_solution, expected):
+    k = 4
+    assert set(ConstantPseudoColourful.choose_centers(lp_solution, k)) == expected

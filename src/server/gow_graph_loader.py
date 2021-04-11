@@ -1,5 +1,7 @@
+import glob
 import os
-from typing import Tuple, Dict
+import re
+from typing import Tuple, Dict, List
 
 import networkx as nx
 from haversine import haversine
@@ -44,6 +46,7 @@ class GowGraphLoader:
         G = nx.Graph()
         with open(f"{os.path.dirname(__file__)}/dataset/GOWALLA/{graph_name}.txt", "r") as f:
             num_vertices, num_blue, num_red, k, mean_consumption, min_blue, min_red = GowGraphLoader.parse_header(f.readline())
+            G.graph["n"] = num_vertices
             G.graph["k"] = k
             G.graph["min_blue"] = min_blue
             G.graph["min_red"] = min_red
@@ -62,3 +65,17 @@ class GowGraphLoader:
                 G.add_edge(j, i, key=str(j) + str(i), weight=distance)
 
         return G
+
+    @staticmethod
+    def get_problem_list():
+        problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/GOWALLA/gow*.txt")
+        folder_name = f"GOWALLA{os.path.sep}"
+        problems = [x[x.index(folder_name) + len(folder_name):] for x in problems]
+        problem_names: List[str] = []
+        reg = re.compile(f".*(?=.txt)")
+        for path in problems:
+            result = reg.search(path)
+            name = result.group(0)
+            problem_names.append(name)
+
+        return problem_names
