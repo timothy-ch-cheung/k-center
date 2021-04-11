@@ -19,12 +19,18 @@ def summarise_file(algorithm: str, problem: str):
     std = np.std(costs)
     return minimum, mean, std
 
+def format_float(num: float):
+    return "{:.4f}".format(num)
+
 
 def summarise(algorithm: str):
     with open(f"{algorithm}_summary.txt", "w") as f:
         f.write("PROBLEM\tMIN\tMEAN\tSTD\n")
         for problem in problems:
             minimum, mean, std = summarise_file(algorithm, problem)
+            minimum = format_float(minimum)
+            mean = format_float(mean)
+            std = format_float(std)
             f.write(f"{problem} {minimum} {mean} {std}\n")
 
 if __name__ == "__main__":
