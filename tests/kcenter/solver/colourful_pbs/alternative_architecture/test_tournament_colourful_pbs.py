@@ -17,7 +17,7 @@ def instance():
     return instance
 
 
-def test_tournament_selection(seed_random, instance):
+def test_tournament_selection(instance, seed_random):
     mating_pool = instance.selection()
     assert len(mating_pool) == 4
     assert mating_pool == [Individual({3, 2}), Individual({0, 1}), Individual({1, 2}), Individual({0, 1})]

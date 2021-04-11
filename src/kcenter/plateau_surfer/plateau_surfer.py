@@ -5,6 +5,7 @@ from typing import Dict, Tuple, Set, List, Optional
 
 import networkx as nx
 
+from src.kcenter.solver.abstract_target_solver import AbstractTargetSolver
 from src.kcenter.brute_force.brute_force_k_center import BruteForceKCenter
 from src.kcenter.constant.colour import Colour
 from src.kcenter.solver.abstract_solver import AbstractSolver
@@ -12,8 +13,8 @@ from src.kcenter.verify.verify import cluster
 from src.util.logger import Logger
 
 
-class PlateauSurfer(BruteForceKCenter, AbstractSolver):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.25,
+class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.5,
                  beta: float = 0.25):
         super().__init__(graph, k, constraints)
         self.weights = {}
@@ -107,7 +108,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
             P.add(random.choice(RCL))
         return P
 
-    def plateau_surf_local_search(self, P: Set[int]):
+    def plateau_surf_local_search(self, P: Set[int], time_left: Optional[float] = None):
+        start_time = time.time()
         nearest_centers, nearest_costs = self.calc_nearest_centers(P)
 
         while True:
@@ -120,11 +122,11 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                 P = self.remove_center(nearest_centers, nearest_costs, P, center)
                 for point in self.points.difference(P).difference({center}):
                     P = self.add_center(nearest_centers, nearest_costs, P, point)
-                    if new_cost := self.find_cost(nearest_costs) < best_new_sol_value:
+                    if (new_cost := self.find_cost(nearest_costs)) < best_new_sol_value:
                         best_new_sol_value = new_cost
                         best_flip = point
                     elif best_flip is None and math.isclose(new_cost, best_new_sol_value) and (
-                            cv := self.max_delta(nearest_centers, new_cost)) < best_cv:
+                            cv := self.max_delta(nearest_costs, new_cost)) < best_cv:
                         # likely mistake in algorithm in paper for not ensuring new_cost=best_new_sol_value
                         best_cv = cv
                         best_cv_flip = point
@@ -139,6 +141,10 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                     modified = True
                 else:
                     P = self.add_center(nearest_centers, nearest_costs, P, center)
+
+                if time_left is not None and time.time() - start_time > time_left:
+                    return P
+
             if not modified:
                 break
 
@@ -167,7 +173,12 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
 
         while True:
             initial_solution = self.randomized_build()
-            solution = self.plateau_surf_local_search(initial_solution)
+            if timeout is not None:
+                time_left = timeout - time.time() - start_time
+                solution = self.plateau_surf_local_search(initial_solution, time_left)
+            else:
+                solution = self.plateau_surf_local_search(initial_solution)
+
             cost = self.find_candidate_cost(solution)
 
             if cost < best_cost:
@@ -176,7 +187,8 @@ class PlateauSurfer(BruteForceKCenter, AbstractSolver):
                 if log is True:
                     logger.append(best_cost)
 
-            if math.isclose(cost, target_cost) or cost < target_cost or time.time() - start_time > timeout:
+            if math.isclose(cost, target_cost) or cost < target_cost or (
+                    timeout is not None and time.time() - start_time > timeout):
                 break
 
         if log is True:

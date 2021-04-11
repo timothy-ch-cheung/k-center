@@ -1,5 +1,5 @@
 import math
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 
 import matplotlib.patheffects as PathEffects
 import matplotlib.pyplot as plt
@@ -127,10 +127,8 @@ def plot_quadrant_stats(results, alphas, betas):
     plt.show()
 
 
-def plot(summary: Dict[Tuple[str, str], float]):
+def plot(summary: Dict[Tuple[str, str], float], alphas: List[float], betas: List[float]):
     results = []
-    alphas = sorted(list(set([ab_pair[0] for ab_pair in summary.keys()])))
-    betas = sorted(list(set([ab_pair[1] for ab_pair in summary.keys()])))
 
     for alpha in alphas:
         row = []
@@ -143,6 +141,55 @@ def plot(summary: Dict[Tuple[str, str], float]):
     plot_quadrant_stats(results, alphas, betas)
 
 
+def plot_alpha(summary: Dict[Tuple[str, str], float], alphas: List[float], betas: List[float]):
+    x = []
+    y = []
+
+    trials = math.floor(len(summary.keys())/len(alphas))
+    for alpha in alphas:
+        x += [float(alpha)] * trials
+
+    for alpha in alphas:
+        for beta in betas:
+            y.append(summary[(alpha, beta)])
+    m, b = np.polyfit(x, y, 1)
+
+    x = np.array(x)
+    y = np.array(y)
+
+    plt.rcParams.update({'font.size': 10})
+    plt.plot(x, y, 'o', color='black')
+    plt.plot(x, m * x + b)
+    plt.show()
+
+
+def plot_beta(summary: Dict[Tuple[str, str], float], alphas: List[float], betas: List[float]):
+    x = []
+    y = []
+
+    trials = math.floor(len(summary.keys()) / len(alphas))
+    for beta in betas:
+        x += [float(beta)] * trials
+
+    for beta in betas:
+        for alpha in alphas:
+            y.append(summary[(alpha, beta)])
+
+    m, b = np.polyfit(x, y, 1)
+
+    x = np.array(x)
+    y = np.array(y)
+
+    plt.rcParams.update({'font.size': 10})
+    plt.plot(x, y, 'o', color='black')
+    plt.plot(x, m * x + b)
+    plt.show()
+
+
 if __name__ == "__main__":
     summary = summarise()
-    plot(summary)
+    alphas = sorted(list(set([ab_pair[0] for ab_pair in summary.keys()])))
+    betas = sorted(list(set([ab_pair[1] for ab_pair in summary.keys()])))
+    plot(summary, alphas, betas)
+    plot_alpha(summary, alphas, betas)
+    plot_beta(summary, alphas, betas)

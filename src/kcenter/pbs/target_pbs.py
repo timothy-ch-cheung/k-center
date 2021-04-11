@@ -14,7 +14,7 @@ from src.util.logger import Logger
 class TargetPBS(PBS, AbstractTargetSolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: Optional[str] = None):
         if name is None:
-            super().__init__(graph, k, constraints)
+            super().__init__(graph, k, constraints, "target_pbs")
         else:
             super().__init__(graph, k, constraints, name=name)
 

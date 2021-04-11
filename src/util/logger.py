@@ -12,6 +12,9 @@ def timestamp():
     time_elapsed_today = str(int(time.time()) % 86400)
     return today + "_" + time_elapsed_today
 
+def log_filename(name: str, n: int, k:int):
+    return f"{name}_n{n}_k{k}"
+
 
 class Logger:
     def __init__(self, name: str, n: int, k: int, start_time: Optional[float] = None):
@@ -26,6 +29,6 @@ class Logger:
         self.logs.append(LogEntry(time=current_time - self.start_time, cost=cost))
 
     def dump(self):
-        with open(f"{self.name}_n{self.n}_k{self.k}_{timestamp()}.txt", "w") as f:
+        with open(f"{log_filename(self.name, self.n, self.k)}_{timestamp()}.txt", "w") as f:
             str_logs = [f"{entry.cost} {entry.time}\n" for entry in self.logs]
             f.writelines(str_logs)

@@ -42,9 +42,10 @@ class SteppedGreedy(Greedy, AbstractGenerator):
         super().__init__(graph, k, constraints)
 
     def generator(self) -> AbstractGenerator.YIELD_TYPE:
-        clusters = {Greedy.INITIAL_HEAD: set(self.graph.nodes)}
+        INITIAL_HEAD = self.get_initial()
+        clusters = {INITIAL_HEAD: set(self.graph.nodes)}
         max_weight = max(list(nx.get_edge_attributes(self.graph, "weight").values()))
-        label = GreedySteps.initial_center(graph=self.graph, center=Greedy.INITIAL_HEAD)
+        label = GreedySteps.initial_center(graph=self.graph, center=INITIAL_HEAD)
         yield [Solution(clusters=clusters, cost=max_weight)], label, SolverState.ACTIVE_MAIN
 
         for i in range(1, self.k):

@@ -1,5 +1,7 @@
+import glob
 import os
-from typing import Tuple, Dict
+import re
+from typing import Tuple, Dict, List
 
 import networkx as nx
 
@@ -37,6 +39,7 @@ class ORLIBGraphLoader:
         with open(f"{os.path.dirname(__file__)}/dataset/ORLIB/{graph_name}.txt", "r") as f:
             num_vertices, num_edges, k = ORLIBGraphLoader.parse_header(f.readline())
             G.graph["k"] = k
+            G.graph["n"] = num_vertices
 
             for vertex in range(1, num_vertices + 1):
                 G.add_node(vertex)
@@ -63,3 +66,17 @@ class ORLIBGraphLoader:
                 optimal = float(line[1])
                 opt[problem_instance] = optimal
         return opt
+
+    @staticmethod
+    def get_problem_list():
+        problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/ORLIB/pmed*.txt")
+        folder_name = f"ORLIB{os.path.sep}"
+        problems = [x[x.index(folder_name)+len(folder_name):] for x in problems]
+        problem_names: List[str] = []
+        reg = re.compile(f".*(?=.txt)")
+        for path in problems:
+            result = reg.search(path)
+            name = result.group(0)
+            problem_names.append(name)
+
+        return problem_names
