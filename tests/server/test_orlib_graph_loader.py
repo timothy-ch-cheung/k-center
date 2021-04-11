@@ -1,3 +1,5 @@
+import pytest
+
 from src.server.orlib_graph_loader import ORLIBGraphLoader
 
 
