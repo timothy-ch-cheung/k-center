@@ -1,0 +1,1 @@
+[val for pair in zip(x,y,z) for val in pair]
