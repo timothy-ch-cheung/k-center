@@ -9,6 +9,15 @@ from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 from tests.server.test_app_solve import FLOAT_ERROR_MARGIN
 
 
+@pytest.fixture
+def large_instance():
+    constraints = {Colour.BLUE: 50, Colour.RED: 50}
+    k = 5
+    graph = GraphLoader.get_graph("large")
+    instance = ColourfulPBS(graph, k, constraints)
+    return instance
+
+
 def test_colourful_pbs_find_pair(seed_random):
     constraints = {Colour.BLUE: 2, Colour.RED: 2}
     k = 2
@@ -52,45 +61,35 @@ def test_colourful_pbs_find_pair_medium(seed_random):
     assert individual.cost == pytest.approx(5.5, FLOAT_ERROR_MARGIN)
 
 
-def test_colourful_pbs_find_pair_large(seed_random):
-    constraints = {Colour.BLUE: 50, Colour.RED: 50}
-    k = 5
-    graph = GraphLoader.get_graph("large")
-    instance = ColourfulPBS(graph, k, constraints)
-
+def test_colourful_pbs_find_pair_large(seed_random, large_instance):
     individual = Individual({1, 2, 3, 107, 5})
-    instance.init_individual(individual)
+    large_instance.init_individual(individual)
     assert individual.cost == pytest.approx(26.5988, FLOAT_ERROR_MARGIN)
 
-    furthest_point = instance.get_furthest_point(individual)
+    furthest_point = large_instance.get_furthest_point(individual)
     assert furthest_point == 45
 
-    point_to_remove, point_to_add = instance.find_pair(45, individual)
-    instance.remove_center(point_to_remove, individual)
-    instance.add_center(point_to_add, individual)
-    instance.find_cost(individual)
+    point_to_remove, point_to_add = large_instance.find_pair(45, individual)
+    large_instance.remove_center(point_to_remove, individual)
+    large_instance.add_center(point_to_add, individual)
+    large_instance.find_cost(individual)
 
     assert individual.cost == pytest.approx(24.3196, FLOAT_ERROR_MARGIN)
 
 
-def test_colourful_pbs_find_pair_large_almost_solved(seed_random):
-    constraints = {Colour.BLUE: 50, Colour.RED: 50}
-    k = 5
-    graph = GraphLoader.get_graph("large")
-    instance = ColourfulPBS(graph, k, constraints)
-
+def test_colourful_pbs_find_pair_large_almost_solved(seed_random, large_instance):
     individual = Individual({0, 1, 2, 3, 90})
-    instance.init_individual(individual)
+    large_instance.init_individual(individual)
     assert individual.cost == pytest.approx(18.2266, FLOAT_ERROR_MARGIN)
 
-    furthest_point = instance.get_furthest_point(individual)
+    furthest_point = large_instance.get_furthest_point(individual)
     assert furthest_point == 107
 
-    point_to_remove, point_to_add = instance.find_pair(107, individual)
-    instance.remove_center(point_to_remove, individual)
-    instance.add_center(point_to_add, individual)
-    instance.find_cost(individual)
-    # TODO: this should return a swap for 90 with 4
+    point_to_remove, point_to_add = large_instance.find_pair(107, individual)
+    large_instance.remove_center(point_to_remove, individual)
+    large_instance.add_center(point_to_add, individual)
+    large_instance.find_cost(individual)
+
     assert individual.cost == pytest.approx(16.62087, FLOAT_ERROR_MARGIN)
 
 
@@ -129,3 +128,16 @@ def test_local_search_large_instance(seed_random):
     assert candidate.centers == {4, 25, 26, 40, 42, 44, 49, 52, 57, 58, 62, 66, 77, 83, 84, 90, 93, 105, 109, 119, 120,
                                  136, 142, 154, 168, 176, 178, 187, 195, 198, 201, 208, 223, 227, 230, 247, 271, 274,
                                  289, 292}
+
+
+def test_generate_seed_candidate(seed_random, mocker, large_instance):
+    def mock_solve(self):
+        return {1: {1, 2}, 3: {3, 5}}, set(), 2.5
+
+    mocker.patch(
+        'src.kcenter.bandyapadhyay.solver.ConstantColourful.solve',
+        mock_solve
+    )
+
+    candidate = large_instance.generate_seed_candidate()
+    assert candidate == Individual({1, 99, 3, 110, 51})
