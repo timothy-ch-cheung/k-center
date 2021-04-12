@@ -19,7 +19,12 @@ class ColourfulPBS(PBS):
     def generate_seed_candidate(self):
         inital_solver = ConstantColourful(self.graph, self.k, self.constraints)
         clusters, outliers, radius = inital_solver.solve()
-        seed_candidate = Individual(centers=set(clusters.keys()))
+        centers = set(clusters.keys())
+
+        if len(centers) < self.k:
+            centers = centers.union(random.sample(self.points.difference(centers), self.k - len(centers)))
+
+        seed_candidate = Individual(centers=centers)
         seed_candidate.init_nearest_centers(self.points, self.weights)
         seed_candidate.cost = self.find_cost(seed_candidate)
         return seed_candidate
