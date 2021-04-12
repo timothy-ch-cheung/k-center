@@ -1,0 +1,2 @@
+p-value=0.02036577147241765
+pairwise p-values={('pbs_original', 'pbs_roulette'): 0.02248405721681983, ('pbs_original', 'pbs_tournament'): 0.07944847248288439, ('pbs_roulette', 'pbs_tournament'): 0.43731974959726305}

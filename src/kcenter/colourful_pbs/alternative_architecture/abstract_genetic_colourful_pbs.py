@@ -18,8 +18,9 @@ def calculate_offspring_size(population_size):
 
 class AbstractGeneticColourfulPBS(TargetColourfulPBS):
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], mating_pool_size: int = 4):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], mating_pool_size: int = 4,
+                 name: Optional[str] = None):
+        super().__init__(graph, k, constraints, name=name)
         self.MATING_POOL_SIZE = mating_pool_size
 
     @abstractmethod

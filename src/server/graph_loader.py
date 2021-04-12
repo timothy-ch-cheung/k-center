@@ -1,5 +1,8 @@
+import glob
 import os
-from typing import Set, Tuple
+import re
+from pathlib import Path
+from typing import Set, Tuple, List
 
 import networkx as nx
 import numpy
@@ -119,12 +122,19 @@ class GraphLoader:
     def get_graph(graph_name: str) -> nx.Graph:
         """Create a NetworkX representation of the graph
         """
-        if graph_name not in GraphLoader.graphs:
+        graph_file = Path(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt")
+        if not graph_file.is_file():
             return None
         f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
         node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
 
         G = nx.Graph()
+        G.graph["n"] = node_count
+        G.graph["k"] = k
+        G.graph["min_blue"] = min_blue
+        G.graph["min_red"] = min_red
+        G.graph["opt"] = opt
+
         for i in range(node_count):
             x, y, colour = GraphLoader.parse_row(f.readline())
             G.add_node(i, pos=numpy.array((x, y)), colour=Colour[colour.upper()])
@@ -132,3 +142,17 @@ class GraphLoader:
 
         calculate_edges(G)
         return G
+
+    @staticmethod
+    def get_problem_list(dataset_name: str = "TEST_COLOURFUL"):
+        problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/{dataset_name}/*.txt")
+        folder_name = f"{dataset_name}{os.path.sep}"
+        problems = [x[x.index(folder_name) + len(folder_name):] for x in problems]
+        problem_names: List[str] = []
+        reg = re.compile(f".*(?=.txt)")
+        for path in problems:
+            result = reg.search(path)
+            name = result.group(0)
+            problem_names.append(name)
+
+        return problem_names

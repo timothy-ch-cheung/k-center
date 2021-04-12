@@ -150,3 +150,10 @@ def test_get_graph_basic_outlier_graph():
 
     em = nx.algorithms.isomorphism.numerical_edge_match("weight", 1)
     assert nx.is_isomorphic(actual_graph, expected_graph, edge_match=em)
+
+
+def test_get_problem_list():
+    problems = GraphLoader.get_problem_list(dataset_name="TRAIN_COLOURFUL")
+    assert set(problems) == {"train_col_n100_k10", "train_col_n100_k20", "train_col_n100_k5", "train_col_n200_k10",
+                        "train_col_n200_k20", "train_col_n200_k5", "train_col_n300_k20", "train_col_n300_k40",
+                        "train_col_n400_k20", "train_col_n400_k40"}

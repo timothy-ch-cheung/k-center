@@ -2,6 +2,7 @@ import cProfile
 import pstats
 
 from kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
+from kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from kcenter.verify.verify import verify_solution
 from src.kcenter.constant.colour import Colour
 from src.server.graph_loader import GraphLoader

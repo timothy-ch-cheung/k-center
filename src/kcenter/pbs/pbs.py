@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Tuple, Dict, Set, Generator, List
+from typing import Tuple, Dict, Set, Generator, List, Optional
 
 import networkx as nx
 
@@ -512,8 +512,8 @@ class PBS(AbstractSolver):
         self.init_individual(candidate)
         return self.local_search(candidate, 1)
 
-    def generate_population(self) -> List[Individual]:
-        population: List[Individual] = []
+    def generate_population(self, seed_population : Optional[List[Individual]] = None) -> List[Individual]:
+        population: List[Individual] = seed_population or []
         MAX_FAIL_COUNT = 8
         num_fail = 0
         while len(population) < PBS.POPULATION_SIZE:
