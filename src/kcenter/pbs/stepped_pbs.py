@@ -355,7 +355,7 @@ class SteppedPBS(PBS):
         for step in mutation_directed_steps:
             yield step
 
-    def generate_population(self) -> List[Individual]:
+    def generate_population(self, seed_population : Optional[List[Individual]] = None) -> List[Individual]:
         def generate_candidate(self: PBS):
             init_center = random.choice(tuple(self.points))
             candidate = Individual({init_center})

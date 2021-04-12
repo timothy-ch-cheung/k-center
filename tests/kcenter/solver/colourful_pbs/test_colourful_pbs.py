@@ -102,7 +102,7 @@ def test_pbs_colourful_basic_graph_outlier(seed_random):
     clusters, outliers, radius = instance.solve()
 
     assert radius == pytest.approx(0.707, FLOAT_ERROR_MARGIN)
-    assert clusters == {1: {0, 1}, 4: {3, 4}}
+    assert clusters == {0: {0, 1}, 3: {3, 4}}
     assert outliers == {2}
     assert verify_solution(graph, constraints, k, radius, set(clusters.keys())) is True
 

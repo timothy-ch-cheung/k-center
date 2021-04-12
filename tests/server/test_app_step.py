@@ -127,4 +127,6 @@ def test_inspect_terminate_generator(basic_graph_pbs):
     assert response.get_json()["step"] == {
         "active": False,
         "inspect": False,
-        "label": "3 generations were completed. The fittest individual was 0 with a cost of 0.728"}
+        "label": "3 generations were completed. The fittest individual was 0 with a "
+                 "cost of 0.728"
+    }

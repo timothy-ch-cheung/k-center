@@ -122,7 +122,7 @@ class PBS(AbstractSolver):
     'A Memetic Genetic Algorithm for the Vertex p-center Problem (2008)'
     """
     POPULATION_SIZE = 8
-    GENERATIONS = 2
+    GENERATIONS = 3
 
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: str = "pbs"):
         self.name = name

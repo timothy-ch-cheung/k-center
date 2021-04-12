@@ -2,7 +2,7 @@ from typing import Dict, Generator, Optional
 
 import networkx as nx
 
-from kcenter.pbs.pbs import Individual, PBS
+from src.kcenter.pbs.pbs import Individual, PBS
 from src.kcenter.colourful_pbs.colourful_pbs import ColourfulPBS
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.target_pbs import TargetPBS

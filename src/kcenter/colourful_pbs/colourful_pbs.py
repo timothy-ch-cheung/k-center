@@ -4,7 +4,7 @@ from typing import Dict, Tuple, Optional, List
 
 import networkx as nx
 
-from kcenter.bandyapadhyay.solver import ConstantColourful
+from src.kcenter.bandyapadhyay.solver import ConstantColourful
 from src.kcenter.constant.colour import Colour
 from src.kcenter.pbs.pbs import PBS, Individual, min2, Neighbour
 
