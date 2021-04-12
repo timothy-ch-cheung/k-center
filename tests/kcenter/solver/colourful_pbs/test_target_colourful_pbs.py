@@ -1,4 +1,4 @@
-from kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
+from src.kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from tests.kcenter.solver.pbs.test_pbs import K, RELAXED_CONSTRAINTS
 from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
 
