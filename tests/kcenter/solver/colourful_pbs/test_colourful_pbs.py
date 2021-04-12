@@ -126,6 +126,6 @@ def test_local_search_large_instance(seed_random):
 
     candidate = instance.local_search(candidate, generation=2)
     assert candidate.cost == pytest.approx(1003.9398, FLOAT_ERROR_MARGIN)
-    assert candidate.centers == {4, 25, 26, 40, 42, 44, 49, 52, 57, 58, 62, 66, 77, 83, 84, 90, 93, 105, 109, 119, 120,
-                                 136, 142, 154, 168, 176, 178, 187, 195, 198, 201, 208, 223, 227, 230, 247, 271, 274,
-                                 289, 292}
+    assert candidate.centers == {25, 26, 40, 42, 44, 49, 52, 57, 62, 66, 77, 83, 84, 93, 105, 107, 109, 119, 120, 136,
+                                 142, 153, 168, 176, 178, 187, 195, 198, 208, 212, 223, 227, 230, 237, 247, 271, 274,
+                                 286, 289, 292}
