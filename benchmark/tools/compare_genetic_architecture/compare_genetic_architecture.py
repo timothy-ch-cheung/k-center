@@ -3,13 +3,13 @@ import os
 import time
 from pathlib import Path
 
+from benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
 from kcenter.colourful_pbs.alternative_architecture.roulette_colourful_pbs import RouletteColourfulPBS
 from kcenter.colourful_pbs.alternative_architecture.tournament_colourful_pbs import TournamentColourfulPBS
 from kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from kcenter.constant.colour import Colour
 from kcenter.verify.verify import verify_solution
 from server.graph_loader import GraphLoader
-from tests.benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
 
 algorithms = {
     "target_pbs_original": TargetColourfulPBS,
