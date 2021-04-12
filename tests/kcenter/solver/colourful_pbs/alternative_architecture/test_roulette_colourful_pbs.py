@@ -53,7 +53,7 @@ def test_gen_crossover_2_offspring(seed_random, instance_two):
     for child in offspring_gen:
         offspring.append(child)
     assert len(offspring) == 3
-    assert offspring == [Individual({1, 3}), Individual({1, 4}), Individual({0, 4})]
+    assert offspring == [Individual({1, 3}), Individual({0, 3}), Individual({0, 4})]
 
 
 def test_gen_mutation_1_offspring(seed_random, instance_two):
@@ -83,8 +83,8 @@ def test_evolve(seed_random, instance):
     new_population = []
     for i in range(PBS.POPULATION_SIZE):
         new_population.append(next(generator))
-    assert new_population == [Individual({3, 1}), Individual({0, 3}), Individual({1, 3}), Individual({0, 3}),
-                              Individual({3, 1}), Individual({0, 4}), Individual({1, 4}), Individual({0, 3})]
+    assert new_population == [Individual({3, 1}), Individual({0, 3}), Individual({0, 4}), Individual({1, 4}),
+                              Individual({1, 4}), Individual({1, 4}), Individual({0, 4}), Individual({0, 4})]
 
 
 def test_target_solve(seed_random):
