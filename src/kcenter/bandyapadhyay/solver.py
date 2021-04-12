@@ -26,5 +26,5 @@ class ConstantColourful(ConstantPseudoColourful):
         clusters, outliers, radius = solver.solve()
         if len(clusters.keys()) > self.k:
             solver = ConstantPseudoColourful(self.graph, self.k - 1, self.constraints)
-            return solver.solve()
+            clusters, outliers, radius = solver.solve()
         return clusters, outliers, radius

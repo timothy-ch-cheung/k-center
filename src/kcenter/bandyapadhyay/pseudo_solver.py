@@ -26,10 +26,11 @@ class ConstantPseudoColourful(AbstractSolver):
         return sorted(list(nx.get_edge_attributes(graph, "weight").values()))
 
     @staticmethod
-    def choose_centers(solution: Dict[int, float]):
+    def choose_centers(solution: Dict[int, float], k: int):
         """given a solution to the subroutine red_maximiser (LP2), we pick centers depending on the number of fractional
         solutions"""
-        potential_centers = [x for x in solution.keys() if solution[x] != 0]
+        potential_centers = sorted([x for x in solution.keys() if solution[x] != 0], reverse=True,
+                                   key=lambda x: solution[x])[0:k + 1]
         return potential_centers
 
     @staticmethod
@@ -94,7 +95,7 @@ class ConstantPseudoColourful(AbstractSolver):
         red_maximiser = RedMaximiser(self.graph, clusters, self.constraints[Colour.BLUE])
         solution = red_maximiser.solve(self.k)
 
-        centers = ConstantPseudoColourful.choose_centers(solution)
+        centers = ConstantPseudoColourful.choose_centers(solution, self.k)
         unused_centers = set(clusters.keys()).difference(centers)
 
         outliers: Set[int] = set()
