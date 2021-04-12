@@ -96,4 +96,4 @@ def test_target_solve(seed_random):
     clusters, outliers, cost = instance.target_solve(0.708)
     assert cost == pytest.approx(0.7071, FLOAT_ERROR_MARGIN)
     assert outliers == set()
-    assert clusters == {1: {0, 1}, 4: {3, 4}}
+    assert clusters == {0: {0, 1}, 3: {3, 4}}

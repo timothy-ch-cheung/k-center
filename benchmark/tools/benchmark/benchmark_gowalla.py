@@ -1,41 +1,20 @@
-import glob
 import math
 import os
 import time
 from pathlib import Path
 
+from benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
 from kcenter.constant.colour import Colour
 from kcenter.verify.verify import verify_solution
 from server.gow_graph_loader import GowGraphLoader
 from server.routes import k_center_algorithms
-from util.logger import LogEntry, log_filename
+from util.logger import LogEntry
 
 problem_list = GowGraphLoader.get_problem_list()
 
 
 def calc_timeout(n, k):
-    return math.ceil(0.1 * n + 0.5 * k)
-
-
-def get_latest_log(algorithm: str, n: int, k: int):
-    logs = glob.glob(f"{log_filename(algorithm, n, k)}_*")
-    latest_log = max(logs, key=os.path.getctime)
-    return latest_log
-
-
-def get_last_valid_result(log_name: str, timeout: int):
-    last_valid = None
-    with open(log_name, "r") as f:
-        for line in f.readlines():
-            line = line.strip().split(" ")
-            cost = float(line[0])
-            sol_time = float(line[1])
-
-            if sol_time > timeout:
-                break
-
-            last_valid = LogEntry(cost=cost, time=sol_time)
-    return last_valid
+    return math.ceil(0.15 * n + 0.5 * k)
 
 
 def benchmark(problem_name: str, trials: int, algorithm: str):
@@ -45,12 +24,12 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
     min_blue = graph.graph["min_blue"]
     min_red = graph.graph["min_red"]
     constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
-    solver = k_center_algorithms[algorithm](graph, k, constraints)
+    solver = k_center_algorithms[algorithm](graph, k, constraints, name=algorithm)
     timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
-        if algorithm == "grasp" or algorithm == "pbs":
+        if "pbs" in algorithm:
             clusters, outliers, radius = solver.target_solve(timeout=timeout, log=True)
             log = get_latest_log(algorithm, n, k)
             entry = get_last_valid_result(log, timeout)
@@ -73,8 +52,8 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
 
 
 def run_suite():
-    TRIALS = 50
-    ALGORITHM = "colourful_bandyapadhyay"
+    TRIALS = 1
+    ALGORITHM = "target_colourful_pbs"
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 

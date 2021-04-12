@@ -66,7 +66,7 @@ class TargetPBS(PBS, AbstractTargetSolver):
                     yield candidate if self.update_population(candidate) else None
             generation += 1
 
-    def target_solve(self, target_cost: float, timeout: Optional[float] = None, log: bool = False) -> Tuple[
+    def target_solve(self, target_cost: float=None, timeout: Optional[float] = None, log: bool = False) -> Tuple[
         Dict[int, Set[int]], Set[int], float]:
 
         start_time = time.time()
@@ -81,7 +81,7 @@ class TargetPBS(PBS, AbstractTargetSolver):
                     best_cost = candidate.cost
                     if log is True:
                         logger.append(best_cost)
-                if math.isclose(candidate.cost, target_cost) or candidate.cost < target_cost:
+                if target_cost is not None and (math.isclose(candidate.cost, target_cost) or candidate.cost < target_cost):
                     solution = candidate
                     break
             if timeout is not None and time.time() - start_time > timeout:

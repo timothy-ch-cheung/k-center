@@ -3,6 +3,7 @@ import time
 import networkx as nx
 from flask import render_template, request, jsonify, Blueprint
 
+from src.kcenter.colourful_pbs.target_colourful_pbs import TargetColourfulPBS
 from src.kcenter.pbs.target_pbs import TargetPBS
 from src.kcenter.plateau_surfer.plateau_surfer import PlateauSurfer
 from src.kcenter.bandyapadhyay.pseudo_solver import ConstantPseudoColourful
@@ -26,6 +27,7 @@ k_center_algorithms = {
     "pbs": PBS,
     "target_pbs": TargetPBS,
     "colourful_pbs": ColourfulPBS,
+    "target_colourful_pbs": TargetColourfulPBS,
     "brute_force_k_center": BruteForceKCenter,
     "brute_force_colourful_k_center": BruteForceColourfulKCenter,
     "grasp": PlateauSurfer

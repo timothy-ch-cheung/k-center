@@ -9,3 +9,4 @@ Pyomo==5.7.1
 scipy==1.6.2
 matplotlib==3.3.3
 haversine==2.3.0
+pytest-mock==3.5.1
