@@ -9,11 +9,11 @@ from src.kcenter.constant.colour import Colour
 
 
 class TournamentColourfulPBS(AbstractGeneticColourfulPBS):
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], mating_pool_size: Optional[int] = None):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], mating_pool_size: Optional[int] = None, name: Optional[str] = None):
         if mating_pool_size is None:
-            super().__init__(graph, k, constraints)
+            super().__init__(graph, k, constraints, name=name)
         else:
-            super().__init__(graph, k, constraints, mating_pool_size=mating_pool_size)
+            super().__init__(graph, k, constraints, mating_pool_size=mating_pool_size, name=name)
 
     def selection(self):
         """Perform tournament selection
