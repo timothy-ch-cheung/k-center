@@ -453,8 +453,9 @@ class PBS(AbstractSolver):
 
         INTERVAL_START = 0.1
         INTERVAL_END = 0.9
-        first_user = random.choice(tuple(self.points))
-        second_user = random.choice(tuple(self.points))
+        excluded_points = first_parent.centers.union(second_parent.centers)
+        first_user = random.choice(tuple(self.points.difference(excluded_points)))
+        second_user = random.choice(tuple(self.points.difference(excluded_points)))
         q = random.uniform(INTERVAL_START, INTERVAL_END)
         first_child_centers = set()
         second_child_centers = set()
