@@ -61,10 +61,52 @@ def analyse(summaries: Dict[str, Dict[str, float]]) -> Tuple[float, Dict[Tuple[s
     return p_value, pairwise_p_values
 
 
+def generate_latex_table(summaries: Dict[str, Dict[str, float]]):
+    print()
+    DECIMAL_POINTS = 2
+    algs = list(summaries.keys())
+    percentage_above_opt = {alg: [] for alg in algs}
+
+    header = "\\multicolumn{6}{c}{Instance}"
+    for algorithm in algs:
+        header += "& \\quad & \\multicolumn{3}{c}{" + algorithm + "}"
+    print(f"{header}\\")
+
+    for problem in problems:
+        graph = GraphLoader.get_graph(f"TRAIN_COLOURFUL/{problem}")
+        n = graph.graph["n"]
+        k = graph.graph["k"]
+        min_blue = graph.graph["min_blue"]
+        min_red = graph.graph["min_red"]
+        optimal_cost = '{:.2f}'.format(round(graph.graph["opt"], 2))
+
+        row = f"{problem} & {n} & {k} & {min_blue} & {min_red} & {optimal_cost}"
+        for algorithm in algs:
+            minimum = '{:.2f}'.format(round(summaries[algorithm][problem]["min"], DECIMAL_POINTS))
+            mean = '{:.2f}'.format(round(summaries[algorithm][problem]["mean"], DECIMAL_POINTS))
+            std = '{:.2f}'.format(round(summaries[algorithm][problem]["std"], DECIMAL_POINTS))
+            row += f" && {minimum} & {mean} & {std}"
+
+            percentage_above_opt[algorithm].append(summaries[algorithm][problem]["mean"]/float(optimal_cost))
+        print(f"{row}\\\\")
+
+    footer = "\\multicolumn{6}{c}{Average \% cost above opt}"
+    for algorithm in algs:
+        above_opt = percentage_above_opt[algorithm]
+        footer += " && \multicolumn{3}{c}{"
+        footer += f"{'{:.2f}'.format((sum(above_opt)/len(above_opt) -1) * 100)}\%"
+        footer += "}"
+
+    print(f"{footer}\\\\")
+    print()
+
+
 if __name__ == "__main__":
     summaries = dict()
     for alg in algorithms:
         summaries[alg] = summarise(alg)
+
+    # generate_latex_table(summaries)
 
     p_value, pairwise_p_values = analyse(summaries)
     print(f"Quade omnibus test p-value: {p_value}")
