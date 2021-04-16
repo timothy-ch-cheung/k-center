@@ -164,6 +164,8 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
 
     print(f"{sub_underline}\\\\")
 
+    costs = {alg:[] for alg in algs}
+    above_opt = {alg: [] for alg in algs}
     for problem in problem_list[dataset]:
         if dataset == "ORLIB":
             opt = ORLIBGraphLoader.get_opt()[problem]
@@ -183,10 +185,20 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
             mean = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["mean"], DECIMAL_POINTS))
             std = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["std"], DECIMAL_POINTS))
             percentage_above_opt = ((summaries[algorithm][problem]["cost"]["mean"] / opt) - 1) * 100
+
+            above_opt[algorithm].append(percentage_above_opt)
+
             percentage_above_opt = '{:.2f}'.format(round(percentage_above_opt), DECIMAL_POINTS)
             row += f" && {minimum} & {mean} & {std} & {percentage_above_opt}"
 
         print(f"{row}\\\\")
+
+    footer = "\\multicolumn{2}{c}{Average}"
+    for algorithm in algs:
+        mean_above_opt = sum(above_opt[algorithm])/len(above_opt[algorithm])
+        mean_above_opt = '{:.2f}'.format(round(mean_above_opt, DECIMAL_POINTS))
+        footer += f"&&&&& {mean_above_opt}"
+    print(f"{footer}\\\\")
     print()
 
 
