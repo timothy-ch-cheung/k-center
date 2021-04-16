@@ -464,6 +464,8 @@ class PBS(AbstractSolver):
                 continue
             d1 = self.weights[(center, first_user)]
             d2 = self.weights[(center, second_user)]
+            if d2 == 0:
+                d2 += 1e-14
             if d1 / d2 <= q:
                 first_child_centers.add(center)
             else:
