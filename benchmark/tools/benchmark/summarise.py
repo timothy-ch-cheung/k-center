@@ -3,6 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 
+from benchmark.statistic.wilcoxon import wilcoxon_test
 from server.gow_graph_loader import GowGraphLoader
 
 problem_list = {
@@ -57,7 +58,7 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
             minimum = '{:.2f}'.format(round(summaries[algorithm][problem][type]["min"], DECIMAL_POINTS))
             mean = '{:.2f}'.format(round(summaries[algorithm][problem][type]["mean"], DECIMAL_POINTS))
             std = '{:.2f}'.format(round(summaries[algorithm][problem][type]["std"], DECIMAL_POINTS))
-            mean_time = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["mean"], DECIMAL_POINTS))
+            mean_time = '{:.2f}'.format(round(summaries[algorithm][problem]["time"]["mean"], DECIMAL_POINTS))
             row += f" && {minimum} & {mean} & {std} & {mean_time}"
 
         cost_gap = ((summaries[algs[1]][problem]["cost"]["mean"] / summaries[algs[0]][problem]["cost"][
@@ -118,6 +119,16 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str], 
     print()
 
 
+def analyse(summaries: summary_type):
+    x = []
+    y = []
+    algs = list(summaries.keys())
+    for problem in problem_list[dataset]:
+        x.append(summaries[algs[0]][problem]["cost"]["mean"])
+        y.append(summaries[algs[1]][problem]["cost"]["mean"])
+    p_value = wilcoxon_test(x, y)
+    return p_value
+
 def calc_stats(results: List[float]) -> Dict[str, float]:
     minimum = min(results)
     mean = float(np.mean(results))
@@ -154,5 +165,6 @@ if __name__ == "__main__":
     dataset = "GOWALLA"
     summaries = summarise(f"{dataset}")
 
-    generate_latex_table(summaries, dataset, "cost")
+    print(analyse(summaries))
+    # generate_latex_table(summaries, dataset, "cost")
     # generate_latex_table(summaries, dataset, "time")
