@@ -29,6 +29,10 @@ export const HomeIcon = styled(Home)`
 function App() {
     const history = useHistory();
 
+    const handleLearnButtonClick = () => {
+        history.push('/learn')
+    }
+
     const handleSolveButtonClick = () => {
         history.push('/solve')
     }
@@ -41,6 +45,12 @@ function App() {
         <Container>
             <header className="App-header">
                 <Heading>Colorful K-Center Clustering </Heading>
+                <PaddedButton
+                    variant="contained"
+                    size="large"
+                    onClick={handleLearnButtonClick}>
+                    What is the colourful k-center?
+                </PaddedButton>
                 <PaddedButton
                     variant="contained"
                     color="primary"
