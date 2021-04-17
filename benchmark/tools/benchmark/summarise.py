@@ -53,6 +53,8 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
 
     time_gaps = []
     cost_gaps = []
+    costs = {alg:[] for alg in algs}
+    times = {alg:[] for alg in algs}
     for problem in problem_list[dataset]:
         graph = loader[dataset].get_graph(problem)
         n = graph.graph["n"]
@@ -68,6 +70,9 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
             mean_time = '{:.2f}'.format(round(summaries[algorithm][problem]["time"]["mean"], DECIMAL_POINTS))
             row += f" && {minimum} & {mean} & {std} & {mean_time}"
 
+            times[algorithm].append(summaries[algorithm][problem]["time"]["mean"])
+            costs[algorithm].append(summaries[algorithm][problem]["cost"]["mean"])
+
         cost_gap = ((summaries[algs[1]][problem]["cost"]["mean"] / summaries[algs[0]][problem]["cost"][
             "mean"]) - 1) * 100
         cost_gap_rounded = '{:.2f}'.format(round(cost_gap, DECIMAL_POINTS))
@@ -81,7 +86,12 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
 
         print(f"{row}\\\\")
 
-    footer = "\\multicolumn{10}{c}{} & Average && " + f"{np.mean(cost_gaps)} & {np.mean(time_gaps)}"
+    footer = "\\multicolumn{1}{c}{Average}"
+    for algorithm in algs:
+        mean_time = '{:.2f}'.format(round(sum(times[algorithm])/len(times[algorithm]),DECIMAL_POINTS))
+        mean_cost = '{:.2f}'.format(round(sum(costs[algorithm])/len(costs[algorithm]), DECIMAL_POINTS))
+        footer += f" &&& {mean_cost} && {mean_time}"
+    footer += f" && {np.mean(cost_gaps)} & {np.mean(time_gaps)}"
     print(f"{footer}\\\\")
     print()
 
@@ -107,6 +117,9 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str]):
 
     print(f"{sub_underline}\\\\")
 
+    above_opt = {alg: [] for alg in algs}
+    times = {alg: [] for alg in algs}
+    costs = {alg: [] for alg in algs}
     for problem in problem_list[dataset]:
         if dataset == "SYNTHETIC":
             graph = loader[dataset].get_graph(f"SYNTHETIC/{problem}")
@@ -123,6 +136,11 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str]):
             std = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["std"], DECIMAL_POINTS))
             mean_time = '{:.2f}'.format(round(summaries[algorithm][problem]["time"]["mean"], DECIMAL_POINTS))
             percentage_above_opt = ((summaries[algorithm][problem]["cost"]["mean"] / opt) - 1) * 100
+
+            above_opt[algorithm].append(percentage_above_opt)
+            times[algorithm].append(summaries[algorithm][problem]["time"]["mean"])
+            costs[algorithm].append(summaries[algorithm][problem]["cost"]["mean"])
+
             percentage_above_opt = '{:.2f}'.format(round(percentage_above_opt), DECIMAL_POINTS)
             row += f" && {minimum} & {mean} & {std} & {percentage_above_opt} & {mean_time}"
 
@@ -139,7 +157,13 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str]):
 
         print(f"{row}\\\\")
 
-    footer = "\\multicolumn{13}{c}{} & Average && " + f"{np.mean(cost_gaps)} & {np.mean(time_gaps)}"
+    footer = "\\multicolumn{2}{c}{Average}"
+    for algorithm in algs:
+        mean = '{:.2f}'.format(round(sum(costs[algorithm]) / len(costs[algorithm]), DECIMAL_POINTS))
+        mean_time = '{:.2f}'.format(round(sum(times[algorithm]) / len(times[algorithm]), DECIMAL_POINTS))
+        mean_above_opt = '{:.2f}'.format(round(sum(above_opt[algorithm]) / len(above_opt[algorithm]), DECIMAL_POINTS))
+        footer += f" &&&&& {mean_above_opt} & {mean_time}"
+    footer += f" && {np.mean(cost_gaps)} & {np.mean(time_gaps)}"
     print(f"{footer}\\\\")
     print()
 
@@ -148,9 +172,6 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
     print()
     DECIMAL_POINTS = 2
     algs = list(summaries.keys())
-
-    time_gaps = []
-    cost_gaps = []
 
     header = "\\multicolumn{2}{c}{Instance}"
     for algorithm in algs:
@@ -164,7 +185,6 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
 
     print(f"{sub_underline}\\\\")
 
-    costs = {alg:[] for alg in algs}
     above_opt = {alg: [] for alg in algs}
     for problem in problem_list[dataset]:
         if dataset == "ORLIB":
@@ -195,7 +215,7 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
 
     footer = "\\multicolumn{2}{c}{Average}"
     for algorithm in algs:
-        mean_above_opt = sum(above_opt[algorithm])/len(above_opt[algorithm])
+        mean_above_opt = sum(above_opt[algorithm]) / len(above_opt[algorithm])
         mean_above_opt = '{:.2f}'.format(round(mean_above_opt, DECIMAL_POINTS))
         footer += f"&&&&& {mean_above_opt}"
     print(f"{footer}\\\\")
@@ -254,10 +274,10 @@ def summarise(dataset: str):
 
 
 if __name__ == "__main__":
-    dataset = "ORLIB"
+    dataset = "GOWALLA"
     summaries = summarise(f"{dataset}")
 
     analyse(summaries)
-    # generate_latex_table(summaries, dataset, "cost")
+    generate_latex_table(summaries, dataset, "cost")
     # generate_latex_table_known_opt(summaries, dataset)
-    generate_latex_table_known_opt_no_stats(summaries, dataset)
+    # generate_latex_table_known_opt_no_stats(summaries, dataset)
