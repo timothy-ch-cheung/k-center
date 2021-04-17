@@ -3,18 +3,22 @@ from typing import Dict, List
 
 import numpy as np
 
+from benchmark.statistic.quade import quade_test, post_hoc_quade_test
 from benchmark.statistic.wilcoxon import wilcoxon_test
 from server.gow_graph_loader import GowGraphLoader
 from server.graph_loader import GraphLoader
+from server.orlib_graph_loader import ORLIBGraphLoader
 
 problem_list = {
     "GOWALLA": GowGraphLoader.get_problem_list(),
-    "SYNTHETIC": GraphLoader.get_problem_list()
+    "SYNTHETIC": GraphLoader.get_problem_list(),
+    "ORLIB": ORLIBGraphLoader.get_problem_list()
 }
 
 loader = {
     "GOWALLA": GowGraphLoader,
-    "SYNTHETIC": GraphLoader
+    "SYNTHETIC": GraphLoader,
+    "ORLIB": ORLIBGraphLoader
 }
 
 results_type = Dict[str, float]
@@ -104,7 +108,11 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str]):
     print(f"{sub_underline}\\\\")
 
     for problem in problem_list[dataset]:
-        graph = loader[dataset].get_graph(f"SYNTHETIC/{problem}")
+        if dataset == "SYNTHETIC":
+            graph = loader[dataset].get_graph(f"SYNTHETIC/{problem}")
+        else:
+            graph = loader[dataset].get_graph(f"{problem}")
+
         opt = round(graph.graph["opt"], 2)
         optimal_cost = '{:.2f}'.format(round(graph.graph["opt"], 2))
 
@@ -136,15 +144,82 @@ def generate_latex_table_known_opt(summaries: summary_type, dataset: List[str]):
     print()
 
 
-def analyse(summaries: summary_type):
-    x = []
-    y = []
+def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: List[str]):
+    print()
+    DECIMAL_POINTS = 2
     algs = list(summaries.keys())
+
+    time_gaps = []
+    cost_gaps = []
+
+    header = "\\multicolumn{2}{c}{Instance}"
+    for algorithm in algs:
+        header += "& \\quad & \\multicolumn{4}{c}{" + algorithm + "}"
+    print(f"{header}\\\\")
+
+    sub_underline = "\\cline{1-1}"
+    COLUMN_WIDTH = 4
+    for idx, algorithm in enumerate(algs):
+        sub_underline += " \\cline{" + str(idx + 2 + COLUMN_WIDTH * idx) + "-" + str(idx + 4 + COLUMN_WIDTH * idx) + "}"
+
+    print(f"{sub_underline}\\\\")
+
+    costs = {alg:[] for alg in algs}
+    above_opt = {alg: [] for alg in algs}
     for problem in problem_list[dataset]:
-        x.append(summaries[algs[0]][problem]["cost"]["mean"])
-        y.append(summaries[algs[1]][problem]["cost"]["mean"])
-    p_value = wilcoxon_test(x, y)
-    return p_value
+        if dataset == "ORLIB":
+            opt = ORLIBGraphLoader.get_opt()[problem]
+        else:
+            problem_path = problem
+            if dataset == "SYNTHETIC":
+                problem_path = problem_path + "/" + problem
+
+            graph = loader[dataset].get_graph(problem_path)
+            opt = graph.graph["opt"]
+
+        optimal_cost = '{:.2f}'.format(round(opt, DECIMAL_POINTS))
+
+        row = f"{problem} & {optimal_cost}"
+        for algorithm in algs:
+            minimum = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["min"], DECIMAL_POINTS))
+            mean = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["mean"], DECIMAL_POINTS))
+            std = '{:.2f}'.format(round(summaries[algorithm][problem]["cost"]["std"], DECIMAL_POINTS))
+            percentage_above_opt = ((summaries[algorithm][problem]["cost"]["mean"] / opt) - 1) * 100
+
+            above_opt[algorithm].append(percentage_above_opt)
+
+            percentage_above_opt = '{:.2f}'.format(round(percentage_above_opt), DECIMAL_POINTS)
+            row += f" && {minimum} & {mean} & {std} & {percentage_above_opt}"
+
+        print(f"{row}\\\\")
+
+    footer = "\\multicolumn{2}{c}{Average}"
+    for algorithm in algs:
+        mean_above_opt = sum(above_opt[algorithm])/len(above_opt[algorithm])
+        mean_above_opt = '{:.2f}'.format(round(mean_above_opt, DECIMAL_POINTS))
+        footer += f"&&&&& {mean_above_opt}"
+    print(f"{footer}\\\\")
+    print()
+
+
+def analyse(summaries: summary_type):
+    algs = list(summaries.keys())
+    measurements = [[] for algorithm in algs]
+    for problem in problem_list[dataset]:
+        for idx, algorithm in enumerate(algs):
+            measurements[idx].append(summaries[algorithm][problem]["cost"]["mean"])
+
+    if len(algs) == 2:
+        p_value = wilcoxon_test(measurements[0], measurements[1])
+    else:
+        p_value = quade_test(algs, problem_list[dataset], measurements)
+
+    print(f"p-value={p_value}")
+
+    if len(algs) > 2 and p_value <= 0.05:
+        pairwise_p_values = post_hoc_quade_test(algs, problem_list[dataset], measurements)
+        print(pairwise_p_values)
+
 
 def calc_stats(results: List[float]) -> Dict[str, float]:
     minimum = min(results)
@@ -179,9 +254,10 @@ def summarise(dataset: str):
 
 
 if __name__ == "__main__":
-    dataset = "SYNTHETIC"
+    dataset = "ORLIB"
     summaries = summarise(f"{dataset}")
 
-    print(analyse(summaries))
+    analyse(summaries)
     # generate_latex_table(summaries, dataset, "cost")
-    generate_latex_table_known_opt(summaries, dataset)
+    # generate_latex_table_known_opt(summaries, dataset)
+    generate_latex_table_known_opt_no_stats(summaries, dataset)
