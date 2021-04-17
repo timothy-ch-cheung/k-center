@@ -41,6 +41,7 @@ class ResponseTypes:
 @main.route("/")
 @main.route("/solve")
 @main.route("/steps")
+@main.route("/learn")
 def index():
     return render_template('index.html')
 
