@@ -10,12 +10,12 @@ context('Step', () => {
     })
 
     it('Visual regression on /steps modal', () => {
-        cy.get("[data-cy=steps-modal-btn]").click()
+        cy.get("[cy-data=steps-modal-btn]").click()
         cy.compareSnapshot("steps_modal", TOLERANCE)
     })
 
     it('Visual regression on stepped walk through for greedy algorithm', () => {
-        cy.get("[data-cy=steps-modal-btn]").click()
+        cy.get("[cy-data=steps-modal-btn]").click()
         cy.get('[cy-data=problem-instance-select]').click()
         cy.get('[cy-data=basic-instance]').click()
         cy.get('[cy-data=algorithm-select]').click()
@@ -41,7 +41,7 @@ context('Step', () => {
     })
 
     it('Visual regression on stepped walk through for colourful PBS algorithm', () => {
-        cy.get("[data-cy=steps-modal-btn]").click()
+        cy.get("[cy-data=steps-modal-btn]").click()
         cy.get('[cy-data=problem-instance-select]').click()
         cy.get('[cy-data=medium-instance]').click()
         cy.get('[cy-data=algorithm-select]').click()
