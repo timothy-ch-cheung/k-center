@@ -123,7 +123,7 @@ function Learn() {
                 <HomeIcon fontSize="large"/>
             </IconButton>
         </div>
-        <UnselectableDiv style={{width: "70%", margin: "0 auto"}} data-cy="carousel">
+        <UnselectableDiv style={{width: "70%", margin: "0 auto"}} cy-data="carousel">
             <Carousel autoPlay={false} showThumbs={false}>
                 {slides.map((slide, index) => {
                     return <div>
