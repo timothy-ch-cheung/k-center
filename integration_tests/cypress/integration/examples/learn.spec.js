@@ -6,7 +6,7 @@ context('Learn', () => {
 
       let i
       for (i=0; i < SLIDES; i++) {
-          cy.compareSnapshot(`learn_${i}`)
+          cy.compareSnapshot(`learn_${i.toString().padStart(2, "0")}`)
           cy.get('[aria-label="next slide / item"]').click()
           cy.wait(0.25)
       }
