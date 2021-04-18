@@ -128,7 +128,7 @@ export default function (props: Props) {
                 <MenuItem value={"basic"} cy-data="basic-instance">basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                 <MenuItem value={"medium"}>medium</MenuItem>
-                <MenuItem value={"large"}>large</MenuItem>
+                <MenuItem value={"large"} cy-data="large-instance">large</MenuItem>
                 <MenuItem value={"k_center_large"}>k center large</MenuItem>
                 <MenuItem value={"extreme_point"}>extreme point</MenuItem>
                 <MenuItem value={"thousand"}>Thousand</MenuItem>
