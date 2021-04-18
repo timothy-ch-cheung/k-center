@@ -35,7 +35,7 @@ export default function ViewPanel(props: Props): JSX.Element {
             <ToggleButton value={View.Population} aria-label="population" disabled={props.subSolve}>
                 <PopulationIcon/>
             </ToggleButton>
-            <ToggleButton value={View.Individual} aria-label="individual" disabled={props.subSolve}>
+            <ToggleButton value={View.Individual} aria-label="individual" disabled={props.subSolve} cy-data="zoom-individual-btn">
                 <IndividualIcon/>
             </ToggleButton>
         </ToggleButtonGroup>

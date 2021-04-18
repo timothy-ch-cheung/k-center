@@ -19,7 +19,7 @@ context('Step', () => {
         cy.get('[cy-data=problem-instance-select]').click()
         cy.get('[cy-data=basic-instance]').click()
         cy.get('[cy-data=algorithm-select]').click()
-        cy.get('[cy-data="greedy').click()
+        cy.get('[cy-data=greedy]').click()
 
         cy.get('[cy-data=solve-submit-btn]').click()
         cy.compareSnapshot("steps_walkthrough_00", TOLERANCE)
@@ -40,4 +40,24 @@ context('Step', () => {
         cy.get('[cy-data=page-next]').should('not.be.disabled')
     })
 
+    it('Visual regression on stepped walk through for colourful PBS algorithm', () => {
+        cy.get("[data-cy=steps-modal-btn]").click()
+        cy.get('[cy-data=problem-instance-select]').click()
+        cy.get('[cy-data=medium-instance]').click()
+        cy.get('[cy-data=algorithm-select]').click()
+        cy.get('[cy-data=colourful_pbs]').click()
+
+        cy.get('[cy-data=solve-submit-btn]').click()
+        cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_00", TOLERANCE)
+
+        cy.intercept('POST', 'next/*', { fixture: 'colourful_pbs_medium_1.json' })
+        cy.get('[cy-data=page-next]').click()
+        cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_01", TOLERANCE)
+
+        cy.intercept('POST', 'next/*', { fixture: 'colourful_pbs_medium_2.json' })
+        cy.get('[cy-data=page-next]').click()
+        cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_02", TOLERANCE)
+        cy.get('[cy-data=zoom-individual-btn]').click()
+        cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_03", TOLERANCE)
+    })
 })
