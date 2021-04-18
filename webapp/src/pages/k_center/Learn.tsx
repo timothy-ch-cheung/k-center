@@ -54,8 +54,7 @@ function Learn() {
     const slides: Array<Slide> = [
         {
             img: k_center_initial, title: "What is the k-center problem?", description: `Imagine you are planning a city 
-        with a parcel delivery network and the points represent potential locations for residents or warehouses. 
-        The parcels will be delivered from the warehouse closest to the resident.`
+        with a parcel delivery network and the points represent potential locations for residents or warehouses.`
         },
         {
             img: k_center_initial, title: "What are the k-center problem?", description: `What is the best locations to build 
