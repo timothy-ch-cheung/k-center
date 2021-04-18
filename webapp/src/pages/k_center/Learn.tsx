@@ -76,17 +76,17 @@ function Learn() {
         {
             img: rk_center_initial, title: "An intermediate problem", description: `You would like to ensure the 
             majority of people get their parcels quickly. What if we wanted to exclude few people living in the 
-            countryside (highlighted in green box) since servicing these people leads to awkward warehouse locations 
+            countryside (highlighted in green boxes) since servicing these people leads to awkward warehouse locations 
             causing many people in the inner city to receive poor service?`
         },
         {
             img: rk_center_task, title: "An intermediate problem", description: `Therefore we might only want to 
         consider a certain percentage of residents when considering warehouse locations to serve the majority rather
-        than the few. In our example lets say we want to consider at least 62.5% of residents.`
+        than the few. In our example lets say we want to consider at least 75% of residents.`
         },
         {
             img: rk_center_solution, title: "The Robust k-center problem", description: `This is called the Robust 
-            k-center problem. Notice in the answer shown below, the green arrow showing the solution cost is shorter, 
+            k-center problem. Notice in the answer shown below, the green arrows showing the solution cost is shorter, 
             but two residents are excluded (this doesn't necessarily mean we don't deliver to them, we just don't 
             prioritise them).`
         },
@@ -102,13 +102,13 @@ function Learn() {
             the two groups as blue and red.`
         },
         {
-            img: rkck_solution, title: "The robust k-center bias", description: `The solution provided by the
-            robust k-center problem would exclude people over 60 even though they need the service more.`
+            img: rkck_solution, title: "The robust k-center bias", description: `Lets ask the same question of covering 
+            at least 75% of residents. The solution provided by the robust k-center problem would exclude people over 
+            60 even though they need the service more.`
         },
         {
-            img: ck_center_task, title: "Taking prior knowledge into account", description: `We can label residents
-            over 60 as red and residents under 60 as blue. We then ask what is the best allocation of hospitals to cover
-            62.5% of residents such that all red residents are covered?`
+            img: ck_center_task, title: "Taking prior knowledge into account", description: `We then ask what is the best allocation of hospitals to cover
+            75% of residents such that all red residents are covered?`
         },
         {
             img: ck_center_solution, title: "The colourful k-center problem", description: `This is the colourful 
