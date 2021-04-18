@@ -61,7 +61,7 @@ export default function ConfigModal(props: Props) {
     return <ChartFrame style={{gridArea: props.gridArea}} width={props.width} height={props.height}>
         <H3>Load new problem</H3>
         <SectionDivider/>
-        <Button variant="contained" color="primary" onClick={handleOpen}>Load</Button>
+        <Button variant="contained" color="primary" onClick={handleOpen} data-cy="steps-modal-btn">Load</Button>
 
         <Modal open={open} onClose={handleClose}>
             <Window variant="outlined">

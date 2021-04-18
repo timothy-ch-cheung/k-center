@@ -12,9 +12,14 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const { renameSync } = require('fs');
 const getCompareSnapshotsPlugin = require("cypress-visual-regression/dist/plugin")
 
 // eslint-disable-next-line no-unused-vars
-module.exports = (on) => {
-    getCompareSnapshotsPlugin(on)
+module.exports = (on, config) => {
+    on('after:screenshot', ({ path }) => {
+        renameSync(path, path.replace(/ \(\d*\)/i, ''));
+    });
+
+    getCompareSnapshotsPlugin(on, config)
 }

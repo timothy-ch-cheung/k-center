@@ -3,5 +3,9 @@
   "viewportWidth": 1600,
   "viewportHeight": 900,
   "screenshotsFolder": "cypress/screenshots/actual",
-  "trashAssetsBeforeRuns": true
+  "trashAssetsBeforeRuns": true,
+  "video": false,
+  "env": {
+    "failSilently": false
+  }
 }
