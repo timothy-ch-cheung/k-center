@@ -139,12 +139,16 @@ export default function (props: Props) {
         </FormControlNoWrap>
         <FormControlNoWrap variant={"outlined"} margin={"dense"}>
             <SelectInputLabel>Algorithm</SelectInputLabel>
-            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid} onClose={handleAlgorithmClose}>
+            <Select
+                onChange={handleAlgorithmSelectChange}
+                error={isAlgorithmChanged && !algorithmValid}
+                onClose={handleAlgorithmClose} cy-data="algorithm-select"
+            >
                 {Object.entries(algorithms).map(([algorithm_name, algorithm_properties]) => {
                     if (props.mode === Mode.Step && !algorithm_properties.stepped_enabled) {
                         return null
                     }
-                    return <MenuItem value={algorithm_name}>{algorithm_properties.name}</MenuItem>
+                    return <MenuItem value={algorithm_name} cy-data={algorithm_name}>{algorithm_properties.name}</MenuItem>
                 })}
             </Select>
             <ErrorText>{isAlgorithmChanged && !algorithmValid ? "please select an algorithm" : "."}</ErrorText>
@@ -176,7 +180,9 @@ export default function (props: Props) {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={props.isProcessing}>{props.submitButtonText}
+                disabled={props.isProcessing}
+                cy-data="solve-submit-btn"
+            >{props.submitButtonText}
             </Button>
             {props.isProcessing && <CircularProgress style={{height: "35px", width: "35px"}}/>}
         </HorizontalGroup>

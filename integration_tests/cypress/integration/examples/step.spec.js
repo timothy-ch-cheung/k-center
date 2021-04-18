@@ -1,3 +1,4 @@
+const {TOLERANCE} = require("../../constants");
 context('Step', () => {
 
     beforeEach(() => {
@@ -5,12 +6,12 @@ context('Step', () => {
     })
 
     it('Visual regression on /steps page', () => {
-        cy.compareSnapshot("steps")
+        cy.compareSnapshot("steps", TOLERANCE)
     })
 
     it('Visual regression on /steps modal', () => {
         cy.get("[data-cy=steps-modal-btn]").click()
-        cy.compareSnapshot("steps_modal")
+        cy.compareSnapshot("steps_modal", TOLERANCE)
     })
 
 })
