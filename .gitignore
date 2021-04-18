@@ -12,6 +12,7 @@ build/
 node_modules/
 develop-eggs/
 integration_tests/cypress/screenshots/actual
+integration_tests/cypress/snapshots/diff
 dist/
 downloads/
 eggs/
