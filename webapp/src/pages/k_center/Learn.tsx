@@ -57,7 +57,7 @@ function Learn() {
         with a parcel delivery network and the points represent potential locations for residents or warehouses.`
         },
         {
-            img: k_center_initial, title: "What are the k-center problem?", description: `What is the best locations to build 
+            img: k_center_initial, title: "What is the k-center problem?", description: `What is the best locations to build 
         warehouses such that the distance a delivery driver must travel is minimised? Another way to state this is 
         where should  warehouses be built such that the maximum distance between a resident and their nearest warehouse 
         is minimised?`
