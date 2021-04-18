@@ -5,6 +5,7 @@ import {Alert} from "@material-ui/lab";
 import styled from "@emotion/styled";
 import {responses} from "../../constants/responses";
 import {AlertData} from "../../pages/solve/Solve";
+import isPropValid from '@emotion/is-prop-valid';
 
 interface Props {
     open: boolean
@@ -28,7 +29,10 @@ const MessageContainer = styled("div")`
   flex-flow: column;
 `
 
-const LinkBtn = styled("button")`
+const LinkBtn = styled("button", {
+    shouldForwardProp: prop =>
+        isPropValid(prop) || prop === 'cy-data'
+})`
   background: none;
   border: none;
   padding: 0;
@@ -73,7 +77,8 @@ function CloseableAlert(props: Props) {
                         <div style={{width: "10px"}}/>
                         {
                             hasExtraInfo &&
-                            <LinkBtn onClick={onClickLink}>{responses[props.alertData.type].message}</LinkBtn>
+                            <LinkBtn onClick={onClickLink}
+                                     cy-data="extra-info-link">{responses[props.alertData.type].message}</LinkBtn>
                         }
                     </div>
                     <Collapse in={infoOpen}>

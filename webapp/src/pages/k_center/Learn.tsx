@@ -30,9 +30,9 @@ const Title = styled("h1")`
 
 const Description = styled("p")`
   color: white;
-  font-size: 20px;
+  font-size: 1vw;
   margin-bottom: 5px;
-  height: 40px;
+  height: 3vh;
 `
 
 const UnselectableDiv = styled("div")`
@@ -123,7 +123,7 @@ function Learn() {
                 <HomeIcon fontSize="large"/>
             </IconButton>
         </div>
-        <UnselectableDiv style={{width: "70%", margin: "0 auto"}}>
+        <UnselectableDiv style={{width: "70%", margin: "0 auto"}} cy-data="carousel">
             <Carousel autoPlay={false} showThumbs={false}>
                 {slides.map((slide, index) => {
                     return <div>
