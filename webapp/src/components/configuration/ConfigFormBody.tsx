@@ -123,8 +123,9 @@ export default function (props: Props) {
             <Select onChange={handleProblemInstanceSelectChange}
                     error={isProblemInstanceChanged && !problemInstanceValid}
                     onClose={handleProblemInstanceClose}
+                    cy-data="problem-instance-select"
             >
-                <MenuItem value={"basic"}>basic</MenuItem>
+                <MenuItem value={"basic"} cy-data="basic-instance">basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
                 <MenuItem value={"medium"}>medium</MenuItem>
                 <MenuItem value={"large"}>large</MenuItem>
