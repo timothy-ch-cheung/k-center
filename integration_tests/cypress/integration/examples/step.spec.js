@@ -50,11 +50,11 @@ context('Step', () => {
         cy.get('[cy-data=solve-submit-btn]').click()
         cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_00", TOLERANCE)
 
-        cy.intercept('POST', 'next/*', { fixture: 'colourful_pbs_medium_1.json' })
+        cy.intercept('POST', 'next', { fixture: 'colourful_pbs_medium_1.json' })
         cy.get('[cy-data=page-next]').click()
         cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_01", TOLERANCE)
 
-        cy.intercept('POST', 'next/*', { fixture: 'colourful_pbs_medium_2.json' })
+        cy.intercept('POST', 'next', { fixture: 'colourful_pbs_medium_2.json' })
         cy.get('[cy-data=page-next]').click()
         cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_02", TOLERANCE)
         cy.get('[cy-data=zoom-individual-btn]').click()
