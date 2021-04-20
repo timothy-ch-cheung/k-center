@@ -221,6 +221,20 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
     print(f"{footer}\\\\")
     print()
 
+def get_opt():
+    opt = dict()
+    for problem in problem_list[dataset]:
+        if dataset == "ORLIB":
+            opt[problem] = ORLIBGraphLoader.get_opt()[problem]
+        else:
+            problem_path = problem
+            if dataset == "SYNTHETIC":
+                problem_path = problem_path + "/" + problem
+
+            graph = loader[dataset].get_graph(problem_path)
+            opt[problem] = graph.graph["opt"]
+    return opt
+
 
 def analyse(summaries: summary_type):
     algs = list(summaries.keys())
@@ -241,9 +255,11 @@ def analyse(summaries: summary_type):
         print(pairwise_p_values)
 
 
-def count_pairwise_comparison(summaries: summary_type):
+def count_pairwise_comparison(summaries: summary_type, num_std: int = 0):
     algs = list(summaries.keys())
     pairwise_compare = {alg: {alg:0 for alg in algs} for alg in algs}
+    optimal_costs = get_opt()
+
     for first_alg in algs:
         for second_alg in algs:
             if first_alg == second_alg:
@@ -251,7 +267,13 @@ def count_pairwise_comparison(summaries: summary_type):
 
             for problem in problem_list[dataset]:
                 first_score = summaries[first_alg][problem]["cost"]["mean"]
+                first_score += summaries[first_alg][problem]["cost"]["std"] * num_std
+                first_score = max(optimal_costs[problem], first_score)
+
                 second_score = summaries[second_alg][problem]["cost"]["mean"]
+                second_score -= summaries[second_alg][problem]["cost"]["std"] * num_std
+                second_score = max(optimal_costs[problem], second_score)
+
 
                 if first_score < second_score:
                     pairwise_compare[first_alg][second_alg] += 1
@@ -298,6 +320,7 @@ if __name__ == "__main__":
 
     analyse(summaries)
     count_pairwise_comparison(summaries)
+    count_pairwise_comparison(summaries, num_std=2)
 
     # generate_latex_table(summaries, dataset, "cost")
     # generate_latex_table_known_opt(summaries, dataset)
