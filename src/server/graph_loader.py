@@ -2,7 +2,7 @@ import glob
 import os
 import re
 from pathlib import Path
-from typing import Set, Tuple, List
+from typing import Set, Tuple, List, Dict
 
 import networkx as nx
 import numpy
@@ -156,3 +156,12 @@ class GraphLoader:
             problem_names.append(name)
 
         return problem_names
+
+    @staticmethod
+    def get_opt(dataset_name: str = "SYNTHETIC") -> Dict[str, float]:
+        optimal_costs = dict()
+        for problem in GraphLoader.get_problem_list():
+            f = open(f"{os.path.dirname(__file__)}/dataset/{dataset_name}/{problem}.txt", "r")
+            node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
+            optimal_costs[problem] = opt
+        return optimal_costs

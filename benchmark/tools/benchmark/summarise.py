@@ -221,20 +221,6 @@ def generate_latex_table_known_opt_no_stats(summaries: summary_type, dataset: Li
     print(f"{footer}\\\\")
     print()
 
-def get_opt():
-    opt = dict()
-    for problem in problem_list[dataset]:
-        if dataset == "ORLIB":
-            opt[problem] = ORLIBGraphLoader.get_opt()[problem]
-        else:
-            problem_path = problem
-            if dataset == "SYNTHETIC":
-                problem_path = problem_path + "/" + problem
-
-            graph = loader[dataset].get_graph(problem_path)
-            opt[problem] = graph.graph["opt"]
-    return opt
-
 
 def analyse(summaries: summary_type):
     algs = list(summaries.keys())
@@ -255,10 +241,13 @@ def analyse(summaries: summary_type):
         print(pairwise_p_values)
 
 
-def count_pairwise_comparison(summaries: summary_type, num_std: int = 0):
+def count_pairwise_comparison(summaries: summary_type, dataset: str, num_std: int = 0):
     algs = list(summaries.keys())
     pairwise_compare = {alg: {alg:0 for alg in algs} for alg in algs}
-    optimal_costs = get_opt()
+    if dataset != "GOWALLA":
+        optimal_costs = loader[dataset].get_opt()
+    else:
+        optimal_costs = {problem: 0 for problem in problem_list[dataset]}
 
     for first_alg in algs:
         for second_alg in algs:
@@ -313,14 +302,18 @@ def summarise(dataset: str):
             summaries[alg][problem]["time"] = calc_stats(durations)
     return summaries
 
+def summarise_time_data():
+    pass
+
 
 if __name__ == "__main__":
-    dataset = "ORLIB"
+    dataset = "SYNTHETIC"
     summaries = summarise(f"{dataset}")
 
     analyse(summaries)
-    count_pairwise_comparison(summaries)
-    count_pairwise_comparison(summaries, num_std=2)
+    count_pairwise_comparison(summaries, dataset)
+    count_pairwise_comparison(summaries, dataset, num_std=2)
+    count_pairwise_comparison(summaries, dataset, num_std=3)
 
     # generate_latex_table(summaries, dataset, "cost")
     # generate_latex_table_known_opt(summaries, dataset)
