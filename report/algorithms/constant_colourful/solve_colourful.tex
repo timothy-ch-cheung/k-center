@@ -1,0 +1,29 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Pseudo 2-Approximation Colourful $k$-center}
+\label{alg:approx_colourful}
+\begin{algorithmic}[1]
+\Procedure{approx\textunderscore colourful}{}
+    \State{weights $\gets\{dist(i,j)\mid\forall i,j\in V\}$}
+    \State{cost $\gets max(weights)$}
+    \State{left$\gets 0$; right$\gets |weights|$}
+    \State{$(x,z)\gets$ undefined}
+    \While{left $\leq$ right}
+        \State{mid $\gets (left + right)/2$}
+        \State{$\rho\gets$ weights[mid]}
+        \State{$(x',z')\gets$ LP1($\rho$)}
+        \If{$(x',z')$ is a feasible solution to LP1($\rho$)}
+            \State{$(x,z)\gets(x',z')$}
+            \State{right$\gets mid-1$}
+        \Else
+            \State{left$\gets mid+1$}
+        \EndIf
+    \EndWhile
+    \State{$(O,C,\tilde{x},\tilde{z})\gets cluster(x,z,\rho)$}
+    \State{$\tilde{x}\gets LP2$}
+    \State{$C\gets \{c\in C\mid \tilde{x_c}>0\}$}
+    \State\Return{$C$}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

@@ -1,0 +1,15 @@
+We chose to create our tool in React JS as it has reusable components, state to store our visualisations, and libraries such as Material-UI to speed up the development. We use TypeScript as the static type definitions and type checking will help us identify bugs.
+
+Having decided on developing a web application, we needed to decide between a client-only or a client-server model. While a client-only would make development easier since it would not require networking, we decided to use a client-server model because the we did not want to hinder our ability to implement LPs by having to write them in JavaScript (JS); the most popular JS linear programming library on npm is jsLPSolver which at the time of writing has not been updated in over a year.
+
+We considered C, Java and Python to implement our server. C was favourable for its efficiency, however it lacked web server libraries. Java was considered as it had Spring Boot, which we have previous experience using, however spring boot uses a controller, service, repository model - this is suited to business applications but its feature set is more extensive than we require and working within that model would slow development. Therefore, we implemented our algorithms using Python 3 as it offered graph (NetworkX), web server (Flask) and Linear programming libraries. To supplement the lack of static typing in Python, we use type hinting.
+
+We identified SciPy and Pyomo as options for LP libraries. We implemented a prototypes for a simple linear program (\cref{fig:simple_lp}) to decide between them.
+
+\input{3_design/simple_lp}
+
+The two implementations are shown in \cref{fig:compare_lp}. The SciPy implementation is significantly more concise, however SciPy only supports minimisation which means in our use of case maximisation, we need to inverse the signs of the variables. While the Pyomo implementation is more verbose, the constraints are more clearly defined as functions, and it has the added benefit supporting multiple solvers (SciPy is limited its own implementation of the Simplex method). Therefore we use Pyomo for its clarity and its compatability with open/closed source solvers such as GLPK, Gurobi and CPLEX.
+
+\input{3_design/compare_lp}
+
+We also considered two libraries for visualisation: mpld3 and D3.js. Mpld3 allows exporting of Matplotlib plots to html (Matplotlib is a Python plotting library). We created a basic prototype using mpld3, but we quickly found it was inflexible due to the lack of customisation for interactive legends. Furthermore for the client to render the plot in React, it would need to inject html into the page which presents a potential security vulnerability. Therefore we decided to use D3, a JS visualisation library. While D3 is more difficult to learn than matplotlib due to being a more low level library, but it is more flexible.

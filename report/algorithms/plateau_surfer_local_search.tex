@@ -12,15 +12,15 @@
             \State {best\textunderscore flip$\gets$undefined}
             \State {best\textunderscore cv\textunderscore flip$\gets$undefined}
             \State {best\textunderscore new\textunderscore cost$\gets$ Cost($C$)}
-            \State {best\textunderscore cv$\gets$ CountCV($C$, Cost($C$))}
+            \State {best\textunderscore cv$\gets$ count\textunderscore cv($C$, Cost($C$))}
             \For{$v_j\in V\setminus C$}
                 \State {$\bar{C}\gets C\setminus \{i\} \cup \{j\}$}
                 \If{Cost($\bar{C}$) < best\textunderscore new\textunderscore cost}
                     \State {best\textunderscore cv$\gets$Cost($\bar{P}$)}
                     \State {best\textunderscore flip$\gets j$}
-                \ElsIf {best\textunderscore flip != undefined \textbf{and} CountCV($\bar{C}$, Cost($\bar{C}$))$<$best\textunderscore cv}
-                    \State {best\textunderscore cv$\gets$ CountCV($\bar{C}$, Cost($\bar{C}$))}
-                    \State {best\textunderscore flip$\gets j$}
+                \ElsIf {best\textunderscore flip != undefined \textbf{and} count\textunderscore cv($\bar{C}$, Cost($\bar{C}$))$<$best\textunderscore cv}
+                    \State {best\textunderscore cv$\gets$ count\textunderscore cv($\bar{C}$, Cost($\bar{C}$))}
+                    \State {best\textunderscore cv\textunderscore flip$\gets j$}
                 \EndIf
             \EndFor
             \If {best\textunderscore flip != undefined}

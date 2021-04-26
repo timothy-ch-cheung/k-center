@@ -1,2 +1,34 @@
-In this paper we focus on the case where $\emph{c}=2$ and we will refer to the two classes as $blue$ and $red$.
+\textcite{bandyapadhyay_constant_2019} devised a pseudo-approximation algorithm which produces a 2-approximation using at most $k+1$ centers. They also created a second procedure which exploited some geometric properties of the colourful $k$-center problem to deal with special cases where the centers are very far apart, which combined with the pseudo-approximation to produce a $(17+\epsilon)$ true approximation. However the geometric procedure is limited to a 2D Euclidean space, due to this limitation we focus only on the pseudo-approximation algorithm.
 
+The pseudo-approximation algorithm is comprised of three components, two linear programs (\textbf{LP1} and \textbf{LP2}) and a greedy clustering algorithm. Linear programs (\acrshort{lp}s) are formed by three components:
+\begin{itemize}
+    \item \textbf{Decision variables:} the variables which we want to determine the values for
+    \item \textbf{Objective function:} a function which want to minimise/maximise to obtain the optimal LP solution 
+    \item \textbf{Constraints:} a list of linear inequalities and equalities between the variables that a valid solution must satisfy
+\end{itemize}
+
+For a more detailed overview of linear programming we refer the reader to "Understanding and Using Linear Programming" (\cite[see][Chap.~2]{matousek_understanding_2007}).
+
+LP1 decides whether an instance of the Colourful $k$-center problem can be solved with a cost $\rho$. To understand LP1, we need to define the concept of a ball around point $j$ of radius $\rho$; the ball $B(j,\rho)$ is the set of all points within $r$ distance of the point $j$. The decision variables for LP1 are $x$ and $z$, both of which can be fractional. Given a vertex $i\in V$, $x_i$ represents the degree that $i$ is a center and $z_i$ represents the degree that $i$ is covered by a center. For example, if $z_i=0$ then $i$ is not covered by any center and is therefore an outlier. If $x_i=1$, then vertex $i$ should be opened as a center. Constraints $(3)$ and $(4)$ of LP1 ensure that the solution covers at least $r$ and $b$ points respectively. LP1 is used to determine the optimal cost (out of $n^2$ interpoint distances), by testing a feasibility of a radius $\rho$.
+
+\centerline{\begin{minipage}{0.8\textwidth}
+    \vspace{0.5cm}
+    \input{algorithms/constant_colourful/LP1}
+\end{minipage}}
+
+The greedy clustering algorithm (\cref{alg:greedy_cluster_lp}) clusters the $V$ into $|O|$ clusters with centers $C$, It creates an set of updated pairs $(\tilde{x},\tilde{z})$ from the LP1 solution $(x,z)$ which shifts the "mass" from $x_i$ to its center $x_j$ (lines 7,10-13 \cref{alg:greedy_cluster_lp}).
+
+\input{algorithms/constant_colourful/greedy_clustering}
+
+Given clusters $O$ which contain vertices at most $2\rho$ distance away from the center, if we can pick $k$ clusters from $O$ which meet the blue/red constraints then we have a 2-approximation. \citeauthor{bandyapadhyay_constant_2019} proved while it is not always possible to select $k$ clusters which satisfy the constraints, it is always possible to select $k+1$ clusters. They formalised this procedure in LP2 which maximises the coverage of red vertices $r_i$ using centers $\tilde{x_i}$, constrained to covering at least $b$ blue vertices using $\leq k$ centers. The decision variable $\tilde{x}$ indicates which vertices to open as centers. They proved there can be at most two fractional values for $\tilde{x_i}$, which can both be rounded up for solution with at most $k+1$ centers.
+
+\centerline{\begin{minipage}{0.8\textwidth}
+    \vspace{0.5cm}
+    \input{algorithms/constant_colourful/LP2}
+\end{minipage}}
+
+As their research takes a purely theoretical viewpoint, they assume that $\rho$ (LP1) is 'guessed' correctly, hence $\rho=OPT$. However from a practical viewpoint, there are $n^2$ candidate costs ; a na\"{i}ve implementation would need $\mathcal{O}(n^2)$ calls to LP1. In our testing, each call to LP1 is time consuming. We show a practical implementation of the pseudo-approximation algorithm, based on a binary search, which makes $\mathcal{O}(log_2 n)$ calls to LP1.
+
+\input{algorithms/constant_colourful/solve_colourful}
+
+Analysing the complexity is slightly more involved as we use \acrshort{lp}s. The Simplex method, developed by George Dantzig in 1947 (\cite{dantzig_origins_1990}), is popular technique to solve \acrshort{lp}s; the worse case time complexity is $\mathcal{O}(2^n)$ \parencites{klee_simplex_1972}[Chapter~5.9]{matousek_understanding_2007}. However in general this is not an issue, the simplex algorithm is shown to have a polynomial \emph{smoothed complexity} (\cite{spielman_smoothed_2001}). \emph{Smoothed complexity} combines worse case and average case complexity with slight random perturbations of the inputs which provides a more practical measure of performance. Therefore the \emph{smoothed complexity} of the pseudo-approximation algorithm is $n^{\mathcal{O}(1)}$.

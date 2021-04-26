@@ -1,0 +1,22 @@
+%TC:ignore
+\renewcommand{\arraystretch}{0.7}
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.32\textwidth}
+        \begin{tabularx}{\linewidth}{|rl|}
+            \hline
+            \multicolumn{2}{|X|}{} \tabularnewline
+            maximise & $2x + 3y$\tabularnewline
+            \hphantom{.......................}&\tabularnewline
+            subject to & $2x + 3y \leq 9$\tabularnewline
+            &\tabularnewline
+            & $x,y \geq 0$\tabularnewline
+            &\tabularnewline
+            \hline
+        \end{tabularx}%
+    \end{minipage}
+    \caption{Simple LP for evaluating SciPy and Pyomo}
+    \label{fig:simple_lp}
+\end{figure}
+\renewcommand{\arraystretch}{1.0}
+%TC:endignore

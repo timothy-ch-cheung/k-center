@@ -1,0 +1,24 @@
+%TC:ignore
+\renewcommand{\arraystretch}{0.7}
+\begin{tabularx}{\linewidth}{|lllr|}
+    \hline
+    & & &\tabularnewline
+    \multicolumn{4}{|X|}{LP1, the feasibility LP (\cite{bandyapadhyay_constant_2019})} \tabularnewline
+    \hline
+    & & &\tabularnewline
+    \multicolumn{4}{|X|}{Given a radius $\rho$, find a feasible solution $(x,z)$ such that:} \tabularnewline
+    & & &\tabularnewline
+    \hphantom{.....}& $\displaystyle \sum_{i\in B(j,\rho)} x_i\geq z_j$ & $\forall j\in V$&(1)\tabularnewline
+    & & &\tabularnewline
+    \hphantom{.....}& $\displaystyle \hphantom{.}\sum_{\hphantom{..}i\in V} x_i\leq k\hphantom{..}$ & &(2)\tabularnewline
+    & & &\tabularnewline
+    \hphantom{.....}& $\displaystyle \hphantom{.}\sum_{\hphantom{..}i\in R} z_i\geq r\hphantom{..}$ & &(3)\tabularnewline
+    & & &\tabularnewline
+    \hphantom{.....}& $\displaystyle \hphantom{.}\sum_{\hphantom{..}i\in B} z_i\geq b\hphantom{..}$ & &(4)\tabularnewline
+    & & &\tabularnewline
+    \hphantom{.....}& $z_j,x_i\in [0,1]$ & $\forall i,j\in V$ &(5)\tabularnewline
+    & & &\tabularnewline
+    \hline
+\end{tabularx}%
+\renewcommand{\arraystretch}{1}
+%TC:endignore
