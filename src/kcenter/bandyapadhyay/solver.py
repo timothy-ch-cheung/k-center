@@ -13,8 +13,8 @@ class ConstantColourful(ConstantPseudoColourful):
     produces a pseudo approximation which opens at most k centers with a 17-approximation
     """
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: str = "constant_approximation"):
+        super().__init__(graph, k, constraints, name=name)
 
     def solve(self) -> Tuple[Dict[int, Set[int]], Set[int], int]:
         """Solves the Colourful K-Center problem using the algorithm created by Bandyapadhyay et al.
