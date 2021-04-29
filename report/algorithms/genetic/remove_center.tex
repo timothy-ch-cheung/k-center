@@ -1,0 +1,33 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Remove Center (\cite{pullan_memetic_2008})}
+\label{alg:remove_center}
+\begin{algorithmic}[1]
+\Function{find\textunderscore next}{$v$}
+    \State{min\textunderscore cost $\gets 0$; min\textunderscore center $\gets undefined$}
+    \For{$c\in C$}
+        \If{$dist(v,c) <$ min\textunderscore cost}
+            \State{min\textunderscore cost $\gets dist(v,c)$; min\textunderscore center $\gets c$}
+        \EndIf
+    \EndFor
+    \State \Return {(min\textunderscore cost, min\textunderscore center)}
+\EndFunction
+\State{}
+\Function{remove\textunderscore center}{$f$}
+    \State {cost $\gets 0$}
+    \State {C $\gets C\setminus \{f\}$}
+    \For{$v\in V$}
+        \If{$F_{v}^0=f$}
+            \State{$D_{v}^0\gets D_{v}^1$; $F_{v}^0\gets F_{v}^1$}
+            \State{$(D_{v}^1,F_{v}^1)\gets$ find\textunderscore next($v$)}
+        \ElsIf{}
+            \State{$(D_{v}^1,F_{v}^1)\gets$ find\textunderscore next($v$)}
+        \EndIf
+        \If{$D_{v}^0>cost$}
+            \State{$cost\gets D_{v}^0$}
+        \EndIf
+    \EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

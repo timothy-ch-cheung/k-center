@@ -1,0 +1,10 @@
+{
+  "name": "integration_tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^7.1.0",
+    "cypress-visual-regression": "^1.5.7"
+  }
+}

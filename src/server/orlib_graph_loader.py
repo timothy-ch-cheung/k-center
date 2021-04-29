@@ -40,6 +40,7 @@ class ORLIBGraphLoader:
             num_vertices, num_edges, k = ORLIBGraphLoader.parse_header(f.readline())
             G.graph["k"] = k
             G.graph["n"] = num_vertices
+            G.graph["opt"] = ORLIBGraphLoader.get_opt()[graph_name]
 
             for vertex in range(1, num_vertices + 1):
                 G.add_node(vertex)
@@ -79,4 +80,5 @@ class ORLIBGraphLoader:
             name = result.group(0)
             problem_names.append(name)
 
+        problem_names = sorted(problem_names, key=lambda x: int(re.search("(?<=pmed)\d{1,2}", x)[0]))
         return problem_names

@@ -1,0 +1,27 @@
+%TC:ignore
+\begin{table}[H]
+    \caption{Results before and after population seeding}\label{table:improved_colourful_pbs}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{lllllllXXXlXXX}
+    \firsthline
+    \multicolumn{6}{c}{Instance} & \quad & \multicolumn{3}{c}{Colourful PBS} & \quad & \multicolumn{3}{c}{Colourful PBS + Population Seeding}\\
+    \cline{1-6} \cline{8-10} \cline{12-14}
+    Name & n & k & b & r & opt && $min$ &$\mu$ & $\sigma$ && $min$ &$\mu$ & $\sigma$\\
+    \hline
+    train01 & 100 & 5 & 40 & 40 & 15.50 && 15.50 & 15.50 & 0.00 && 15.50 & 15.50 & 0.00\\
+    train02 & 100 & 10 & 40 & 40 & 12.50 && 12.50 & 12.50 & 0.00 && 12.50 & 12.50 & 0.00\\
+    train03 & 100 & 20 & 40 & 40 & 6.50 && 6.50 & 6.52 & 0.07 && 6.50 & 6.53 & 0.10\\
+    train04 & 200 & 10 & 90 & 90 & 11.50 && 11.50 & 11.50 & 0.00 && 11.50 & 11.50 & 0.00\\
+    train05 & 200 & 5 & 90 & 90 & 4.50 && 4.50 & 4.50 & 0.00 && 4.50 & 4.50 & 0.00\\
+    train06 & 200 & 20 & 90 & 90 & 22.50 && 22.50 & 28.09 & 3.50 && 22.50 & 28.01 & 3.61\\
+    train07 & 300 & 20 & 130 & 130 & 23.50 && 23.50 & 23.50 & 0.00 && 23.50 & 23.50 & 0.00\\
+    train08 & 300 & 40 & 130 & 130 & 43.50 && 582.93 & 684.75 & 138.11 && 43.50 & 43.50 & 0.00\\
+    train09 & 400 & 20 & 170 & 170 & 33.50 && 33.50 & 367.41 & 668.32 && 33.50 & 428.20 & 702.49\\
+    train10 & 400 & 40 & 170 & 170 & 53.50 && 623.81 & 1231.79 & 156.93 && 53.50 & 62.62 & 17.18\\
+    \hline
+    \multicolumn{6}{c}{Average \% cost above opt} && \multicolumn{3}{c}{469.84\%} && \multicolumn{3}{c}{122.02\%}\\
+    \lasthline
+    \end{tabularx}
+    \normalsize
+\end{table}
+%TC:endignore

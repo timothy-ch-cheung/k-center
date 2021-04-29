@@ -123,11 +123,12 @@ export default function (props: Props) {
             <Select onChange={handleProblemInstanceSelectChange}
                     error={isProblemInstanceChanged && !problemInstanceValid}
                     onClose={handleProblemInstanceClose}
+                    cy-data="problem-instance-select"
             >
-                <MenuItem value={"basic"}>basic</MenuItem>
+                <MenuItem value={"basic"} cy-data="basic-instance">basic</MenuItem>
                 <MenuItem value={"basic_with_outlier"}>basic (with outlier)</MenuItem>
-                <MenuItem value={"medium"}>medium</MenuItem>
-                <MenuItem value={"large"}>large</MenuItem>
+                <MenuItem value={"medium"} cy-data="medium-instance">medium</MenuItem>
+                <MenuItem value={"large"} cy-data="large-instance">large</MenuItem>
                 <MenuItem value={"k_center_large"}>k center large</MenuItem>
                 <MenuItem value={"extreme_point"}>extreme point</MenuItem>
                 <MenuItem value={"thousand"}>Thousand</MenuItem>
@@ -138,12 +139,16 @@ export default function (props: Props) {
         </FormControlNoWrap>
         <FormControlNoWrap variant={"outlined"} margin={"dense"}>
             <SelectInputLabel>Algorithm</SelectInputLabel>
-            <Select onChange={handleAlgorithmSelectChange} error={isAlgorithmChanged && !algorithmValid} onClose={handleAlgorithmClose}>
+            <Select
+                onChange={handleAlgorithmSelectChange}
+                error={isAlgorithmChanged && !algorithmValid}
+                onClose={handleAlgorithmClose} cy-data="algorithm-select"
+            >
                 {Object.entries(algorithms).map(([algorithm_name, algorithm_properties]) => {
                     if (props.mode === Mode.Step && !algorithm_properties.stepped_enabled) {
                         return null
                     }
-                    return <MenuItem value={algorithm_name}>{algorithm_properties.name}</MenuItem>
+                    return <MenuItem value={algorithm_name} cy-data={algorithm_name}>{algorithm_properties.name}</MenuItem>
                 })}
             </Select>
             <ErrorText>{isAlgorithmChanged && !algorithmValid ? "please select an algorithm" : "."}</ErrorText>
@@ -175,7 +180,9 @@ export default function (props: Props) {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={props.isProcessing}>{props.submitButtonText}
+                disabled={props.isProcessing}
+                cy-data="solve-submit-btn"
+            >{props.submitButtonText}
             </Button>
             {props.isProcessing && <CircularProgress style={{height: "35px", width: "35px"}}/>}
         </HorizontalGroup>

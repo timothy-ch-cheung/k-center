@@ -1,0 +1,25 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Greedy Clustering (\cite{bandyapadhyay_constant_2019})}
+\label{alg:greedy_cluster_lp}
+\begin{algorithmic}[1]
+\Function{cluster}{$x,z,\rho$}
+    \State {$C\gets\emptyset$}
+    \State {$V'\gets V$}
+    \While{$v'\neq\emptyset$}
+        \State{$j\in V'$ be a point with maximum $z_j$}
+        \State{$C\gets C\cup\{j\}$}
+        \State{$\tilde{x_j}\gets min(1, \sum _{i\in B(j,\rho)}x_j)$}
+        \State{$\tilde{z_j}\gets\tilde{x_j}$}
+        \State{$O_j\gets B(j,2\rho)\cap V'$}
+        \For{$i\neq j\in O_j$}
+            \State{$\tilde{x_i}\gets 0$}
+            \State{$\tilde{z_i}\gets\tilde{z_j}$}
+        \EndFor
+        \State{$V'\gets V'\setminus O_j$}
+    \EndWhile
+    \State\Return{$O,C,\tilde{x},\tilde{z}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

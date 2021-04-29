@@ -11,11 +11,20 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{appendix}
+\usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{stmaryrd}
+\usepackage{xparse}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage[acronym, toc, section,numberedsection=autolabel]{glossaries}
+
 
 \makeatletter
 \algrenewcommand\ALG@beginalgorithmic{\footnotesize}
@@ -26,18 +35,26 @@
 \setlength{\parskip}{1em}
 \renewcommand{\baselinestretch}{1.2}
 \newcommand{\textbox}[1]{\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\itshape}{#1}}}
+\setlength{\fboxsep}{1em}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 
-\title{On the Colourful $k$-center problem}
-\author{Timothy Cheung}
-\date{March 2021}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{L}{>{\raggedleft\arraybackslash}X}
+\newcolumntype{R}{>{\raggedright\arraybackslash}X}
+
+\makeglossaries
+
+%TC:ignore
+\input{glossary}
+\input{acroynyms}
+%TC:endignore
 
 \begin{document}
 %TC:ignore
-\maketitle
+\include{title}
 \newpage
 \begin{abstract}
 \input{1_introduction/abstract}
@@ -52,19 +69,20 @@
 \input{1_introduction/introduction}
 
 \section{Literature Review}\label{section:lit_review}
+
     \subsection{Overview}
     \input{1_introduction/overview}
     
-    \subsection{The $k$-center problem}\label{section:k_center}
+    \subsection{The \texorpdfstring{$k$}{k}-center problem}\label{section:k_center}
     \input{1_introduction/k_center}
     
-    \subsection{The robust $k$-center problem}
+    \subsection{The robust \texorpdfstring{$k$}{k}-center problem}\label{section:robust_k_center}
     \input{1_introduction/robust_k_center}
     
-    \subsection{The colourful $k$-center problem}
+    \subsection{The colourful \texorpdfstring{$k$}{k}-center problem}\label{section:colourful_k_center}
     \input{1_introduction/colourful_k_center}
     
-    \subsection{The significance of $k$-center}
+    \subsection{Novel use cases}
     \input{1_introduction/significance}
     
     \subsection{Aims and Motivations}
@@ -74,44 +92,102 @@
     \input{1_introduction/related_work}
 
 \section{Background}\label{section:background}
-\subsection{Approaches to solving the k-center problem}
-\input{2_body/background/solving_k_center}
+    \subsection{Approaches to solving the k-center problem}\label{subsection:approaches_k_center}
+    \input{2_body/background/solving_k_center}
 
-    \subsubsection{A Greedy Approximation Algorithm}\label{section:greedy}
-    \input{2_body/background/greedy}
-    
-    \subsubsection{A Memetic Genetic Algorithm (PBS)}\label{section:pbs}
-    \input{2_body/background/memetic_genetic}
-    
-    \subsubsection{A Randomized Algorithm (GRASP) and Plateau Surfer Local Search}\label{section:plateau_surfer}
-    \input{2_body/background/grasp_local_search}
+        \subsubsection{Approximation Algorithms}\label{section:greedy}
+        \input{2_body/background/greedy}
+        
+        \subsubsection{A Memetic Genetic Algorithm (PBS)}\label{section:pbs}
+        \input{2_body/background/memetic_genetic}
+        
+        \subsubsection{A Randomized Algorithm (GRASP Plateau Surfer Local Search)}\label{section:plateau_surfer}
+        \input{2_body/background/grasp_local_search}
 
-\subsection{Approaches to solving the colourful k-center}
+    \subsection{Approaches to solving the colourful k-center}\label{subsection:approaches_colourful_k_center}
+    \input{2_body/background/solving_colourful_k_center}
 
-    \subsubsection{A Constant Colourful Algorithm}\label{section:colourful_k_center}
-    \input{2_body/background/constant_colourful}
+        \subsubsection{A O(1)-Colourful Algorithm}\label{section:constant_colourful_k_center}
+        \input{2_body/background/constant_colourful}
+        
+        \subsubsection{Colourful PBS}\label{section:colourful_pbs}
+        \input{2_body/background/colourful_pbs}
 
 \section{Design}\label{section:design}
+    \subsection{Requirements}\label{section:requirements}
+    \input{3_design/requirements}
+    
+    \subsection{Tooling and Prototyping}\label{section:prototype}
+    \input{3_design/prototype}
+    
+    \subsection{Existing Visualiser Review}\label{section:visualiser_review}
+    \input{3_design/visualiser_review}
+    
+    \subsection{Solution Visualisation}\label{section:solution_visualisation}
+    \input{3_design/solve_visualisation}
+    
+    \subsection{Stepped Visualisation}\label{section:stepped_visualisation}
+    \input{3_design/stepped_visualisation}
+    
+    \subsection{Architecture}\label{section:architecture}
+    \input{3_design/architecture}
 
 \section{Results}\label{section:results}
+    \subsection{Methodology}\label{section:methodology}
+    \input{4_results/methodology}
+    
+    \subsection{\texorpdfstring{$k$}{k}-center ORLIB}\label{section:k_center_orlib}
+    \input{4_results/orlib}
+    
+    \subsection{Colourful \texorpdfstring{$k$}{k}-center Gowalla data set}\label{section:colourful_k_center_gowalla}
+    \input{4_results/gowalla}
+    
+    \subsection{Colourful \texorpdfstring{$k$}{k}-center Synthetic data set}\label{section:colourful_k_center_synthetic}
+    \input{4_results/synthetic}
 
 \section{Evaluation}\label{section:evaluation}
+    \subsection{Colourful PBS}
+    \input{5_evaluation/algorithm_implementation}
+    
+    \subsection{The web tool}
+    \input{5_evaluation/web_tool_evaluation}
+    
+    \subsection{Software Engineering}
+    \input{5_evaluation/software_engineering}
+    
+    \subsection{Reflection}
+    \input{5_evaluation/reflection}
+    
+\section{Discussion}\label{section:discussion}
+\input{6_discussion/discussion}
 
-\section{Reflection}
-\subsection{Knowledge Gained}
-\input{4_evaluation/learning}
+\section{Conclusion}\label{section:conclusion}
+\input{7_conclusion/conclusion}
+    
 \newpage
 %TC:ignore
 \section{References}
-\printbibliography[heading=none]
+\sloppy{\printbibliography[heading=none]}
 
 \appendix
 \section{Brute Force Algorithms}
-\subsection{k-center}
-\label{brute-force-k-center}
-\input{algorithms/brute_force_k_center}
-\subsection{colourful k-center}
-\input{algorithms/brute_force_colourful_k_center}
+    \subsection{k-center}
+        \label{brute-force-k-center}
+        \input{algorithms/brute_force_k_center}
+    \subsection{colourful k-center}
+        \label{brute-force-colourful-k-center}
+        \input{algorithms/brute_force_colourful_k_center}
+        \input{algorithms/random_colourul_instance}
 \section{Determining parameters for GRASP}\label{appendix:grasp_param}
+    \input{8_appendix/grasp_parameters}
+    
+\section{Comparing genetic architectures}\label{appendix:genetic_architectures}
+    \input{8_appendix/genetic_architecture}
+    
+\section{Seeding the genetic population}\label{appendix:seed_population}
+    \input{8_appendix/seeding_genetic_population}
+
+\printglossaries
+
 %TC:endignore
 \end{document}

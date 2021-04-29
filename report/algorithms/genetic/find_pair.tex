@@ -1,0 +1,33 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Find Pair (\cite{pullan_memetic_2008})}
+\label{alg:find_pair}
+\begin{algorithmic}[1]
+\Function{find\textunderscore pair}{$w$}
+    \State {cost $\gets max_{\forall i\in V,\forall j\in V}dist(i,j)$}\Comment{Set initial cost to max edge weight \hphantom{.............................................................................}}
+    \State {$L\gets\emptyset$}
+    \For{$i\in N_{wm}$}
+        \State{add\textunderscore center(i)}
+        \For{$c\in C$}
+            \State{$M_c\gets 0$}
+        \EndFor
+        \For{$v\in V\setminus C$}
+            \If{$min(dist(i,v),D_v^1)>M_{F_v^0}$}
+                \State{$M_{F_v^0}\gets min(dist(i,v),D_v^1)$}
+            \EndIf
+        \EndFor
+        \For{$c\in C$}
+            \If{$M_c=cost$}\Comment{Add to candidate list $L$ when swaps of equal cost are found\hphantom{...............................................}}
+                \State{$L\gets L\cup\{(c,i)\}$}
+            \ElsIf{$M_c<C$}\Comment{Reset candidate list when a lower cost is found\hphantom{...........................................................}}
+                \State{$L\gets \{(c,i)\}$}
+                \State{$cost\gets M_c$}
+            \EndIf
+        \EndFor
+        \State{remove\textunderscore center(i)}
+    \EndFor
+    \State\Return{select\textunderscore random($L$)}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

@@ -25,13 +25,13 @@ const Text = styled(Typography)`
 
 export default function (props: Props) {
     return <ButtonGroup>
-        <IconButton aria-label="back" disabled={!props.isPrevEnabled} onClick={props.handlePrevClick}>
+        <IconButton aria-label="back" disabled={!props.isPrevEnabled} onClick={props.handlePrevClick} cy-data="page-prev">
             <ArrowBackIosIcon/>
         </IconButton>
         <Text variant="button" display="block">
             Step {props.currentPage}/{props.maxPage && props.maxPage > 0 ? props.maxPage : "?"}
         </Text>
-        <IconButton aria-label="forward" disabled={!props.isNextEnabled} onClick={props.handleNextClick}>
+        <IconButton aria-label="forward" disabled={!props.isNextEnabled} onClick={props.handleNextClick} cy-data="page-next">
             <ArrowForwardIosIcon/>
         </IconButton>
     </ButtonGroup>

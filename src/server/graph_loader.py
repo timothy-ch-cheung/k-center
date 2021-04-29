@@ -144,7 +144,7 @@ class GraphLoader:
         return G
 
     @staticmethod
-    def get_problem_list(dataset_name: str = "TEST_COLOURFUL"):
+    def get_problem_list(dataset_name: str = "SYNTHETIC"):
         problems = glob.glob(f"{os.path.dirname(__file__)}/dataset/{dataset_name}/*.txt")
         folder_name = f"{dataset_name}{os.path.sep}"
         problems = [x[x.index(folder_name) + len(folder_name):] for x in problems]

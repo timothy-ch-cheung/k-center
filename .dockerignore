@@ -1,2 +1,10 @@
 webapp/node_modules
 venv
+integration_tests
+tests
+results
+report
+prototypes
+benchmark
+design
+weekly_logs

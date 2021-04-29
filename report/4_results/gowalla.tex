@@ -1,0 +1,4 @@
+\input{4_results/tables/gowalla_cost}
+
+\paragraph{Analysis of solution cost}~\\
+Our result for the Wilcoxon test was \num{1.819e-12}, proving our observations to be statistically significant. Colourful PBS produced lower costs than the $O(1)$-approximation algorithm for all 40 instances, the average decrease was 43.2\%. To account for the variance in cost of a memetic algorithm, we calculate the cost $2\sigma$ above $\mu$ and count the number of results from our algorithm that would still have a cost below the $O(1)$-approximation (see \cref{section:k_center_orlib}). When comparing costs two standard deviations above the mean, our algorithm still achieves a cost below the $O(1)$-approximation for all 40 instances. Furthermore if we extend this to three standard deviations, which would cover 99.7\% of observations under the empirical rule, our algorithm still produces better results than the $O(1)$-approximation for 39/40 Gowalla problems.

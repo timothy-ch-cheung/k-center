@@ -1,0 +1,34 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Find Pair (modified for colourful pbs)}
+\label{alg:find_pair_colourful}
+\begin{algorithmic}[1]
+\Function{find\textunderscore pair}{$w$}
+    \State {coverage $\gets |V|$}\Comment{A swap causing all vertices to become uncovered is the most costly swap \hphantom{........................}}
+    \State {$L\gets\emptyset$}
+    \For{$i\in N_{wm}$}
+        \State{add\textunderscore center(i)}
+        \State {$cost\gets$ last known cost for this individual from invoking \emph{find\_colourful\_cost}}
+        \For{$c\in C$}
+            \State{$M_c\gets 0$}
+        \EndFor
+        \For{$v\in V\setminus C$}
+            \If{$min(dist(i,v),D_v^1)> cost$ \emph{and} $D^0_v\leq cost$}\Comment{Does removing $F_v^0$ cause a covered point to become uncovered?} 
+                \State{$M_{F_v^0}\gets M_{F_v^0} + 1$}\Comment{If so, removing $F_v^0$ incurs a cost, add 1 to the cost of removing it}
+            \EndIf
+        \EndFor
+        \For{$c\in C$}
+            \If{$M_c=coverage$}\Comment{Add to candidate list $L$ when swaps of equal cost are found\hphantom{...........................................}}
+                \State{$L\gets L\cup\{(c,i)\}$}
+            \ElsIf{$M_c<C$}\Comment{Reset candidate list when a lower coverage loss is found\hphantom{.................................................}}
+                \State{$L\gets \{(c,i)\}$}
+                \State{$coverage\gets M_c$}
+            \EndIf
+        \EndFor
+        \State{remove\textunderscore center(i)}
+    \EndFor
+    \State\Return{select\textunderscore random($L$)}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

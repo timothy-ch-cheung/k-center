@@ -1,0 +1,20 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Basic Genetic Algorithm (\cite{kramer_genetic_2017})}
+\label{alg:basic_genetic}
+\begin{algorithmic}[1]
+\Procedure{Evolve}{}
+    \State {initialise population}
+    \Repeat\Comment{each outer iteration is a single generation\hphantom{.....................................................................................................}}
+        \Repeat\Comment{loop until new enough candidates for new generation are created\hphantom{................................................................}}
+            \State{crossover}
+            \State{mutation}
+            \State{genotype-phenotype mapping}
+            \State{fitness computation}
+        \Until {population complete}
+        \State{selection of parental population}
+    \Until{termination condition}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore
