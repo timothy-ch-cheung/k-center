@@ -8,9 +8,9 @@ orlib_comparisons = {
 }
 
 orlib_comparisons = {
-    'gon': {'gon': 0, 'grasp': 11, 'pbs': 2},
-    'grasp': {'gon': 23, 'grasp': 0, 'pbs': 3},
-    'pbs': {'gon': 34, 'grasp': 31, 'pbs': 0}
+    'gon': {'GRASP': 11, 'PBS': 2},
+    'grasp': {'Gon': 23, 'PBS': 3},
+    'pbs': {'Gon': 34, 'GRASP': 31}
 }
 
 colours = {
