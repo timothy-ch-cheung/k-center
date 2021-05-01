@@ -21,7 +21,7 @@ def plot_graph(GRAPH_NAME, INTERVAL, y1, y2):
     def draw_hline(y):
         maximum = max(y)
         plt.axhline(maximum, color="lightgray", linestyle="--")
-        plt.text(-0.05, maximum, "{:.2f}".format(maximum), ha="center", va="bottom", fontsize=9)
+        plt.text(0, maximum, "{:.2f}".format(maximum), ha="center", va="bottom", fontsize=9)
 
     draw_hline(baseline)
     draw_hline(y1)
