@@ -139,7 +139,7 @@ class PBS(AbstractSolver):
         self.MAX_WEIGHT = max(nx.get_edge_attributes(graph, "weight").values())
         self.DEFAULT_POINT = list(graph.nodes())[0]
 
-        super().__init__(graph, k, constraints)
+        super().__init__(graph, k, constraints, name=name)
         PBS.order_edges(self.graph)
 
     @staticmethod
