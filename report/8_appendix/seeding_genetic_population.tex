@@ -1,0 +1,3 @@
+We found the instances which failed to converge were due to the search being stuck in local minima from their initial starting points being on outliers or having multiple centers in close proximity of eachother. The centers produced by the pseudo apporximation (\cref{section:constant_colourful_k_center}) produced centers which cover many points and therefore away from outliers, we use this algorithm as a subroutine to seed the first individual the population of our genetic algorithm, the remainder of the population is generated as before. The result of this is significantly better performance on our training set shown in \cref{table:improved_colourful_pbs}.
+
+\input{2_body/background/improved_colourful_pbs_table}

@@ -10,3 +10,4 @@ scipy==1.6.2
 matplotlib==3.4.1
 haversine==2.3.0
 pytest-mock==3.5.1
+memory-profiler==0.58.0

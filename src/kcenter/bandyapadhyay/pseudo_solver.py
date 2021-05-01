@@ -16,8 +16,8 @@ class ConstantPseudoColourful(AbstractSolver):
     produces a pseudo approximation which opens at most k+1 centers with a 1
     """
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
-        super().__init__(graph, k, constraints)
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name: str = "constant_approximation"):
+        super().__init__(graph, k, constraints, name)
 
     @staticmethod
     def get_weights(graph: nx.Graph):

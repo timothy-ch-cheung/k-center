@@ -1,0 +1,17 @@
+We performed grid search for the parameters $\alpha$ and $\beta$ for values between 0 and 1. The data set we used was TSPLIB, originally a travelling salesman data set that has been used for $k$-center, which has known optimal $k$-center costs for some instances (\cite{pullan_memetic_2008}). For each parameter pair, we perform 5 trails with 5 iterations, therefore the local search is performed 25 times. We then calculate the mean percentage above the optimal cost, and plot it in a heatmap in \cref{fig:grid_search_heatmap}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=13cm]{images/grasp_heatmap.png}
+    \caption{Grasp Plateau Surfer grid search}
+    \label{fig:grid_search_heatmap}
+\end{figure}
+
+The average percentage above optimal cost for each quadrant is shown in \cref{fig:grid_search_quadrant}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=7cm]{images/quadrant_averages_grasp.png}
+    \caption{Grasp Plateau Surfer grid search (quadrant averages)}
+    \label{fig:grid_search_quadrant}
+\end{figure}

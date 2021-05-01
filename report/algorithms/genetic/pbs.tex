@@ -1,0 +1,25 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{PBS Algorithm (\cite{pullan_memetic_2008})}
+\label{alg:pbs}
+\begin{algorithmic}[1]
+\Procedure{PBS}{}
+    \State {C $\gets\emptyset$}
+    \For{$i \gets 1$ to population\textunderscore size}
+        \State {f $\gets$ SelectRandom(V)}\Comment{Select a random vertex as an initial point to generate individual}
+        \State {$C_i\gets$ LocalSearch({f})}
+    \EndFor
+    \Repeat
+        \For{$C_i \in C$}
+            \For{$C_j \in C$}
+                \State{$C$ $\gets C$ $+$ LocalSearch($M_1(C_j)$)}
+                \State{$C$ $\gets C$ $+$ LocalSearch($M_2(X_1 (C_i,C_j))$)}
+                \State{$(S_1,S_2)\gets X_2(C_i,C_j)$}
+                 \State{$C$ $\gets C$ $+$ LocalSearch($M_2(S_1)$)} $+$ LocalSearch($M_2(S_2)$)
+            \EndFor    
+        \EndFor
+    \Until{termination condition}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

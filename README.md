@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/timothy-ch-cheung/k-center/branch/master/graph/badge.svg?token=n5JVnL4MUa)](https://codecov.io/gh/timothy-ch-cheung/k-center)
+[![CI](https://github.com/timothy-ch-cheung/k-center/actions/workflows/main.yml/badge.svg)](https://github.com/timothy-ch-cheung/k-center/actions/workflows/main.yml)
+
 # Final Year Project on Fair K-Center Clustering
 By Timothy Cheung
 
@@ -47,6 +50,3 @@ To benchmark the algorithms, we provide a command line script
 
 ### Analysis
 To perform analysis you must have R language installed.
-
-## Stats
-[![codecov](https://codecov.io/gh/timothy-ch-cheung/k-center/branch/master/graph/badge.svg?token=n5JVnL4MUa)](https://codecov.io/gh/timothy-ch-cheung/k-center)

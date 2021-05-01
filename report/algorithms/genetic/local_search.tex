@@ -1,0 +1,23 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{PBS Local Search (\cite{pullan_memetic_2008})}
+\label{alg:pbs_local_search}
+\begin{algorithmic}[1]
+\Function{local\textunderscore search}{$C,g$}
+    \State{iterations$\gets 0$}
+    \State{stale\textunderscore iterations $\gets 0$}
+    \While{iterations $<2n$ \textbf{and} stale\textunderscore iterations $<0.1(g+1)n$}
+        \State{$(cost, w)=max_{v\in V}D_v^0$ }\Comment{Find the point $w$ which is furthest away from its nearest center\hphantom{............................................}}
+        \State{$(c,i)=$ find\textunderscore pair($w$) }
+        \State{add\textunderscore center(i)}
+        \State{remove\textunderscore center(c)}
+        \State{iterations $\gets$ iterations $+ 1$}
+        \State{(new\textunderscore cost, new\textunderscore w) $=max_{v\in V}D_v^0$ }
+        \If{cost = new\textunderscore cost}
+            \State{stale\textunderscore iterations $\gets$ iterations $+ 1$}
+        \EndIf
+    \EndWhile
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

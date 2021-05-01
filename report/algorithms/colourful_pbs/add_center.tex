@@ -1,0 +1,19 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Add Center (modified)}
+\label{alg:add_center_colourful}
+\begin{algorithmic}[1]
+\Function{add\textunderscore center}{$f$}
+    \State {C $\gets C\cup \{f\}$}
+    \For{$v\in V$}
+        \If{$dist(f,v) < D_{v}^0$}
+            \State{$D_{v}^1\gets D_{v}^0$; $F_{v}^1\gets F_{v}^0$}
+            \State{$D_{v}^0\gets dist(f,v)$; $F_{v}^0\gets f$}
+        \ElsIf{$dist(f,v)<D_{v}^1$}
+            \State{$D_{v}^1\gets dist(f,v)$; $F_{v}^1\gets f$}
+        \EndIf
+    \EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore

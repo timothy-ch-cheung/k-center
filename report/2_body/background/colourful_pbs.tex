@@ -1,0 +1,41 @@
+From our results described in \cref{section:k_center_orlib}, we decided PBS would be a better metaheuristic than GRASP to for our algorithm. We propose a series of modifications to the PBS algorithm to solve the colourful $k$-center problem. We use the same genetic operators $X_1$, $X_2$, $M_1$ and $M_2$ but we make changes to the \gls{local_search} procedure. In this section we describe our modifications and show the different genetic architectures we have considered.
+
+\paragraph{Colourful \gls{local_search}}~\\
+\citeauthor{pullan_memetic_2008} noted for stochastic \gls{local_search} algorithms, performing many efficient searches was better than performing a small number of complex ones. Following this intuition we designed the modified \emph{find\_pair} function to retain original time complexity of $\mathcal{O}(kn^2)$. To describe the \gls{local_search} we need to first redefine the components \emph{add\_center}, \emph{remove\_center} and \emph{find\_pair}.
+
+As we have to account for outliers, we can no longer calculate the cost of the solution through maximising $D^1_v$ ($\forall v\in V$), therefore we amend \emph{add\_center} and \emph{remove\_center} to only update the neighbourhood structures.
+
+\begin{minipage}{0.48\textwidth}
+    \input{algorithms/colourful_pbs/add_center}
+\end{minipage}
+\hspace{0.02\textwidth}
+\begin{minipage}{0.48\textwidth}
+    \input{algorithms/colourful_pbs/remove_center}
+\end{minipage}
+
+As we no longer get the cost of the solution as a by product of updating the neighbourhood structures, we define a new function \emph{find\_colourful\_cost} to calculate the cost of a solution given a set of centers and constraints. The time complexity of \emph{find\_colourful\_cost} is $\mathcal{O}(n$ $log$ $n)$ due to the sorting of neighbours.
+
+\input{algorithms/colourful_pbs/find_cost}
+
+The original \emph{find\_pair} function returned the best swap by calculating the new cost of the solution if a center $w$ was replaced with the center $i$. In PBS, the center $w$ services point $v$ with max $D^1_v$, we follow this intuition and redefine $w$ as $F^1_v$ with max $D^1_v$ such that $D^1_v\leq cost$ ($\forall v\in V$). If we were to use \emph{find\_colourful\_cost} to evaluate the best swaps in \emph{find\_pair}, the complexity of \emph{find\_pair} would be $\mathcal{O}(kn^2+n^2log$ $n)$ due recalculating the solution cost at each of the $\mathcal{O}(n)$ iterations.
+
+\input{algorithms/colourful_pbs/find_pair}
+
+Therefore instead of using the exact cost of removing a center to guide our cost, we define a new heuristic based on the coverage of points rather than the cost of the solution. This change is described in \cref{alg:find_pair_colourful} lines 10-11; for each center in the solution, we calculate the number of points which will no longer be covered if that center was removed from the solution. It follows that the best swaps will involve removing the centers that provide the least coverage.
+
+In line 6 (\cref{alg:find_pair_colourful}) we define the cost as the last known cost, note we explicitly do not call \emph{find\_colourful\_cost} as that will increase the complexity above our aim of ${O}(kn^2)$. Instead, we call \emph{find\_colourful\_cost} a single time at each iteration of the \gls{local_search}.
+
+Given these components, we are now ready to define the full \gls{local_search} in \cref{alg:colourful_pbs_local_search}. The time complexity is $\mathcal{O}(kn^3)$ which is the same complexity as the original PBS \gls{local_search}. This procedure is embedded in the original PBS framework.
+
+\input{algorithms/colourful_pbs/local_search}
+
+\paragraph{Alternative selection methods}~\\
+We noted PBS uses an non-standard genetic selection method where the population is updated as soon as a better solution is found (this is somewhat similar to elitism selection). The impact is the diversity of the population may be reduced, therefore we also tested roulette and tournament selection. Our experiments concluded that the original selection method was the best, our full results are reported in \cref{appendix:genetic_architectures}.
+
+\paragraph{Seeding the initial population}~\\
+In our preliminary experiments, we found instances failing to converge due to the search being stuck in local minima from their initial starting points being outliers. The centers produced by the pseudo approximation (\cref{section:constant_colourful_k_center}) produced centers which cover many points, we use this as a subroutine to seed the first individual of the population. The result of this is better performance on our training set shown in \cref{appendix:seed_population}.
+
+\paragraph{The full algorithm}~\\
+Our full algorithm combines the PBS metaheuristic, colourful \gls{local_search} and population seeding. It is described in \cref{alg:colourful_pbs} and we will dub this algorithm as Colourful PBS.
+
+\input{algorithms/colourful_pbs/colourful_pbs}

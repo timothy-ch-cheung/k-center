@@ -1,0 +1,19 @@
+\input{4_results/tables/orlib_cost}
+
+\paragraph{Analysis of solution cost}~\\
+The Quade omnibus test on the $\mu$ costs (\cref{table:orlib_cost}) returned a p-value of \num{7.25e-9}. As the omnibus test returned a statistically significant result, we perform a post-hoc Quade test to determine whether the pairwise difference between the three algorithms are significant (\cref{table:post_hoc_orlib}).
+
+\input{4_results/tables/post_hoc_orlib}
+
+%TC:ignore
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/compare_three_alg.png}
+    \caption{Number of problem instances where an algorithm performed better than another}
+    \label{fig:compare_three_alg}
+\end{figure}
+%TC:endignore
+
+All three pairwise Quade tests returned a p-value below 0.05, we count the number of problem instances where one algorithm performed better than another in \cref{fig:compare_three_alg}. PBS achieved a lower cost than the \emph{Gon} algorithm in 36/40 and GRASP Plateau surfer in 34/40 ORLIB problems. Similarly the Plateau Surfer algorithm performed better than the \emph{Gon} in 25/40 problem instances. As the PBS algorithm is a memetic algorithm, there is variability in the results; we record the standard deviation in \cref{table:orlib_cost}. We calculate the cost $2\sigma$ above $\mu$ for PBS and the cost $2\sigma$ below $\mu$ for \emph{Gon}/Plateau Surfer, to account for 95.45\% of our observations under the empirical rule. Under this analysis, PBS achieves a lower cost than GRASP Plateau surfer for 34/40 and 31/40 for \emph{Gon} in ORLIB.
+
+The average \%-gap above optimal cost was $\mu$ was 49.87\%, 47.83\% and 27.38\% for \emph{Gon}, Grasp Plateau Surfer and PBS respectively. While PBS performed significantly better than the other two algorithms, we could not reproduce results by \cite{pullan_memetic_2008} which showed the optimal optimal cost could be reached on all ORLIB problems. A possible reason could be the parameters for the strategy used to maintain population diversity which was not reported in their paper, we contacted the author via email for clarification but we did not receive a reply.

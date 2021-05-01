@@ -1,0 +1,26 @@
+%TC:ignore
+\begin{algorithm}[H] 
+\caption{Find colourful cost}
+\label{alg:find_cost_colourful}
+\begin{algorithmic}[1]
+\Function{find\textunderscore colourful\textunderscore cost}{$C$}
+    \State {S $\gets\emptyset$}\Comment{The set of points which are clustered\hphantom{................................................................................}}
+    \State {$t_b\gets 0$; $t_r\gets 0$}\Comment{The number blue/red points currently covered\hphantom{.................................................................}}
+    \State{cost $\gets max\{dist(i,j)\mid\forall i,j\in V\}$}
+    \State{$nearest$\textunderscore$vertices\gets$ sort ascending $v\in V$ by $D^1_v$}\Comment{sort the set of vertices by the distance from their nearest center}
+    \For{$v\in nearest$\textunderscore$vertices$}
+        \If{$t_b\geq b$ \emph{and} $t_r\geq r$}
+            \State\Return{cost}
+        \EndIf
+        \If{$v\in B$}
+            \State{$t_b\gets t_b + 1$}
+        \ElsIf{$v\in R$}
+            \State{$t_r\gets t_r + 1$}
+        \EndIf
+        \State{$cost\gets D^1_v$}
+    \EndFor
+    \State\Return{cost}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+%TC:endignore
