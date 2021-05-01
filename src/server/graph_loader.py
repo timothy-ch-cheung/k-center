@@ -119,6 +119,15 @@ class GraphLoader:
             }
 
     @staticmethod
+    def get_header(graph_name: str):
+        graph_file = Path(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt")
+        if not graph_file.is_file():
+            return None
+        f = open(f"{os.path.dirname(__file__)}/dataset/{graph_name}.txt", "r")
+        node_count, k, blue, red, min_blue, min_red, opt, outliers = GraphLoader.parse_header(f.readline())
+        return node_count, blue, red, k, min_blue, min_red, outliers, opt
+
+    @staticmethod
     def get_graph(graph_name: str) -> nx.Graph:
         """Create a NetworkX representation of the graph
         """
