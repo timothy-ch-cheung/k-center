@@ -12,13 +12,15 @@ from server.orlib_graph_loader import ORLIBGraphLoader
 problem_list = {
     "GOWALLA": GowGraphLoader.get_problem_list(),
     "SYNTHETIC": GraphLoader.get_problem_list(),
-    "ORLIB": ORLIBGraphLoader.get_problem_list()
+    "ORLIB": ORLIBGraphLoader.get_problem_list(),
+    "GOWALLA_SOLVED": ["solved_gow41"],
 }
 
 loader = {
     "GOWALLA": GowGraphLoader,
     "SYNTHETIC": GraphLoader,
-    "ORLIB": ORLIBGraphLoader
+    "ORLIB": ORLIBGraphLoader,
+    "GOWALLA_SOLVED": GowGraphLoader
 }
 
 results_type = Dict[str, float]
@@ -244,7 +246,7 @@ def analyse(summaries: summary_type):
 def count_pairwise_comparison(summaries: summary_type, dataset: str, num_std: int = 0):
     algs = list(summaries.keys())
     pairwise_compare = {alg: {alg:0 for alg in algs} for alg in algs}
-    if dataset != "GOWALLA":
+    if "GOWALLA" not in dataset:
         optimal_costs = loader[dataset].get_opt()
     else:
         optimal_costs = {problem: 0 for problem in problem_list[dataset]}
@@ -307,7 +309,7 @@ def summarise_time_data():
 
 
 if __name__ == "__main__":
-    dataset = "SYNTHETIC"
+    dataset = "GOWALLA_SOLVED"
     summaries = summarise(f"{dataset}")
 
     analyse(summaries)
