@@ -162,3 +162,15 @@ def test_get_problem_list():
 def test_get_header():
     header = GraphLoader.get_header("SYNTHETIC/syn01")
     assert header == (100, 48, 52, 3, 40, 40, 20, 133.5)
+
+
+def test_get_opt():
+    OPT = GraphLoader.get_opt()
+    assert OPT == {
+        'syn01': 133.5, 'syn02': 80.5, 'syn03': 40.5, 'syn04': 15.5, 'syn05': 80.5, 'syn06': 40.5, 'syn07': 16.5,
+        'syn08': 8.5, 'syn09': 80.5, 'syn10': 27.5, 'syn11': 12.5, 'syn12': 5.5, 'syn13': 80.5, 'syn14': 16.5,
+        'syn15': 12.5, 'syn16': 4.5, 'syn17': 80.5, 'syn18': 16.5, 'syn19': 12.5, 'syn20': 3.5, 'syn21': 80.5,
+        'syn22': 16.5, 'syn23': 9.5, 'syn24': 2.5, 'syn25': 40.5, 'syn26': 11.5, 'syn27': 8.5, 'syn28': 2.5,
+        'syn29': 40.5, 'syn30': 11.5, 'syn31': 7.5, 'syn32': 2.5, 'syn33': 27.5, 'syn34': 10.5, 'syn35': 7.5,
+        'syn36': 2.5, 'syn37': 80.5, 'syn38': 40.5, 'syn39': 16.5, 'syn40': 13.5
+    }
