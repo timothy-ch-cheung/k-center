@@ -304,9 +304,6 @@ def summarise(dataset: str):
             summaries[alg][problem]["time"] = calc_stats(durations)
     return summaries
 
-def summarise_time_data():
-    pass
-
 
 if __name__ == "__main__":
     dataset = "GOWALLA_SOLVED"
