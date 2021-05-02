@@ -152,6 +152,11 @@ def test_get_graph_basic_outlier_graph():
     assert nx.is_isomorphic(actual_graph, expected_graph, edge_match=em)
 
 
+def test_get_graph_none():
+    graph = GraphLoader.get_graph("none")
+    assert graph is None
+
+
 def test_get_problem_list():
     problems = GraphLoader.get_problem_list(dataset_name="TRAIN_COLOURFUL")
     assert set(problems) == {"train_col_n100_k10", "train_col_n100_k20", "train_col_n100_k5", "train_col_n200_k10",
@@ -162,6 +167,11 @@ def test_get_problem_list():
 def test_get_header():
     header = GraphLoader.get_header("SYNTHETIC/syn01")
     assert header == (100, 48, 52, 3, 40, 40, 20, 133.5)
+
+
+def test_get_header_none():
+    header = GraphLoader.get_header("SYNTHETIC/syn42")
+    assert header is None
 
 
 def test_get_opt():
