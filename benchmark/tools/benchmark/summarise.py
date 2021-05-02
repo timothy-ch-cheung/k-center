@@ -12,13 +12,15 @@ from server.orlib_graph_loader import ORLIBGraphLoader
 problem_list = {
     "GOWALLA": GowGraphLoader.get_problem_list(),
     "SYNTHETIC": GraphLoader.get_problem_list(),
-    "ORLIB": ORLIBGraphLoader.get_problem_list()
+    "ORLIB": ORLIBGraphLoader.get_problem_list(),
+    "GOWALLA_SOLVED": ["solved_gow41"],
 }
 
 loader = {
     "GOWALLA": GowGraphLoader,
     "SYNTHETIC": GraphLoader,
-    "ORLIB": ORLIBGraphLoader
+    "ORLIB": ORLIBGraphLoader,
+    "GOWALLA_SOLVED": GowGraphLoader
 }
 
 results_type = Dict[str, float]
@@ -53,8 +55,8 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
 
     time_gaps = []
     cost_gaps = []
-    costs = {alg:[] for alg in algs}
-    times = {alg:[] for alg in algs}
+    costs = {alg: [] for alg in algs}
+    times = {alg: [] for alg in algs}
     for problem in problem_list[dataset]:
         graph = loader[dataset].get_graph(problem)
         n = graph.graph["n"]
@@ -88,8 +90,8 @@ def generate_latex_table(summaries: summary_type, dataset: List[str], type: str)
 
     footer = "\\multicolumn{1}{c}{Average}"
     for algorithm in algs:
-        mean_time = '{:.2f}'.format(round(sum(times[algorithm])/len(times[algorithm]),DECIMAL_POINTS))
-        mean_cost = '{:.2f}'.format(round(sum(costs[algorithm])/len(costs[algorithm]), DECIMAL_POINTS))
+        mean_time = '{:.2f}'.format(round(sum(times[algorithm]) / len(times[algorithm]), DECIMAL_POINTS))
+        mean_cost = '{:.2f}'.format(round(sum(costs[algorithm]) / len(costs[algorithm]), DECIMAL_POINTS))
         footer += f" &&& {mean_cost} && {mean_time}"
     footer += f" && {np.mean(cost_gaps)} & {np.mean(time_gaps)}"
     print(f"{footer}\\\\")
@@ -241,6 +243,36 @@ def analyse(summaries: summary_type):
         print(pairwise_p_values)
 
 
+def count_pairwise_comparison(summaries: summary_type, dataset: str, num_std: int = 0):
+    algs = list(summaries.keys())
+    pairwise_compare = {alg: {alg:0 for alg in algs} for alg in algs}
+    if "GOWALLA" not in dataset:
+        optimal_costs = loader[dataset].get_opt()
+    else:
+        optimal_costs = {problem: 0 for problem in problem_list[dataset]}
+
+    for first_alg in algs:
+        for second_alg in algs:
+            if first_alg == second_alg:
+                continue
+
+            for problem in problem_list[dataset]:
+                first_score = summaries[first_alg][problem]["cost"]["mean"]
+                first_score += summaries[first_alg][problem]["cost"]["std"] * num_std
+                first_score = max(optimal_costs[problem], first_score)
+
+                second_score = summaries[second_alg][problem]["cost"]["mean"]
+                second_score -= summaries[second_alg][problem]["cost"]["std"] * num_std
+                second_score = max(optimal_costs[problem], second_score)
+
+
+                if first_score < second_score:
+                    pairwise_compare[first_alg][second_alg] += 1
+
+    print(pairwise_compare)
+    return pairwise_compare
+
+
 def calc_stats(results: List[float]) -> Dict[str, float]:
     minimum = min(results)
     mean = float(np.mean(results))
@@ -274,10 +306,14 @@ def summarise(dataset: str):
 
 
 if __name__ == "__main__":
-    dataset = "GOWALLA"
+    dataset = "GOWALLA_SOLVED"
     summaries = summarise(f"{dataset}")
 
     analyse(summaries)
-    generate_latex_table(summaries, dataset, "cost")
+    count_pairwise_comparison(summaries, dataset)
+    count_pairwise_comparison(summaries, dataset, num_std=2)
+    count_pairwise_comparison(summaries, dataset, num_std=3)
+
+    # generate_latex_table(summaries, dataset, "cost")
     # generate_latex_table_known_opt(summaries, dataset)
     # generate_latex_table_known_opt_no_stats(summaries, dataset)

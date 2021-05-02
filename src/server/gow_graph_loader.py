@@ -42,6 +42,12 @@ class GowGraphLoader:
         return location_id, latitude, longitude, visits
 
     @staticmethod
+    def get_header(graph_name: str):
+        with open(f"{os.path.dirname(__file__)}/dataset/GOWALLA/{graph_name}.txt", "r") as f:
+            num_vertices, num_blue, num_red, k, mean_consumption, min_blue, min_red =  GowGraphLoader.parse_header(f.readline())
+            return num_vertices, num_blue, num_red, k, min_blue, min_red
+
+    @staticmethod
     def get_graph(graph_name: str) -> nx.Graph:
         G = nx.Graph()
         with open(f"{os.path.dirname(__file__)}/dataset/GOWALLA/{graph_name}.txt", "r") as f:
