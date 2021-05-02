@@ -6,3 +6,8 @@ def test_load_gow_graph():
 
     assert len(graph.nodes()) == 100
     assert len(graph.edges()) == 5050
+
+
+def test_get_header():
+    header = GowGraphLoader.get_header("gow01")
+    assert header == (100, 18, 82, 5, 13, 61)

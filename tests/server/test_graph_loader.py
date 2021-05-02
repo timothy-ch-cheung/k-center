@@ -155,5 +155,10 @@ def test_get_graph_basic_outlier_graph():
 def test_get_problem_list():
     problems = GraphLoader.get_problem_list(dataset_name="TRAIN_COLOURFUL")
     assert set(problems) == {"train_col_n100_k10", "train_col_n100_k20", "train_col_n100_k5", "train_col_n200_k10",
-                        "train_col_n200_k20", "train_col_n200_k5", "train_col_n300_k20", "train_col_n300_k40",
-                        "train_col_n400_k20", "train_col_n400_k40"}
+                             "train_col_n200_k20", "train_col_n200_k5", "train_col_n300_k20", "train_col_n300_k40",
+                             "train_col_n400_k20", "train_col_n400_k40"}
+
+
+def test_get_header():
+    header = GraphLoader.get_header("SYNTHETIC/syn01")
+    assert header == (100, 48, 52, 3, 40, 40, 20, 133.5)
