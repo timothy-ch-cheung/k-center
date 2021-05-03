@@ -2,11 +2,11 @@ from typing import Dict, Tuple, Set
 
 import networkx as nx
 
-from kcenter.constant.colour import Colour
-from kcenter.constant.solver_state import SolverState
-from kcenter.plateau_surfer.plateau_surfer import PlateauSurfer
-from kcenter.solver.abstract_generator import AbstractGenerator, Solution
-from kcenter.verify.verify import cluster, cluster_nearest
+from src.kcenter.constant.colour import Colour
+from src.kcenter.constant.solver_state import SolverState
+from src.kcenter.plateau_surfer.plateau_surfer import PlateauSurfer
+from src.kcenter.solver.abstract_generator import AbstractGenerator, Solution
+from src.kcenter.verify.verify import cluster, cluster_nearest
 
 
 class PlateauSurferSteps:

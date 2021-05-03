@@ -1,6 +1,6 @@
-from kcenter.constant.solver_state import SolverState
-from kcenter.plateau_surfer.stepped_plateau_surfer import SteppedPlateauSurfer
-from kcenter.solver.abstract_generator import Solution
+from src.kcenter.constant.solver_state import SolverState
+from src.kcenter.plateau_surfer.stepped_plateau_surfer import SteppedPlateauSurfer
+from src.kcenter.solver.abstract_generator import Solution
 from tests.kcenter.solver.pbs.test_pbs import RELAXED_CONSTRAINTS, K
 from tests.kcenter.util.assertion import assert_step_equal
 from tests.kcenter.util.create_test_graph import basic_graph_with_outlier
