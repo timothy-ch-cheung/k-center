@@ -30,7 +30,7 @@ k_center_algorithms = {
     "target_colourful_pbs": TargetColourfulPBS,
     "brute_force_k_center": BruteForceKCenter,
     "brute_force_colourful_k_center": BruteForceColourfulKCenter,
-    "grasp": PlateauSurfer
+    "grasp_ps": PlateauSurfer
 }
 
 
