@@ -35,6 +35,10 @@ def cluster(graph: nx.Graph, centers: Set[int], radius: float) -> Dict[int, Set[
     return clusters
 
 
+def cluster_nearest(graph: nx.Graph, centers: Set[int]) -> Dict[int, Set[int]]:
+    return cluster(graph, centers, float("inf"))
+
+
 def verify_solution(graph: nx.Graph, constraints: Dict[Colour, int], k: int, radius: float, centers: Set[int]) -> bool:
     """Verify that a set of centers with a given radius satisfies the constraints of the Colourful K-Center problem.
     Ensures that the minimum coverage of Blue and Red points are met.
