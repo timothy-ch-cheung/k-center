@@ -2,7 +2,7 @@ import uuid
 
 from flask import request, Blueprint, jsonify
 
-from kcenter.plateau_surfer.stepped_plateau_surfer import SteppedPlateauSurfer
+from src.kcenter.plateau_surfer.stepped_plateau_surfer import SteppedPlateauSurfer
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
