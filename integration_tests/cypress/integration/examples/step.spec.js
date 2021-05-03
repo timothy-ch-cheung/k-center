@@ -60,4 +60,10 @@ context('Step', () => {
         cy.get('[cy-data=zoom-individual-btn]').click()
         cy.compareSnapshot("steps_walkthrough_colourful_pbs_large_03", TOLERANCE)
     })
+
+    it('Shows available algorithms', () => {
+        cy.get("[cy-data=steps-modal-btn]").click()
+        cy.get('[cy-data=algorithm-select]').click()
+        cy.compareSnapshot("step_available_algorithms", TOLERANCE)
+    })
 })

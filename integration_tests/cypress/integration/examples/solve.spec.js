@@ -49,5 +49,8 @@ context('Solve', () => {
         cy.compareSnapshot("solve_graph_brute_force_alert_expanded", TOLERANCE)
     })
 
-
+    it('Shows available algorithms', () => {
+        cy.get('[cy-data=algorithm-select]').click()
+        cy.compareSnapshot("solve_available_algorithms", TOLERANCE)
+    })
 })
