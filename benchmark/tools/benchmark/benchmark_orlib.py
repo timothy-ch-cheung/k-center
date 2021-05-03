@@ -49,7 +49,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
 
     results = []
     for i in range(trials):
-        if algorithm == "grasp" or algorithm == "pbs":
+        if algorithm == "grasp_ps" or algorithm == "pbs":
             clusters, outliers, radius = solver.target_solve(target_cost=optimal_cost, timeout=timeout, log=True)
             log = get_latest_log(algorithm, n, k)
             entry = get_last_valid_result(log, timeout)
@@ -71,7 +71,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
 
 def run_suite():
     TRIALS = 10
-    ALGORITHM = "grasp"
+    ALGORITHM = "grasp_ps"
     Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
