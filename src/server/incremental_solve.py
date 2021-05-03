@@ -1,5 +1,8 @@
+import uuid
+
 from flask import request, Blueprint, jsonify
 
+from src.kcenter.plateau_surfer.stepped_plateau_surfer import SteppedPlateauSurfer
 from src.kcenter.bandyapadhyay.stepped_pseudo_solver import SteppedConstantPseudoColourful
 from src.kcenter.bandyapadhyay.stepped_solver import SteppedConstantColourful
 from src.kcenter.colourful_pbs.stepped_colourful_pbs import SteppedColourfulPBS
@@ -8,7 +11,6 @@ from src.kcenter.greedy.stepped_greedy import SteppedGreedy
 from src.kcenter.greedy.stepped_greedy_reduce import SteppedGreedyReduce
 from src.kcenter.pbs.stepped_pbs import SteppedPBS
 from src.server.graph_loader import GraphLoader
-import uuid
 
 step = Blueprint('step', __name__)
 
@@ -20,7 +22,8 @@ stepped_algorithms = {
     "colourful_bandyapadhyay_pseudo": SteppedConstantPseudoColourful,
     "colourful_bandyapadhyay": SteppedConstantColourful,
     "pbs": SteppedPBS,
-    "colourful_pbs": SteppedColourfulPBS
+    "colourful_pbs": SteppedColourfulPBS,
+    "grasp_ps": SteppedPlateauSurfer
 }
 
 

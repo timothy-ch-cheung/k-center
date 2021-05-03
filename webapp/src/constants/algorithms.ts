@@ -42,6 +42,12 @@ export const algorithms : {[key: string]: algorithm_props}= {
         type: "genetic",
         stepped_enabled: true
     },
+    grasp_ps: {
+        name: "GRASP Plateau Surfer",
+        short_name: "GRASP-PS",
+        type: "randomised",
+        stepped_enabled: true
+    },
     brute_force_k_center: {
         name: "Brute force K-Center",
         short_name: "Brute force K-Center",
