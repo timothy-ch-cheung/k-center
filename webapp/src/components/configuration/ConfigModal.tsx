@@ -21,6 +21,7 @@ interface Props {
     setStepSolveRequestData: (data: StepSolveRequestData) => void
     id: string
     resetSteps: () => void
+    setId: (id: string) => void
 }
 
 const Window = styled(Paper)`
@@ -54,6 +55,7 @@ export default function ConfigModal(props: Props) {
                 props.resetSteps()
                 setIsLoading(false)
                 setOpen(false);
+                props.setId(response.data.id)
             }
         )
     }
