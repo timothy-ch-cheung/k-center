@@ -19,5 +19,5 @@ def profile_memory_approximation(graph_name: str):
 if __name__ == "__main__":
     INTERVAL, TIMEOUT, GRAPH_NAME = parse_args()
     fun = partial(profile_memory_approximation, GRAPH_NAME)
-    mem = memory_usage(fun, interval=INTERVAL)
+    mem = memory_usage(fun, interval=INTERVAL, max_iterations=1)
     print(mem)
