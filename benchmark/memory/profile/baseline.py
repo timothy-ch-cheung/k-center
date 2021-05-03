@@ -8,5 +8,5 @@ from server.gow_graph_loader import GowGraphLoader
 if __name__ == "__main__":
     INTERVAL, TIMEOUT, GRAPH_NAME = parse_args()
     fun = partial(GowGraphLoader.get_graph, GRAPH_NAME)
-    baseline = memory_usage(fun, interval=INTERVAL)
+    baseline = memory_usage(fun, interval=INTERVAL, max_iterations=1)
     print(baseline)

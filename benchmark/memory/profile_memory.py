@@ -29,7 +29,7 @@ def plot_graph(GRAPH_NAME, INTERVAL, y1, y2):
 
     ax.plot(x0, baseline, label="Load Graph", color="green")
     ax.plot(x1, y1, label="Colourful PBS", color="blue")
-    ax.plot(x2, y2, label="Constant Colourful", color="red")
+    ax.plot(x2, y2, label="Ban algorithm", color="red")
     ax.legend()
     ax.set_ylim([None, max(baseline + y1 + y2) * 1.05])
 
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     GRAPH_NAME = "solved_gow41"
     graph = GowGraphLoader.get_graph(GRAPH_NAME)
     TIMEOUT = calc_timeout(graph.graph["n"], graph.graph["k"])
+    print(f"Timeout: {TIMEOUT}")
 
     y1_str = subprocess.run([sys.executable, "profile/colourful_pbs.py", str(INTERVAL), str(TIMEOUT), GRAPH_NAME],
                             stdout=subprocess.PIPE).stdout.decode('utf-8')
