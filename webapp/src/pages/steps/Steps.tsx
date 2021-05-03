@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Container, HomeIcon} from "../index/App";
-import {v4 as uuid} from 'uuid';
 import Chart, {ChartData} from "../../components/chart/Chart";
 import styled from "@emotion/styled";
 import ConfigModal, {StepSolveRequestData} from "../../components/configuration/ConfigModal";
@@ -47,7 +46,7 @@ const DEFAULT_STEP_PAGE_SETTINGS = {
 
 export default function Steps() {
     const history = useHistory();
-    const [id, setId] = useState<string>(uuid());
+    const [id, setId] = useState<string>("");
     const [solutionHistory, setSolutionHistory] = useState<SolutionStep[]>([])
     const [solveRequestData, setSolveRequestData] = useState<StepSolveRequestData>()
     const [chartData, setChartData] = useState<SolutionStep>()
@@ -104,6 +103,7 @@ export default function Steps() {
                 setStepSolveRequestData={setSolveRequestData}
                 id={id}
                 resetSteps={resetPageControl}
+                setId={setId}
             />
             <InstanceStats gridArea="mid-left" chart={chartData} width={190} height={165}/>
             <Parameters gridArea="bot-left" solveRequestData={solveRequestData} width={190} height={130}/>
