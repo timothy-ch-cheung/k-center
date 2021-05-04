@@ -54,7 +54,7 @@ def profile_mem(graph_name, first_algorithm, second_algorithm):
     graph = GowGraphLoader.get_graph(graph_name)
     TIMEOUT = calc_timeout(graph.graph["n"], graph.graph["k"])
 
-    print(f"{os.path.dirname(__file__)}/profile/{first_algorithm}.py")
+    # Two algorithms need to be run as a separate subprocess to get the correct memory usage reading
     y1_str = subprocess.run(
         [sys.executable,"-m", f"benchmark.memory.profile.{first_algorithm}", str(INTERVAL), str(TIMEOUT),
          graph_name],
