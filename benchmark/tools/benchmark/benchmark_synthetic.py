@@ -15,7 +15,7 @@ def calc_timeout(n, k):
     return math.ceil(0.15 * n + 0.5 * k)
 
 
-def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
+def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str, timeout: int):
     graph = GraphLoader.get_graph(f"{problem_set}/{problem_name}")
     n = graph.graph["n"]
     k = graph.graph["k"]
@@ -24,7 +24,8 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
     optimal_cost = graph.graph["opt"]
     constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
     solver = k_center_algorithms[algorithm](graph, k, constraints, name=algorithm)
-    timeout = calc_timeout(n, k)
+    if timeout == -1:
+        timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
@@ -50,7 +51,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str):
         os.fsync(f)
 
 
-def run_suite():
+def run_synthetic_suite(algorithm, trials, timeout):
     PROBLEM_SET = "SYNTHETIC"
     problem_list = GraphLoader.get_problem_list(PROBLEM_SET)
     TRIALS = 16
@@ -70,4 +71,4 @@ def run_suite():
 
 
 if __name__ == "__main__":
-    run_suite()
+    run_synthetic_suite("colourful_pbs", 10, -1)

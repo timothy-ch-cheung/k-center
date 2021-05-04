@@ -2,13 +2,14 @@ import math
 import os
 import time
 from pathlib import Path
+from typing import Optional
 
 from benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
-from kcenter.constant.colour import Colour
-from kcenter.verify.verify import verify_solution
-from server.gow_graph_loader import GowGraphLoader
-from server.routes import k_center_algorithms
-from util.logger import LogEntry
+from src.kcenter.constant.colour import Colour
+from src.kcenter.verify.verify import verify_solution
+from src.server.gow_graph_loader import GowGraphLoader
+from src.server.routes import k_center_algorithms
+from src.util.logger import LogEntry
 
 problem_list = GowGraphLoader.get_problem_list()
 
@@ -17,7 +18,7 @@ def calc_timeout(n, k):
     return math.ceil(0.15 * n + 0.5 * k)
 
 
-def benchmark(problem_name: str, trials: int, algorithm: str):
+def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
     graph = GowGraphLoader.get_graph(problem_name)
     n = graph.graph["n"]
     k = graph.graph["k"]
@@ -25,7 +26,8 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
     min_red = graph.graph["min_red"]
     constraints = {Colour.BLUE: min_blue, Colour.RED: min_red}
     solver = k_center_algorithms[algorithm](graph, k, constraints, name=algorithm)
-    timeout = calc_timeout(n, k)
+    if timeout == -1:
+        timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
@@ -51,22 +53,21 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
         os.fsync(f)
 
 
-def run_suite():
-    TRIALS = 1
-    ALGORITHM = "target_colourful_pbs"
-    Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
+def run_gowalla_suite(algorithm, trials, timeout):
+    Path(f"{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
+    print()
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results_1.txt")
+        my_file = Path(f"{algorithm}/{problem}_results.txt")
         if my_file.is_file():
             continue
 
-        benchmark(problem, TRIALS, ALGORITHM)
-        print(f"Benchmarked {ALGORITHM} algorithm on {problem} with {TRIALS} trials")
+        benchmark(problem, trials, algorithm, timeout)
+        print(f"Benchmarked {algorithm} algorithm on {problem} with {trials} trials")
 
-    print(f"total time: {time.time() - start_time}")
+    print(f"\ntotal time: {time.time() - start_time}")
 
 
 if __name__ == "__main__":
-    run_suite()
+    run_gowalla_suite("colourful_pbs", 10, -1)

@@ -4,11 +4,11 @@ import os
 import time
 from pathlib import Path
 
-from kcenter.constant.colour import Colour
-from kcenter.solver.abstract_target_solver import AbstractTargetSolver
-from server.orlib_graph_loader import ORLIBGraphLoader
-from server.routes import k_center_algorithms
-from util.logger import LogEntry, log_filename
+from src.kcenter.constant.colour import Colour
+from src.kcenter.solver.abstract_target_solver import AbstractTargetSolver
+from src.server.orlib_graph_loader import ORLIBGraphLoader
+from src.server.routes import k_center_algorithms
+from src.util.logger import LogEntry, log_filename
 
 OPT = ORLIBGraphLoader.get_opt()
 problem_list = ORLIBGraphLoader.get_problem_list()
@@ -39,13 +39,14 @@ def get_last_valid_result(log_name: str, timeout: int):
     return last_valid
 
 
-def benchmark(problem_name: str, trials: int, algorithm: str):
+def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
     graph = ORLIBGraphLoader.get_graph(problem_name)
     n = graph.graph["n"]
     k = graph.graph["k"]
     solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: 0, Colour.RED: 0})
     optimal_cost = OPT[problem_name]
-    timeout = calc_timeout(n, k)
+    if timeout == -1:
+        timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
@@ -69,22 +70,20 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
         os.fsync(f)
 
 
-def run_suite():
-    TRIALS = 10
-    ALGORITHM = "grasp_ps"
-    Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
+def run_orlib_suite(algorithm, trials, timeout):
+    Path(f"{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results.txt")
+        my_file = Path(f"{algorithm}/{problem}_results.txt")
         if my_file.is_file():
             continue
 
-        benchmark(problem, TRIALS, ALGORITHM)
-        print(f"Benchmarked {ALGORITHM} algorithm on {problem} with {TRIALS} trials")
+        benchmark(problem, trials, algorithm)
+        print(f"Benchmarked {algorithm} algorithm on {problem} with {trials} trials")
 
     print(f"total time: {time.time() - start_time}")
 
 
 if __name__ == "__main__":
-    run_suite()
+    run_orlib_suite("grasp_ps", 10, -1)
