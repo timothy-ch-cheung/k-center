@@ -15,8 +15,9 @@ from src.util.logger import Logger
 
 class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
     def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int] = None, alpha: float = 0.5,
-                 beta: float = 0.25):
+                 beta: float = 0.25, name="grasp_ps"):
         super().__init__(graph, k, constraints)
+        self.name = name
         self.weights = {}
         self.points = set(graph.nodes())
         for i in self.points:
@@ -167,7 +168,7 @@ class PlateauSurfer(BruteForceKCenter, AbstractTargetSolver, AbstractSolver):
         Dict[int, Set[int]], Set[int], float]:
 
         start_time = time.time()
-        logger = Logger("grasp", len(self.points), self.k, start_time)
+        logger = Logger(self.name, len(self.points), self.k, start_time)
         best_cost = self.MAX_WEIGHT
         best_solution = None
 

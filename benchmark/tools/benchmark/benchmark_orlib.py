@@ -43,14 +43,14 @@ def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
     graph = ORLIBGraphLoader.get_graph(problem_name)
     n = graph.graph["n"]
     k = graph.graph["k"]
-    solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: 0, Colour.RED: 0})
+    solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: n, Colour.RED: 0}, name=algorithm)
     optimal_cost = OPT[problem_name]
     if timeout == -1:
         timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
-        if algorithm == "grasp_ps" or algorithm == "pbs":
+        if algorithm == "grasp_ps" or "target" in algorithm:
             clusters, outliers, radius = solver.target_solve(target_cost=optimal_cost, timeout=timeout, log=True)
             log = get_latest_log(algorithm, n, k)
             entry = get_last_valid_result(log, timeout)

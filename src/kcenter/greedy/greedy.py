@@ -13,7 +13,8 @@ class Greedy(AbstractSolver):
     the maximum inter-cluster distance (Gonzalez 1985)".
     """
 
-    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int]):
+    def __init__(self, graph: nx.Graph, k: int, constraints: Dict[Colour, int], name="greedy"):
+        self.name = name
         super().__init__(graph, k, constraints)
 
     @staticmethod

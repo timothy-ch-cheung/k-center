@@ -5,6 +5,8 @@ from typing import Tuple, Dict, List
 
 import networkx as nx
 
+from src.kcenter.constant.colour import Colour
+
 
 class ORLIBGraphLoader:
     @staticmethod
@@ -43,7 +45,7 @@ class ORLIBGraphLoader:
             G.graph["opt"] = ORLIBGraphLoader.get_opt()[graph_name]
 
             for vertex in range(1, num_vertices + 1):
-                G.add_node(vertex)
+                G.add_node(vertex, colour=Colour.BLUE)
 
             for line in f.readlines():
                 start_vertex, end_vertex, cost = ORLIBGraphLoader.parse_edge(line)
