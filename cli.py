@@ -1,7 +1,9 @@
+import re
 import sys
 
 import click
 
+from benchmark.memory.profile_memory import profile_mem
 from benchmark.tools.benchmark.benchmark_gowalla import run_gowalla_suite
 from benchmark.tools.benchmark.benchmark_orlib import run_orlib_suite
 from benchmark.tools.benchmark.benchmark_synthetic import run_synthetic_suite
@@ -60,6 +62,25 @@ def benchmark(data_set, algorithm, trials, timeout):
     algorithm = ALGORITHM_MAP[algorithm]
     print(f"Benchmarking {algorithm} on {data_set} for {trials} {'trial' if trials == 1 else 'trials'}")
     benchmark_handler[data_set](algorithm, trials, timeout)
+
+@main.command()
+@click.argument('first_algorithm')
+@click.argument('second_algorithm')
+@click.option("--instance", "-i", default="gow41", help='Problem instance')
+def profile(first_algorithm, second_algorithm, instance):
+    """Compare memory usage of ALGORITHM_1 and ALGORITHM_2"""
+    if not valid("GOWALLA", first_algorithm) or not valid("GOWALLA", second_algorithm):
+        return
+
+    if not re.match(r"gow\d{2}", instance):
+        print("Invalid problem instance.")
+        print("Supported instances are GOWALLA instances 1-41.")
+        return
+
+    if instance == "gow41":
+        instance = "solved_gow41"
+
+    profile_mem(instance, ALGORITHM_MAP[first_algorithm], ALGORITHM_MAP[second_algorithm])
 
 
 if __name__ == "__main__":
