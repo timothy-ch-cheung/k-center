@@ -6,13 +6,27 @@ from benchmark.tools.benchmark.benchmark_gowalla import run_gowalla_suite
 from benchmark.tools.benchmark.benchmark_orlib import run_orlib_suite
 from benchmark.tools.benchmark.benchmark_synthetic import run_synthetic_suite
 
-algorithm_map = {
+ALGORITHM_MAP = {
     "gon": "greedy",
     "grasp_ps": "grasp_ps",
     "pbs": "target_pbs",
     "ban": "colourful_bandyapadhyay",
     "col_pbs": "target_colourful_pbs"
 }
+
+DATA_SETS = {"ORLIB", "GOWALLA", "SYNTHETIC"}
+
+def valid(data_set, algorithm):
+    valid = True
+    if data_set not in DATA_SETS:
+        print("Invalid DATA_SET, run 'python cli.py info' for valid arguments")
+        valid = False
+
+    if algorithm not in ALGORITHM_MAP:
+        print("Invalid ALGORITHM, run 'python cli.py info' for valid arguments")
+        valid = False
+
+    return valid
 
 
 @click.group()
@@ -39,7 +53,11 @@ def benchmark(data_set, algorithm, trials, timeout):
         "SYNTHETIC": run_synthetic_suite,
         "ORLIB": run_orlib_suite
     }
-    algorithm = algorithm_map[algorithm]
+
+    if not valid(data_set, algorithm):
+        return
+
+    algorithm = ALGORITHM_MAP[algorithm]
     print(f"Benchmarking {algorithm} on {data_set} for {trials} {'trial' if trials == 1 else 'trials'}")
     benchmark_handler[data_set](algorithm, trials, timeout)
 
