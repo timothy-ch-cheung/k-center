@@ -4,11 +4,11 @@ import time
 from pathlib import Path
 
 from benchmark.tools.benchmark.benchmark_orlib import get_latest_log, get_last_valid_result
-from kcenter.constant.colour import Colour
-from kcenter.verify.verify import verify_solution
-from server.graph_loader import GraphLoader
-from server.routes import k_center_algorithms
-from util.logger import LogEntry
+from src.kcenter.constant.colour import Colour
+from src.kcenter.verify.verify import verify_solution
+from src.server.graph_loader import GraphLoader
+from src.server.routes import k_center_algorithms
+from src.util.logger import LogEntry
 
 
 def calc_timeout(n, k):
