@@ -44,7 +44,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str, 
         assert verify_solution(graph, constraints, k, radius, set(clusters.keys()))
         results.append(entry)
 
-    with open(f"{algorithm}/{problem_name}_results_1.txt", "w") as f:
+    with open(f"SYNTHETIC/{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
             f.write(f"{result.cost}, {result.time}\n")
         f.flush()
@@ -54,18 +54,16 @@ def benchmark(problem_name: str, trials: int, algorithm: str, problem_set: str, 
 def run_synthetic_suite(algorithm, trials, timeout):
     PROBLEM_SET = "SYNTHETIC"
     problem_list = GraphLoader.get_problem_list(PROBLEM_SET)
-    TRIALS = 16
-    ALGORITHM = "target_colourful_pbs"
-    Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
+    Path(f"{PROBLEM_SET}/{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results_1.txt")
+        my_file = Path(f"{algorithm}/{problem}_results.txt")
         if my_file.is_file():
             continue
 
-        benchmark(problem, TRIALS, ALGORITHM, PROBLEM_SET)
-        print(f"Benchmarked {ALGORITHM} algorithm on {problem} with {TRIALS} trials")
+        benchmark(problem, trials, algorithm, PROBLEM_SET, timeout)
+        print(f"Benchmarked {algorithm} algorithm on {problem} with {trials} trials")
 
     print(f"total time: {time.time() - start_time}")
 

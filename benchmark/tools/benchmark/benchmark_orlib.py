@@ -63,7 +63,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
             end_time = time.time()
             results.append(LogEntry(cost=radius, time=end_time - start_time))
 
-    with open(f"{algorithm}/{problem_name}_results_1.txt", "w") as f:
+    with open(f"ORLIB/{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
             f.write(f"{result.cost}, {result.time}\n")
         f.flush()
@@ -71,7 +71,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
 
 
 def run_orlib_suite(algorithm, trials, timeout):
-    Path(f"{algorithm}").mkdir(parents=True, exist_ok=True)
+    Path(f"ORLIB/{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     for problem in problem_list:
@@ -79,7 +79,7 @@ def run_orlib_suite(algorithm, trials, timeout):
         if my_file.is_file():
             continue
 
-        benchmark(problem, trials, algorithm)
+        benchmark(problem, trials, algorithm, timeout)
         print(f"Benchmarked {algorithm} algorithm on {problem} with {trials} trials")
 
     print(f"total time: {time.time() - start_time}")

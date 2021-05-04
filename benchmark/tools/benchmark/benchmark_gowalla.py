@@ -46,7 +46,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
         assert verify_solution(graph, constraints, k, radius, set(clusters.keys()))
         results.append(entry)
 
-    with open(f"{algorithm}/{problem_name}_results_1.txt", "w") as f:
+    with open(f"GOWALLA/{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
             f.write(f"{result.cost}, {result.time}\n")
         f.flush()
@@ -54,7 +54,7 @@ def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
 
 
 def run_gowalla_suite(algorithm, trials, timeout):
-    Path(f"{algorithm}").mkdir(parents=True, exist_ok=True)
+    Path(f"GOWALLA/{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     print()

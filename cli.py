@@ -6,6 +6,14 @@ from benchmark.tools.benchmark.benchmark_gowalla import run_gowalla_suite
 from benchmark.tools.benchmark.benchmark_orlib import run_orlib_suite
 from benchmark.tools.benchmark.benchmark_synthetic import run_synthetic_suite
 
+algorithm_map = {
+    "gon": "greedy",
+    "grasp_ps": "grasp_ps",
+    "pbs": "target_pbs",
+    "ban": "colourful_bandyapadhyay",
+    "col_pbs": "target_colourful_pbs"
+}
+
 
 @click.group()
 def main():
@@ -16,7 +24,7 @@ def main():
 def info():
     """Print valid argument options"""
     print("Valid data sets: ['ORLIB', 'GOWALLA', 'SYNTHETIC']")
-    print("Valid algorithms: ['gon', 'grasp_ps', 'pbs', 'ban', 'colourful_pbs']")
+    print("Valid algorithms: ['gon', 'grasp_ps', 'pbs', 'ban', 'col_pbs']")
 
 
 @main.command()
@@ -31,6 +39,7 @@ def benchmark(data_set, algorithm, trials, timeout):
         "SYNTHETIC": run_synthetic_suite,
         "ORLIB": run_orlib_suite
     }
+    algorithm = algorithm_map[algorithm]
     print(f"Benchmarking {algorithm} on {data_set} for {trials} {'trial' if trials == 1 else 'trials'}")
     benchmark_handler[data_set](algorithm, trials, timeout)
 
