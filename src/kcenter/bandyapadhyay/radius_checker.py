@@ -85,8 +85,8 @@ class RadiusChecker:
 
         # constraint constants
         self.model.opt = pyo.Param(initialize=opt, within=pyo.NonNegativeReals)
-        self.model.red_coverage = pyo.Param(initialize=self.min_red_coverage, within=pyo.PositiveIntegers)
-        self.model.blue_coverage = pyo.Param(initialize=self.min_blue_coverage, within=pyo.PositiveIntegers)
+        self.model.red_coverage = pyo.Param(initialize=self.min_red_coverage, within=pyo.NonNegativeIntegers)
+        self.model.blue_coverage = pyo.Param(initialize=self.min_blue_coverage, within=pyo.NonNegativeIntegers)
         self.model.k = pyo.Param(initialize=self.k, within=pyo.PositiveIntegers)
 
         # set constraints

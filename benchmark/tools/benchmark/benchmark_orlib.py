@@ -4,11 +4,11 @@ import os
 import time
 from pathlib import Path
 
-from kcenter.constant.colour import Colour
-from kcenter.solver.abstract_target_solver import AbstractTargetSolver
-from server.orlib_graph_loader import ORLIBGraphLoader
-from server.routes import k_center_algorithms
-from util.logger import LogEntry, log_filename
+from src.kcenter.constant.colour import Colour
+from src.kcenter.solver.abstract_target_solver import AbstractTargetSolver
+from src.server.orlib_graph_loader import ORLIBGraphLoader
+from src.server.routes import k_center_algorithms
+from src.util.logger import LogEntry, log_filename
 
 OPT = ORLIBGraphLoader.get_opt()
 problem_list = ORLIBGraphLoader.get_problem_list()
@@ -39,17 +39,18 @@ def get_last_valid_result(log_name: str, timeout: int):
     return last_valid
 
 
-def benchmark(problem_name: str, trials: int, algorithm: str):
+def benchmark(problem_name: str, trials: int, algorithm: str, timeout: int):
     graph = ORLIBGraphLoader.get_graph(problem_name)
     n = graph.graph["n"]
     k = graph.graph["k"]
-    solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: 0, Colour.RED: 0})
+    solver = k_center_algorithms[algorithm](graph, k, {Colour.BLUE: n, Colour.RED: 0}, name=algorithm)
     optimal_cost = OPT[problem_name]
-    timeout = calc_timeout(n, k)
+    if timeout == -1:
+        timeout = calc_timeout(n, k)
 
     results = []
     for i in range(trials):
-        if algorithm == "grasp_ps" or algorithm == "pbs":
+        if algorithm == "grasp_ps" or "target" in algorithm:
             clusters, outliers, radius = solver.target_solve(target_cost=optimal_cost, timeout=timeout, log=True)
             log = get_latest_log(algorithm, n, k)
             entry = get_last_valid_result(log, timeout)
@@ -62,29 +63,27 @@ def benchmark(problem_name: str, trials: int, algorithm: str):
             end_time = time.time()
             results.append(LogEntry(cost=radius, time=end_time - start_time))
 
-    with open(f"{algorithm}/{problem_name}_results_1.txt", "w") as f:
+    with open(f"ORLIB/{algorithm}/{problem_name}_results.txt", "w") as f:
         for result in results:
             f.write(f"{result.cost}, {result.time}\n")
         f.flush()
         os.fsync(f)
 
 
-def run_suite():
-    TRIALS = 10
-    ALGORITHM = "grasp_ps"
-    Path(f"{ALGORITHM}").mkdir(parents=True, exist_ok=True)
+def run_orlib_suite(algorithm, trials, timeout):
+    Path(f"ORLIB/{algorithm}").mkdir(parents=True, exist_ok=True)
     start_time = time.time()
 
     for problem in problem_list:
-        my_file = Path(f"{ALGORITHM}/{problem}_results.txt")
+        my_file = Path(f"{algorithm}/{problem}_results.txt")
         if my_file.is_file():
             continue
 
-        benchmark(problem, TRIALS, ALGORITHM)
-        print(f"Benchmarked {ALGORITHM} algorithm on {problem} with {TRIALS} trials")
+        benchmark(problem, trials, algorithm, timeout)
+        print(f"Benchmarked {algorithm} algorithm on {problem} with {trials} trials")
 
     print(f"total time: {time.time() - start_time}")
 
 
 if __name__ == "__main__":
-    run_suite()
+    run_orlib_suite("grasp_ps", 10, -1)
