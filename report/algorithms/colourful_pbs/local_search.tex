@@ -3,15 +3,14 @@
 \caption{Colourful PBS Local Search}
 \label{alg:colourful_pbs_local_search}
 \begin{algorithmic}[1]
-\Function{local\textunderscore search}{$C,g$}
-    \State{iterations$\gets 0$}
-    \State{stale\textunderscore iterations $\gets 0$}
+\Function{colourful\textunderscore local\textunderscore search}{$C,g$}
+    \State{iterations$\gets 0$; stale\textunderscore iterations $\gets 0$}
     \While{iterations $<2n$ \textbf{and} stale\textunderscore iterations $<0.1(g+1)n$}
         \State{$covered\_points=\{v\in V\mid D^0_v\leq cost\}$}\Comment{the cost is the last known cost from find\textunderscore colourful\textunderscore or $max_{v\in V}D_v^0$}
         \State{$(cost, w)=max_{v\in covered\_points}D_v^0$}
-        \State{$(c,i)=$ find\textunderscore pair($w$) }
-        \State{add\textunderscore center(i)}
-        \State{remove\textunderscore center(c)}
+        \State{$(c,i)=$ find\textunderscore pair'($w$) }
+        \State{add\textunderscore center'(i)}
+        \State{remove\textunderscore center'(c)}
         \State{$cost\gets$ find\textunderscore colourful\textunderscore cost$(C)$}
         \State{iterations $\gets$ iterations $+ 1$}
         \State{(new\textunderscore cost, new\textunderscore w) $=max_{v\in V}D_v^0$ }

@@ -4,7 +4,7 @@ The focus of the stepped solver is helping a user understand how each algorithm 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{images/stepped_solver_ui/stepped_solver_modal.png}
-    \caption{Stepped Visualisation (configuration modal)}
+    \caption{Stepped Visualisation (configuration modal)\\\url{https://colourful-k-center.herokuapp.com/steps}}
     \label{fig:step_sol_modal}
 \end{figure}
 %TC:endignore
@@ -13,7 +13,7 @@ The focus of the stepped solver is helping a user understand how each algorithm 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{images/stepped_solver_ui/stepped_solver_greedy.png}
-    \caption{Stepped Visualisation}
+    \caption{Stepped Visualisation\\\url{https://colourful-k-center.herokuapp.com/steps}}
     \label{fig:step_sol_greedy}
 \end{figure}
 %TC:endignore
@@ -23,13 +23,13 @@ Some features of the UI have already been described in \cref{section:solution_vi
 %TC:ignore
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/stepped_solver_ui/walkthrough_flow.png}
+    \includegraphics[width=0.85\textwidth]{images/stepped_solver_ui/walkthrough_flow.png}
     \caption{Stepped Visualisation Flow (client side)}
     \label{fig:step_sol_logic}
 \end{figure}
 %TC:endignore
 
-We make considerations for visualising genetic algorithms which have multiple solution in each step. For a genetic algorithm we provide two views in the visualisation panel, to show the whole population and a specific individual in the population (\cref{fig:step_sol_toggle}). 
+We make considerations for visualising genetic algorithms (\acrshort{ga}s) since they have multiple solutions at each step. For a \acrshort{ga}, we design a switchable \acrshort{ui}, to show the whole population and a specific individual in the population (\cref{fig:step_sol_toggle}). 
 
 %TC:ignore
 \begin{figure}[H]
@@ -40,12 +40,12 @@ We make considerations for visualising genetic algorithms which have multiple so
 \end{figure}
 %TC:endignore
 
-We also consider that genetic algorithms have a large number of steps, therefore add an extra control bar to view all steps of the generation or to skip to the next (\cref{fig:step_sol_skip})
+We also consider the large number of steps in \acrshort{ga}s, therefore add an extra control bar to view all steps of the generation or to skip to the next (\cref{fig:step_sol_skip})
 
 %TC:ignore
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{images/stepped_solver_ui/stepped_solver_skip.png}
+    \includegraphics[width=0.35\textwidth]{images/stepped_solver_ui/stepped_solver_skip.png}
     \caption{Additional controls for genetic algorithms (walk-through panel)}
     \label{fig:step_sol_skip}
 \end{figure}

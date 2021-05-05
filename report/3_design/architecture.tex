@@ -1,5 +1,3 @@
-We describe the full architecture of our system.
-
 %TC:ignore
 \begin{figure}[H]
     \centering
@@ -14,18 +12,18 @@ The solution visualisation flow contains a single request:
 %TC:ignore
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/solver_ui/post_solve_flow.png}
+    \includegraphics[width=0.85\textwidth]{images/solver_ui/post_solve_flow.png}
     \caption{Solve Request}
     \label{fig:solve_request}
 \end{figure}
 %TC:endignore
 
 \subsubsection{Stepped Solver Flow}
-The stepped solver is a multi request flow; it is initialised through the '/start' endpoint which creates a solver iterator and returns a UUID token. The solver iterator is implemented using a Python generator function which allows us to use lazy evaluation to only get the next required step.
+The stepped solver is a multi request flow; it is initialised through the '/start' endpoint which creates a solver iterator and returns a \acrshort{uuid} token. The solver iterator (response, \cref{fig:stepped_next_inspect_request}) is implemented using a Python generator function which allows us to use lazy evaluation to execute the next step in the algorithm only when needed.
 %TC:ignore
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/stepped_solver_ui/start_stepped_flow.png}
+    \includegraphics[width=0.8\textwidth]{images/stepped_solver_ui/start_stepped_flow.png}
     \caption{/api/v1/start flow}
     \label{fig:stepped_start_request}
 \end{figure}
@@ -35,7 +33,7 @@ Subsequent calls to the '/next' and '/inspect' endpoints with the UUID is used t
 %TC:ignore
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/stepped_solver_ui/next_inspect_stepped_flow.png}
+    \includegraphics[width=0.8\textwidth]{images/stepped_solver_ui/next_inspect_stepped_flow.png}
     \caption{/api/v1/next and /api/v1/inspect flow}
     \label{fig:stepped_next_inspect_request}
 \end{figure}

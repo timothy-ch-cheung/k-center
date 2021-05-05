@@ -3,7 +3,20 @@
 \caption{Generate Random Colourful $k$-center problem instance}
 \label{alg:generate_colourful}
 \begin{algorithmic}[1]
-\Procedure{generate\textunderscore colourful}{}
+\Require $b/r$: num blue/red points, $o$: num outliers, $k$: num centers, $\rho$: optimal cost
+\Ensure 
+\Procedure{generate\textunderscore colourful}{$b, r,o,k,\rho$}
+    \State{$Q\gets$ create randomised queue of $elements\in \{blue, red\}$ with $b$ $blue$ elements and $r$ $red$ elements}
+    \State{$V\gets\emptyset$}\Comment{Each time a node is added to $V$, a colour is assigned to the node by popping from $Q$\hphantom{......................................}}
+    \State{$C\gets$ generate $k$ nodes at least $\rho$ pairwise distance apart}
+    \State{}
+    \State{$S\gets$ generate 2 supporting points per node $c\in C$ that connect to make a line passing through $c$ with length $2\rho$}
+    \State{$i\gets (b + r) - (o + |C| + |S|)$}
+    \State{$I\gets$ generate $i$ nodes uniformly around nodes $c\in C$ at most $\rho$ distance away from $c$}
+    \State{$O\gets$ generate $o$ nodes uniformly anywhere more than $\rho distance from any c\in C$}
+    \State{}
+    \State{$V\gets V\cup C\cup S\cup I\cup O$}
+    \State\Return{$V$}
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}

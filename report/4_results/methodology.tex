@@ -1,11 +1,74 @@
-We conduct empirical experiments to evaluate the performance of the search based algorithm as they provide no theoretical guarantee of solution quality.
+We conduct empirical experiments to evaluate the performance of each algorithm. \acrshort{grasp_ps}, \acrshort{pbs} and colourful PBS are stochastic and therefore have a degree of variability in solution cost. In the context of genetic algorithms, \textcite{kramer_genetic_2017} suggests that 50 trials is sufficient to address variance. We set a timeout for the $k$-center algorithms to $0.1n + 0.5k$ seconds and $0.15n + 0.5k$ for the colourful $k$-center algorithms (since it is harder). When benchmarking the \emph{Ban} algorithm, if it returned more than $k$-centers, we retried the test with $k-1$ as the parameter. For algorithms that produce multiple results (\acrshort{pbs}, \acrshort{grasp_ps}) we record the time at which the minimum cost is reached. All experiments were conducted on an AMD 4.2GHz Ryzen 4800h PC with 16gb ram. 
 
-The search based algorithms (Plateau Surfer GRASP and PBS) we have considered are stochastic in nature and therefore do not produce consistent outcomes. In the context of genetic algorithms, \textcite{kramer_genetic_2017} recommends at least 25 but 50 or 100 is preferable. To evaluate their ability to solve the $k$-center problem, we run the \emph{Gon}, PBS and GRASP Plateau Surfer algorithms (described in \cref{subsection:approaches_k_center}) on the OR-LIB dataset; a data set originally designed for the $k$-median but later widely used for the $k$-center. The OR-LIB data set contains 40 problem instances ranging from 100-900 nodes, we evaluate the algorithms by comparing the solution cost with the optimal cost (reported by \cite{pullan_memetic_2008}). To determine the statistical significance of our results, we conduct a Wilcoxon rank sum test on the cost of each solution. The Wilcoxon test compares if the difference between a set of pairs is statistically significant, a P-value below 0.05 is considered significant (\cite{wilcoxon_individual_1992}).
+\paragraph{Data Sets}~\\
+To evaluate the algorithms for the $k$-center we use the OR-LIB dataset (\cite{beasley_note_1985}), originally designed for the $k$-median but later widely used for the $k$-center. OR-LIB has 40 problem instances ranging from 100-900 nodes with known optimal solutions (\cite{pullan_memetic_2008}). 
 
-For evaluating the algorithm performance on the Colourful $k$-center problem, there does not exist an established data set which we know the optimal costs for. Therefore we conduct two sets of experiments to ensure our results are robust, both of which we perform the Wilcoxon ranked sum test on.
+As the colourful $k$-center problem was introduced very recently, it does not have any data sets. Generating our own data sets raises two issues; there may be bias in our data generation method and we may not know the optimal solution to our instances. Therefore we create two new data sets to address this (see \cref{appendix:test_datasets}):
+\begin{enumerate}
+    \item GOWALLA - To address the possibility of bias in synthetic data sets, we used a real world 3D data set. We take inspiration from the Gowalla UCI Repeat Consumption Matrices (\cite{kotzias_predicting_2019}), which is based on the number of times a user has checked in at a location. The UCI data set uses discretised geolocations, as this information is important to our problem we generate our own repeat consumption matrices (with latitude/longitude information) from the original Gowalla data set (\cite{cho_friendship_2011}). The locations can be split into blue/red by setting locations visited less frequently than average as blue and more frequently as red. The distance between two locations is defined by the Haversine distance. 
+    \item SYNTHETIC - 40 problems of 100-900 nodes in a 2D plane with known optimal costs (\emph{opt}). Given an optimal cost $\rho$ and $k$, we generate $k$ centers, a uniform random set of inlier points $\leq\rho$ distance from a center, and a set of outlier points $>\rho$ from the centers. We generate 36 instances with 20\% of the vertices as outliers and 4 problem instances which have 80\% of vertices as outliers. The full procedure is described in \cref{appendix:generate_problem_instances}.
+\end{enumerate}
 
-The first is to generate our own problem instances for the Colourful $k$-center problem. In this we generate problem instances ranging from 100-900 nodes. The motivation for this is that we can generate instances with known optimal costs.
+\paragraph{Statistical Analysis Methods}~\\
+To decide whether our results are significant we perform statistical tests. The null hypothesis is that the results come from the same distribution. The statistical test outputs a p-value, in order to reject the null hypothesis the p-value needs to fall below a significance level $\alpha$. We take $\alpha =0.05$, which means there is a 5\% risk of concluding our samples come from different distributions when they are not. We perform the Wilcoxon test for the colourful $k$-center and the Quade test for the $k$-center.
 
-The second experiment use a the Gowalla data set from the UCI Repeat Consumption Matrices. This data set represent the number of tweets with at a geolocation, we interpret the number of tweets as the demographic and the geolocation as coordinates for the clients/facilities. The motivation for this is to address any unknown bias we may have introduced by generating our own data set. In addition, we also brute force a small 40 node sample to compare the difference to the optimal cost on a real data set. We divide the data set into groups of 100-900 nodes, reusing the $k$ value from the ORLIB data set. The mean consumption for each group is calculated and locations above and below the mean are separated into two groups, the colour constraints is to cover at least 75\% of each group.
+\newcounter{method_counter}
+\setcounter{method_counter}{0}
+\begin{figure}[H] 
+    \addtocounter{figure}{-1}
+    \renewcommand{\thefigure}{\arabic{method_counter}}
+    \renewcommand\figurename{Method}
+    \addtocounter{method_counter}{1}
+    \caption{Wilcoxon (\cite{wilcoxon_individual_1945})}
+    \label{method:wilcoxon_test}
+    \vspace{0.1cm}
+    \textbox{\small{\textbf{Wilcoxon signed rank test}\newline A statistical hypothesis test for two sets of paired samples. The general idea is to calculate the differences between pairs then rank the differences by size. The test statistic is calculated by summing the ranks multiplied by the sign of the differences.\newline \textbf{R function: wilcoxon.test(sampleA, sampleB, paired=true)}}}
+\end{figure}
 
-The experiments were conducted on an AMD 4.2GHz Ryzen 4800h and 16gb ram PC. 
+\begin{figure}[H] 
+    \addtocounter{figure}{-1}
+    \renewcommand{\thefigure}{\arabic{method_counter}}
+    \renewcommand\figurename{Method}
+    \addtocounter{method_counter}{1}
+    \caption{Quade (\cite{conover_analysis_1982})}
+    \label{method:quade_test}
+    \vspace{0.1cm}
+    \textbox{\small{\textbf{Quade omnibus test}\newline An extension of the Wilcoxon test for 3 or more sets of grouped samples. An omnibus test is used to determine if the variance between all samples are significant.\newline \textbf{R function: quade.test(matrix)}}}
+\end{figure}
+
+\begin{figure}[H] 
+    \addtocounter{figure}{-1}
+    \renewcommand{\thefigure}{\arabic{method_counter}}
+    \renewcommand\figurename{Method}
+    \addtocounter{method_counter}{1}
+    \caption{Post-Hoc Quade (\cite{conover_analysis_1982})}
+    \label{method:post_hoc_quade}
+    \vspace{0.1cm}
+    \textbox{\small{\textbf{Post-hoc Quade test}\newline If the Quade omnibus test returns a significant result we would like to determine which pairs of samples are significant. This is done using a post-hoc test, which returns p-values for each paired sample. \newline\textbf{R function: quadeAllPairsTest(matrix, dist="TDist", p.adjust.method="holm")}}}
+\end{figure}
+
+Given our results are statistically significant, we count the number of problem instances where one algorithm outperforms another to determine the better algorithm. 
+
+\begin{figure}[H] 
+    \addtocounter{figure}{-1}
+    \renewcommand{\thefigure}{\arabic{method_counter}}
+    \renewcommand\figurename{Method}
+    \addtocounter{method_counter}{1}
+    \caption{Counting results}
+    \label{method:counting_results}
+    \vspace{0.1cm}
+    \textbox{\small{Given paired samples A and B, we count the number of problem instances where A has a lower mean cost ($\mu$) than B. If more than half of the problem instances have lower cost in sample A than B and a statistical test proves that the difference is significant, then we conclude A is better than B.}}
+\end{figure}
+
+\begin{figure}[H] 
+    \addtocounter{figure}{-1}
+    \renewcommand{\thefigure}{\arabic{method_counter}}
+    \renewcommand\figurename{Method}
+    \addtocounter{method_counter}{1}
+    \caption{Counting results (accounting for variance)}
+    \label{method:counting_results_variance}
+    \vspace{0.1cm}
+    \textbox{\small{We use the \gls{empirical_rule} to account to account for variance, it states that under a normal distribution under a normal distribution 95\% and 99.7\% of data will fall under 2 and 3 standard deviations from the mean respectively. This method is the same as \Cref{method:counting_results}, except we adjust the mean costs ($\mu$) by a parameter $\Delta\in\{2,3\}$ which represents the number of standard deviations. We increase the mean costs from sample A by $\Delta\sigma$ and modify the costs from sample B to be $max(opt, B_i -\Delta\sigma)$, $i\in$ problem\_instance (if $opt$ is unknown, set the cost to $B_i -\Delta\sigma$).\newline\newline If more than half of the problem instances have lower cost in sample A than B and a statistical test proves that the difference is significant, then we conclude A is better than B.}}
+\end{figure}
+
+\input{4_results/tables/method_used}

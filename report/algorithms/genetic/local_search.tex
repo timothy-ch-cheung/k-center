@@ -8,7 +8,7 @@
     \State{stale\textunderscore iterations $\gets 0$}
     \While{iterations $<2n$ \textbf{and} stale\textunderscore iterations $<0.1(g+1)n$}
         \State{$(cost, w)=max_{v\in V}D_v^0$ }\Comment{Find the point $w$ which is furthest away from its nearest center\hphantom{............................................}}
-        \State{$(c,i)=$ find\textunderscore pair($w$) }
+        \State{$(c,i)\gets$ find\textunderscore pair($w$) }
         \State{add\textunderscore center(i)}
         \State{remove\textunderscore center(c)}
         \State{iterations $\gets$ iterations $+ 1$}

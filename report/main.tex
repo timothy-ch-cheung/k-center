@@ -24,6 +24,10 @@
 \usepackage{array}
 \usepackage{siunitx}
 \usepackage[acronym, toc, section,numberedsection=autolabel]{glossaries}
+\usepackage{caption}
+\usepackage[justification=centering]{caption}
+\usepackage{newfloat}
+\usepackage{subcaption}
 
 
 \makeatletter
@@ -44,6 +48,9 @@
 \newcolumntype{C}{>{\centering\arraybackslash}X}
 \newcolumntype{L}{>{\raggedleft\arraybackslash}X}
 \newcolumntype{R}{>{\raggedright\arraybackslash}X}
+
+\crefname{figure}{figure}{figures}
+\Crefname{figure}{method}{methods}
 
 \makeglossaries
 
@@ -73,24 +80,25 @@
     \subsection{Overview}
     \input{1_introduction/overview}
     
-    \subsection{The \texorpdfstring{$k$}{k}-center problem}\label{section:k_center}
+    \subsection{The \texorpdfstring{$k$}{k}-center Problem}\label{section:k_center}
     \input{1_introduction/k_center}
     
-    \subsection{The robust \texorpdfstring{$k$}{k}-center problem}\label{section:robust_k_center}
+    \subsection{The Robust \texorpdfstring{$k$}{k}-center Problem}\label{section:robust_k_center}
     \input{1_introduction/robust_k_center}
     
-    \subsection{The colourful \texorpdfstring{$k$}{k}-center problem}\label{section:colourful_k_center}
+    \subsection{The Colourful \texorpdfstring{$k$}{k}-center Problem}\label{section:colourful_k_center}
     \input{1_introduction/colourful_k_center}
     
-    \subsection{Novel use cases}
+    \subsection{Novel Use Cases}
     \input{1_introduction/significance}
     
     \subsection{Aims and Motivations}
     \input{1_introduction/project_aims}
-    
+    \newpage
     \subsection{Related Work}
     \input{1_introduction/related_work}
 
+\newpage
 \section{Background}\label{section:background}
     \subsection{Approaches to solving the k-center problem}\label{subsection:approaches_k_center}
     \input{2_body/background/solving_k_center}
@@ -101,7 +109,7 @@
         \subsubsection{A Memetic Genetic Algorithm (PBS)}\label{section:pbs}
         \input{2_body/background/memetic_genetic}
         
-        \subsubsection{A Randomized Algorithm (GRASP Plateau Surfer Local Search)}\label{section:plateau_surfer}
+        \subsubsection{A Randomised Algorithm (GRASP Plateau Surfer Local Search)}\label{section:plateau_surfer}
         \input{2_body/background/grasp_local_search}
 
     \subsection{Approaches to solving the colourful k-center}\label{subsection:approaches_colourful_k_center}
@@ -110,9 +118,11 @@
         \subsubsection{A O(1)-Colourful Algorithm}\label{section:constant_colourful_k_center}
         \input{2_body/background/constant_colourful}
         
+        \newpage
         \subsubsection{Colourful PBS}\label{section:colourful_pbs}
         \input{2_body/background/colourful_pbs}
 
+\newpage
 \section{Design}\label{section:design}
     \subsection{Requirements}\label{section:requirements}
     \input{3_design/requirements}
@@ -132,6 +142,7 @@
     \subsection{Architecture}\label{section:architecture}
     \input{3_design/architecture}
 
+\newpage
 \section{Results}\label{section:results}
     \subsection{Methodology}\label{section:methodology}
     \input{4_results/methodology}
@@ -145,11 +156,12 @@
     \subsection{Colourful \texorpdfstring{$k$}{k}-center Synthetic data set}\label{section:colourful_k_center_synthetic}
     \input{4_results/synthetic}
 
+\newpage
 \section{Evaluation}\label{section:evaluation}
     \subsection{Colourful PBS}
     \input{5_evaluation/algorithm_implementation}
     
-    \subsection{The web tool}
+    \subsection{The Web Tool}
     \input{5_evaluation/web_tool_evaluation}
     
     \subsection{Software Engineering}
@@ -157,10 +169,8 @@
     
     \subsection{Reflection}
     \input{5_evaluation/reflection}
-    
-\section{Discussion}\label{section:discussion}
-\input{6_discussion/discussion}
 
+\newpage
 \section{Conclusion}\label{section:conclusion}
 \input{7_conclusion/conclusion}
     
@@ -169,24 +179,39 @@
 \section{References}
 \sloppy{\printbibliography[heading=none]}
 
+\newpage
 \appendix
-\section{Brute Force Algorithms}
-    \subsection{k-center}
+\section{Supplementary Algorithms}\label{appendix:algorithms}
+    \subsection{Brute Force \texorpdfstring{$k$}{k}-center}
         \label{brute-force-k-center}
         \input{algorithms/brute_force_k_center}
-    \subsection{colourful k-center}
+    \subsection{Brute Force Colourful \texorpdfstring{$k$}{k}-center}
         \label{brute-force-colourful-k-center}
         \input{algorithms/brute_force_colourful_k_center}
+    \subsection{Generate Problem Instances}\label{appendix:generate_problem_instances}
         \input{algorithms/random_colourul_instance}
-\section{Determining parameters for GRASP}\label{appendix:grasp_param}
+
+\section{Introduction to Linear Programs}
+    \label{appendix:lp_intro}
+    \input{8_appendix/lp_intro}        
+
+\section{Determining Parameters for GRASP}\label{appendix:grasp_param}
     \input{8_appendix/grasp_parameters}
     
-\section{Comparing genetic architectures}\label{appendix:genetic_architectures}
+\section{Comparing Genetic Architectures}\label{appendix:genetic_architectures}
     \input{8_appendix/genetic_architecture}
-    
-\section{Seeding the genetic population}\label{appendix:seed_population}
+\newpage    
+\section{Seeding the Genetic Population}\label{appendix:seed_population}
     \input{8_appendix/seeding_genetic_population}
 
+\section{Test Datasets}\label{appendix:test_datasets}
+    \input{8_appendix/datasets}
+
+\newpage    
+\section{Additional UI Screenshots}\label{appendix:learn}
+    \input{8_appendix/learn}
+
+\newpage
 \printglossaries
 
 %TC:endignore

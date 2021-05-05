@@ -1,40 +1,42 @@
-A genetic algorithm (\acrshort{ga}) is a \gls{metaheuristic} inspired by natural selection, often used to solve combinatorial optimisation problems. The general idea of a \acrshort{ga} is to maintain a population of individuals/solutions and apply various genetic operators on the individuals to produce offspring for the next generation; the fittest individuals will survive each generation and will represent the best solutions. Biological analogies are used to describe \acrshort{ga}s, they are defined as follows (\cite{kramer_genetic_2017}):
+A genetic algorithm (\acrshort{ga}) is a \gls{metaheuristic} inspired by natural selection, often used to solve combinatorial optimisation problems. The general idea of a \acrshort{ga} is to maintain a population of individuals and apply various genetic operators on the individuals to produce offspring for the next generation; the fittest individuals will survive each generation and will represent the best solutions. Biological analogies are used to describe \acrshort{ga}s, they are defined as follows (\cite{kramer_genetic_2017}):
 \begin{itemize}
-    \item \textbf{Genotype:} an encoding of an individual (also known as a chromosome or individual) in the population, it contains genes which represents its properties
+    \item \textbf{Genotype:} an encoding of an individual (also known as a chromosome) in the population, it contains genes which represents its properties
     \item \textbf{Phenotype:} an encoding of the actual solution
-    \item \textbf{Genotype-Phenotype Mapping:} a function which converts an individual (genotype) to an actual solution (phenotype)
+    \item \textbf{Genotype-Phenotype Mapping:} a function which converts an individual (genotype) to a solution (phenotype)
     \item \textbf{Fitness:} a measure of the quality of a phenotype
     \item \textbf{Mutation:} a genetic operator which makes a random alteration to a genotype
     \item \textbf{Crossover:} a genetic operator which mixes typically two parent genotypes and produces one or more child genotypes
-    \item \textbf{Selection:} a process to determine which genotypes to apply genetic operators to create the next generation. Two common methods are roulette wheel selection (random weighted selection with probability proportion to their fitness) and tournament selection (choosing a random subset of the population, then select fittest genotypes)
+    \item \textbf{Selection:} a process to determine which genotypes to apply genetic operators to create the next generation. Two common methods are roulette wheel selection (random weighted selection with probability proportional to their fitness) and tournament selection (choosing a random subset of the population, then select fittest genotypes)
 \end{itemize}
 
-The high-level algorithm for basic GAs described by \textcite{kramer_genetic_2017} is shown in \cref{alg:basic_genetic}. Common termination conditions for \cref{alg:basic_genetic} is setting a fixed number of generations or terminating when fitness reaches a target value. Genotype-phenotype mapping is not always necessary, in some problems the genotype itself is the solution which removes the need for the phenotype.
+The high-level algorithm for basic GAs described by \textcite{kramer_genetic_2017} is shown in \cref{alg:basic_genetic}. Two common termination conditions for GAs are setting a fixed number of generations or terminating when fitness reaches a target value. Genotype-phenotype mapping is not always necessary, in some problems the genotype itself is the solution which removes the need for the phenotype. For a comprehensive overview of genetic algorithms, we refer the reader to chapter 2 of "Genetic Algorithm Essentials" (\cite{kramer_genetic_2017}).
 
 \input{algorithms/genetic/basic_genetic}
 
-For a comprehensive overview of genetic algorithms, we refer the reader to chapter 2 of "Genetic Algorithm Essentials" (\cite{kramer_genetic_2017}).
-
-A memetic algorithm (MA) extends genetic algorithms by using local search techniques. The word 'meme' was first coined by \textcite{dawkins_selfish_1976}, defined as 'a unit of cultural transmission'. Memes are a product of cultural evolution (as opposed to genetic evolution). This notion inspired \textcite{moscato_evolution_1989} to name a genetic algorithm that employed local search, a memetic algorithm.
-
-Population Based Search (PBS) is a memetic algorithm, which uses an unconventional selection method. Instead of using more traditional methods such as roulette or tournament selection, it performs genetic operators between all distinct pairs in the population. Furthermore PBS updates the population immediately when a better solution is found, instead of generating a new population through selection. The high level pseudocode for PBS is described in \cref{alg:pbs}, the subroutines it uses are explained in the remainder of this section.
+A memetic algorithm (\acrshort{ma}) extends genetic algorithms by using local search techniques. The word 'meme' was first coined by \textcite{dawkins_selfish_1976}, defined as 'a unit of cultural transmission'. Memes are a product of cultural evolution (as opposed to genetic evolution).
 
 \input{algorithms/genetic/pbs}
+
+This notion inspired \textcite{moscato_evolution_1989} to name a genetic algorithm that employed local search, a memetic algorithm.
+
+Population Based Search (PBS) is a memetic algorithm, which uses an unconventional selection method (\cite{pullan_memetic_2008}). Instead of using more traditional methods such as roulette or tournament selection, it performs genetic operators between all distinct pairs in the population. Furthermore PBS updates the population immediately when a better solution is found, instead of generating a new population through selection. Through experiments, \citeauthor{pullan_memetic_2008} showed a small population size of 8 is sufficient for PBS. The high level pseudocode for PBS is described in \cref{alg:pbs}, the subroutines it uses are explained in the remainder of this section.
 
 PBS uses two mutation operators and two crossover operators, which can all be implemented in $\mathcal{O}(k)$ time:
 \begin{itemize}
     \item Random Mutation $\mathbf{M_1}$: Given an individual $C_i$, $M_1$ deletes a random number of centers from $C_i$ between $1$ to $k/2$. It replaces the deleted centers by randomly choosing from $V\setminus C$.
-    \item Directed Mutation $\mathbf{M_2}$: Given an individual $C_i$, delete the two closest centers. The two centers are replaced by running the local search. This follows from the intuition of two centers being too close to each other are limiting factors of the solution. 
+    \item Directed Mutation $\mathbf{M_2}$: Given an individual $C_i$, delete the two closest centers; they are replaced by running the local search. This follows from the intuition of two centers being too close to each other are limiting factors of the solution. 
     \item Random Crossover $\mathbf{X_1}$: Given two parent solutions $C_i$ and $C_j$, we randomly select $k$ centers from $C_i\cup C_j$ to create one child solution.
     \item Directed Crossover $\mathbf{X_2}$: Given two parent solutions $C_i$ and $C_j$, $X_2$ generates a two child solutions $S_1$ and $S_2$. Select a random number $x\in\{z\in\mathbb{R}\mid 0.1\leq z\leq 0.9\}$ and two vertices $q,p\in V$. For each $v_i\in C_i\cup C_j$, if $\frac{dist(q, v_i)}{dist(p, v_i)}\leq x$ then add it to the first child, otherwise if $\frac{dist(q, v_i)}{dist(p, v_i)}>x$ then add it to the second child. Note the cardinality of $S_1$ and $S_2$ may not equal $k$. In the case $|S_i|<k$ we run the local search on $S_i$ and in the case $|S_i|>k$, we remove $|S_i|-k$ centers from $S_i$.
 \end{itemize}
 
-The local search relies on the function \emph{find\_pair} which makes returns the optimal swap between a center and a vertex. To implement \emph{find\_pair} efficiently neighbourhood data structures were designed (\cite{mladenovic_solving_2003,pullan_memetic_2008}). The data structures and notation are defined as follows:
+The local search relies on the function \emph{find\_pair} which makes returns the optimal swap between a center and a vertex. To implement \emph{find\_pair} efficiently neighbourhood data structures based on VNS (\cite{mladenovic_solving_2003}) were designed . The data structures and notation are defined as follows:
 \begin{itemize}
     \item $\mathbf{F^0_v}$ and $\mathbf{F^1_v}$: $\mathbf{F^0_v}$ defines the closest center to vertex $v$ and $F^1_v$ defines the second closest.
     \item $\mathbf{D^0_v}$ and $\mathbf{D^1_v}$: $D^0_v$ defines the distance from closest center to vertex $v$ and $\mathbf{D^1_v}$ defines the distance to the second closest.
-    \item $\mathbf{N_{wm}}$: $N_w$ defines the neighbourhood of $n$ vertices around vertex $w$ ordered by distance from $w$ ascending. $w$ is the vertex chosen by the \emph{farthest first} heuristic (\cref{section:greedy}) and $m$ is such that the $m^{th}$ value of $N_w$ is the nearest center to $w$. $N_{wm}$ is the first $m$ elements of $N_w$.
+    \item $\mathbf{N_{wm}}$: $N_w$ defines the neighbourhood of $n$ vertices around vertex $w$ ordered by distance from $w$ ascending. $m$ is such that the $m^{th}$ value of $N_w$ is the nearest center to $w$. $N_{wm}$ is the first $m$ elements of $N_w$.
 \end{itemize}
+
+The function \emph{add\_center} appends center $f$ to a solution $C$ and updates the neighbourhood structures and cost. This has $\mathcal{O}(n)$ time complexity. The function \emph{remove\_center} does the opposite, it removes a center $f$ from a solution $C$, then updates the neighbourhood structures and cost. However \emph{remove\_center} has a time complexity of $\mathcal{O}(nk)$; when we remove a center $f$, if our neighbourhood structure ($F$ and $D$) contains $f$, we must find the next closest center using the \emph{find\_next} function which takes $\mathcal{O}(k)$ time.
 
 \begin{minipage}{0.48\textwidth}
     \input{algorithms/genetic/add_center}
@@ -44,14 +46,12 @@ The local search relies on the function \emph{find\_pair} which makes returns th
     \input{algorithms/genetic/remove_center}
 \end{minipage}
 
-The function \emph{add\_center} appends center $f$ to a solution $C$ and updates the neighbourhood structures and cost. This has $\mathcal{O}(n)$ time complexity. The function \emph{remove\_center} does the opposite, it removes a center $f$ from a solution $C$, then updates the neighbourhood structures and cost. However \emph{remove\_center} has a time complexity of $\mathcal{O}(nk)$; when we remove a center $f$, if our neighbourhood structure ($F$ and $D$) contains $f$, we must find the next closest center using the \emph{find\_next} function which takes $\mathcal{O}(k)$ time.
-
-We are now ready describe \emph{find\_pair}. To find a pair $(c, i)$ which makes which makes the largest decrease in solution cost ($c\in C, i\in V\setminus C$), it adds each vertex $i$ in the neighbourhood $N_{wm}$ to the solution $C$, then for each $c\in C$, it calculates the cost $M_c$ the cost of removing the center $C$ (\emph{find\_pair} lines 9-13). When a center $c$ is removed, the new nearest center is either its second nearest center or the newly added center $i$, hence $M_{F_v^0}\gets min(dist(i,v),D_v^1)$ (\cref{alg:find_pair} line 11). Lines 14-21 in \emph{find\_pair} updates the candidate swap list $L$. A na\"{i}ve implementation of \emph{find\_pair} would have time complexity $\mathcal{O}(k^2\cdot n^2)$, as we would have to check all $k$ centers to find the cost. Using the neighbourhood structures, \emph{add\_center} and \emph{remove\_center}, \emph{find\_pair} has a time complexity of $\mathcal{O}(kn^2)$. 
+We are now ready describe \emph{find\_pair} (\cref{alg:find_pair}). 
 
 \input{algorithms/genetic/find_pair}
 
-With the function \emph{find\_pair} defined, the local search is described in \cref{alg:pbs_local_search}.
+\citeauthor{pullan_memetic_2008} identified to find a pair which makes which makes the largest decrease in solution cost, the center that services the \emph{farthest first} vertex needs to be replaced. The function \emph{find\_pair} does this by adding each vertex in the neighbourhood $N_{wm}$ to the solution $C$, then for each $c\in C$, it calculates the cost $M_c$ of removing the center $c$ (\cref{alg:find_pair} lines 9-13). When a center is removed, the new nearest center is either its second nearest center or the newly added center, hence $M_{F_v^0}\gets min(dist(i,v),D_v^1)$. The pair returned is randomly selected from the candidate list $L$. A na\"{i}ve implementation of \emph{find\_pair} would have time complexity $\mathcal{O}(k^2\cdot n^2)$, as we would have to check all $k$ centers to find the cost. Using the neighbourhood structures, \emph{add\_center} and \emph{remove\_center}, \emph{find\_pair} has a time complexity of $\mathcal{O}(kn^2)$. With the function \emph{find\_pair} defined, the local search is described in \cref{alg:pbs_local_search}.
 
 \input{algorithms/genetic/local_search}
 
-Experiments by \citeauthor{pullan_memetic_2008}, a population size of 8 is sufficient. The termination criteria for the local search is the minimum of $2n$ iterations or $0.1(g + 1)n$ iterations without a decrease in solution cost. As $2n$ is the upper bound of the termination criteria, the time complexity of the PBS local search is $\mathcal{O}(kn^3)$. Since the number of times local search is invoked is bounded by a constant number of generations, the time complexity PBS is $\mathcal{O}(kn^3)$.
+The termination criteria for the local search is the minimum of $2n$ iterations or $0.1(g + 1)n$ iterations without a decrease in solution cost. As $2n$ is the upper bound of the termination criteria, the time complexity of the PBS local search is $\mathcal{O}(kn^3)$. Since the number of times local search is invoked is bounded by a constant number of generations, the time complexity PBS is $\mathcal{O}(kn^3)$.

@@ -1,3 +1,12 @@
-Future on our algorithm could involve research into genetic operators or subroutines to seed the genetic population to produce better starting points for the local search. Our code has been designed, documented and tested, such that another group can expand on our work. An open question would be to evaluate the performance of our algorithm on a large number of colours/demographic groups. 
+Overall this project achieved its two aims of proposing a new algorithm for the colourful $k$-center problem and creating an algorithm visualisation tool.
 
-We believe our web tool serves as a good introduction to $k$-center problems and with further work it has the potential to be an educational aid for more complex algorithms discussed in the paper.
+\paragraph{Educational Value}~\\
+We believe our web tool serves as a good introduction to $k$-center problems, shows clear visualisation of solutions and offers coherent step by step visualisations for basic algorithms such as the \emph{Gon} algorithm. While interactive visualisations are less concise with more complex algorithms such as GRASP and PBS, we believe with further work it has the potential to be an valuable educational aid.
+
+\paragraph{Future Work}~\\
+Our code has been documented and tested, so that another group can easily pick up and expand on our work. Colourful PBS relies on population seeding to produce good solutions, while we use the pseudo 2-approximation as a subroutine to seed our population, it takes a considerable amount of time; further work could investigate more efficient subroutines to produce seed solutions which are good starting points without having to run an expensive linear program.
+
+Another avenue to be explored is research into new genetic operators. While we used the PBS genetic operators for colourful PBS, it is plausible there are genetic operators that could be tailored to the colourful $k$-center.
+
+\paragraph{Open Questions}~\\
+One open question would be to whether the performance of our algorithm extends to a large number of demographic groups. In our study we have looked at \gls{approx_algs} and \gls{metaheuristic} approaches to the colourful $k$-center. While we have shown a na\"ive brute force algorithm, another open question would be to find an efficient \gls{exact_algs} algorithm.

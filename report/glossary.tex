@@ -8,7 +8,7 @@
 \newglossaryentry{approx_algs}{
     name={Approximation Algorithms},
     text={approximation},
-    description={algorithms that produces a solution with a provable guarantee to be within a certain distance to the optimal solution. The guarantee is expressed as a multiplicative factor, for example a $n$-approximation algorithm will always return a solution equal to or less than $n$ times the cost of the optimal solution. Another common notation used is a $\mathcal{O}(1)$-approximation, which does not define a specific approximation factor but states that the approximation factor does not grow with the size of the input}
+    description={algorithms that produce a solution with a provable guarantee to be within a certain distance to the optimal solution. The guarantee is expressed as a multiplicative factor, for example a $n$-approximation algorithm will always return a solution equal to or less than $n$ times the cost of the optimal solution. Another common notation used is a $\mathcal{O}(1)$-approximation, which does not define a specific approximation factor but states that the approximation factor does not grow with the size of the input}
 }
 
 \newglossaryentry{randomised_algs}{
@@ -23,6 +23,12 @@
     description={a metaheuristic inspired by natural selection, it maintains a population which is used to create offspring for each generation}
 }
 
+\newglossaryentry{memetic_algs}{
+    name={Memetic Algorithms},
+    text={memetic},
+    description={a genetic algorithm which uses a local search procedure}
+}
+
 \newglossaryentry{heuristic}{
     name={Heuristic},
     text={heuristic},
@@ -34,7 +40,7 @@
     name={Metaheuristic},
     text={metaheuristic},
     plural={metaheuristics},
-    description={a higher level strategy for solving a problem which is independent of the problem it is trying to solve, which serves as a framework for designing heuristics}
+    description={a higher level strategy for solving a problem which is independent of the problem it is trying to solve. It serves as a framework for designing heuristics}
 }
 
 \newglossaryentry{local_search}{
@@ -47,6 +53,35 @@
     name={Pseudo Approximation Algorithm},
     text={pseudo approximation},
     description={an approximation algorithm which may break a constraint in order to achieve its specified approximation factor}
+}
+
+\newglossaryentry{exact_algs}{
+    name={Exact Exponential Algorithms},
+    text={exact exponential},
+    description={an algorithm which produces optimal solutions in exponential time}
+}
+
+\newglossaryentry{empirical_rule}{
+    name={Empirical Rule},
+    description={states that under a normal distribution: 68\% of data falls within one standard deviation of the mean, 95\% of data falls within two standard deviations of the mean and  99.7\% of data falls within three standard deviations of the mean}
+}
+
+\newglossaryentry{ellipsoid_method}{
+    name={Ellipsoid Method},
+    text={ellipsoid method},
+    description={an ellipsoid is a 3D geometric object that visually resembles a flattened sphere. The ellipsoid method is a technique to solve linear programs invented by \textcite{khachiyan_1979}}
+}
+
+\newglossaryentry{combinatorial_optimisation}{
+    name={Combinatorial Optimisation Problems},
+    text={combinatorial optimisation},
+    description={a problem which is an optimisation problem (where we would like to optimise the value of some objective function) and the domain is in combinatronics (such as sets or graphs)}
+}
+
+\newglossaryentry{dynamic_programming}{
+    name={Dynamic Programming},
+    text={dynamic programming},
+    description={a technique to solve problems by breaking it down into smaller, simpler problems. The solutions to these small problems are used to solve the original problem}
 }
 
 %TC:endignore

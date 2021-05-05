@@ -1,4 +1,24 @@
 \input{4_results/tables/gowalla_cost}
 
 \paragraph{Analysis of solution cost}~\\
-Our result for the Wilcoxon test was \num{1.819e-12}, proving our observations to be statistically significant. Colourful PBS produced lower costs than the $O(1)$-approximation algorithm for all 40 instances, the average decrease was 43.2\%. To account for the variance in cost of a memetic algorithm, we calculate the cost $2\sigma$ above $\mu$ and count the number of results from our algorithm that would still have a cost below the $O(1)$-approximation (see \cref{section:k_center_orlib}). When comparing costs two standard deviations above the mean, our algorithm still achieves a cost below the $O(1)$-approximation for all 40 instances. Furthermore if we extend this to three standard deviations, which would cover 99.7\% of observations under the empirical rule, our algorithm still produces better results than the $O(1)$-approximation for 39/40 Gowalla problems.
+Our result for the Wilcoxon test (\Cref{method:wilcoxon_test}) was \num{1.819e-12}, proving our observations to be statistically significant. From analysis using \Cref{method:counting_results}, colourful PBS produced lower costs than the \emph{Ban} algorithm for all 40 instances. The mean cost was 43.2\% lower on average.
+
+To account for variance we conduct analysis using \Cref{method:counting_results_variance}. Using $\Delta =2$, which accounts for 95\% of the distribution, colorful \acrshort{pbs} outperforms \emph{Ban} for all 40 Gowalla problems. Furthermore if we take $\Delta =3$, which accounts for 99.7\% of the distribution, our algorithm still has lower costs for 39/40 problem instances.
+
+\paragraph{Further analysis}~\\
+We ran the brute force algorithm (\cref{alg:brute_force_colourful_k_center}) to obtain an optimal solution of a smaller 55 node problem instance (this took 5 hours and 16 minutes).
+
+\input{4_results/tables/gowalla_brute_force}
+
+Over 50 trials, colourful PBS converges to the optimal cost without fail whereas the \emph{Ban} algorithm achieves a cost 80\% above the optimal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/memory_usage.png}
+    \caption{Comparison of memory usage on gow41 problem instance\\ (dotted line indicates peak memory usage)}
+    \label{fig:memory_usage}
+\end{figure}
+
+Analysing memory usage (\cref{fig:memory_usage}), colourful PBS uses 1.7\% more memory than \emph{Ban}, however this is insignificant compared to the memory required to store the graph which is around ~70\% of memory usage for both algorithms .
+
+Overall for the real word 3D Gowalla data set Colourful PBS produces better results than the \emph{Ban} algorithm even after accounting for variance, however on average it incurs a five-fold increase in runtime.

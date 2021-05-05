@@ -1,0 +1,18 @@
+%TC:ignore
+\begin{table}[H]
+    \centering
+    \tiny
+    \caption{Performance on real world problem instance (gow41) with known optimal solution}
+    \begin{tabular}{cccccccccccccccccc}
+        \firsthline
+        \multicolumn{4}{c}{Graph Details} & & \multicolumn{3}{c}{Constraints} & & \multicolumn{1}{c}{Optimal solution} & & \multicolumn{3}{c}{\emph{Ban} algorithm} & & \multicolumn{3}{c}{Colourful PBS}\\
+        \cline{1-4} \cline{6-8} \cline{10-10} \cline{12-14} \cline{16-18}\\
+         name &  n & blue & red & & k & min red & min blue & & optimal cost & & $\mu$ & $\sigma$ & \%-gap (opt) & & $\mu$ & $\sigma$ & \%-gap (opt)\\
+         \hline
+        gow41 & 55 & 15 & 40 & & 5 & 11 & 30 & & 577.26 & & 1089.92 & 0.00 & 88.81 & & 577.26 & 0.00 & 0.00\\
+        \lasthline
+    \end{tabular}
+    \label{tab:brute_force_gowalla}
+    \normalsize
+\end{table}
+%TC:endignore

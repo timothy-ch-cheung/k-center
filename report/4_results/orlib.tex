@@ -1,19 +1,31 @@
 \input{4_results/tables/orlib_cost}
 
 \paragraph{Analysis of solution cost}~\\
-The Quade omnibus test on the $\mu$ costs (\cref{table:orlib_cost}) returned a p-value of \num{7.25e-9}. As the omnibus test returned a statistically significant result, we perform a post-hoc Quade test to determine whether the pairwise difference between the three algorithms are significant (\cref{table:post_hoc_orlib}).
+The Quade omnibus test (\Cref{method:quade_test})  returned a p-value of \num{7.25e-9} (\cref{table:orlib_cost}). Since it is statistically significant, we perform a post-hoc Quade test (\Cref{method:post_hoc_quade}), the results are shown in \cref{table:post_hoc_orlib}.
 
 \input{4_results/tables/post_hoc_orlib}
 
+All three pairwise Quade tests returned a p-value below 0.05, we evaluate the three algorithms using \Cref{method:counting_results} and report it in \cref{fig:compare_three_alg}. PBS achieved a lower cost than the \emph{Gon} algorithm in 36/40 and \acrshort{grasp_ps} in 34/40 ORLIB problems. Similarly \acrshort{grasp_ps} performed better than the \emph{Gon} in 25/40 problem instances. 
+
 %TC:ignore
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{images/compare_three_alg.png}
-    \caption{Number of problem instances where an algorithm performed better than another}
-    \label{fig:compare_three_alg}
+    \begin{minipage}{0.57\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/compare_three_alg.png}
+        \caption{Number of problem instances where an\newline algorithm performed better than another (higher\newline is better)}
+        \label{fig:compare_three_alg}
+    \end{minipage}
+    \begin{minipage}{0.43\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/k_center_conf_matrix.png}
+        \caption{\% of ORLIB instances where algorithm X performed better than algorithm Y (higher is better)}
+        \label{fig:compare_three_alg_conf_matrix}
+    \end{minipage}
 \end{figure}
 %TC:endignore
 
-All three pairwise Quade tests returned a p-value below 0.05, we count the number of problem instances where one algorithm performed better than another in \cref{fig:compare_three_alg}. PBS achieved a lower cost than the \emph{Gon} algorithm in 36/40 and GRASP Plateau surfer in 34/40 ORLIB problems. Similarly the Plateau Surfer algorithm performed better than the \emph{Gon} in 25/40 problem instances. As the PBS algorithm is a memetic algorithm, there is variability in the results; we record the standard deviation in \cref{table:orlib_cost}. We calculate the cost $2\sigma$ above $\mu$ for PBS and the cost $2\sigma$ below $\mu$ for \emph{Gon}/Plateau Surfer, to account for 95.45\% of our observations under the empirical rule. Under this analysis, PBS achieves a lower cost than GRASP Plateau surfer for 34/40 and 31/40 for \emph{Gon} in ORLIB.
+We account for variance using \Cref{method:counting_results_variance} with $\Delta =2$ which accounts for 95\% of the data under a normal distribution. Notably, PBS achieves a lower cost than \acrshort{grasp_ps} for 34/40 instances and 31/40 for the \emph{Gon} algorithm. %show full results%
 
-The average \%-gap above optimal cost was $\mu$ was 49.87\%, 47.83\% and 27.38\% for \emph{Gon}, Grasp Plateau Surfer and PBS respectively. While PBS performed significantly better than the other two algorithms, we could not reproduce results by \cite{pullan_memetic_2008} which showed the optimal optimal cost could be reached on all ORLIB problems. A possible reason could be the parameters for the strategy used to maintain population diversity which was not reported in their paper, we contacted the author via email for clarification but we did not receive a reply.
+The average \%-gap above optimal cost was $\mu$ was 49.87\%, 47.83\% and 27.38\% for \emph{Gon}, Grasp Plateau Surfer and PBS respectively. While we observed strong results for PBS, we could not reproduce results by \cite{pullan_memetic_2008} which showed the optimal optimal cost could be reached on all ORLIB problems. A possible reason could be PBS's strategy to maintain population diversity, something that was mentioned but not detailed in their paper. We contacted the author via email for clarification but we did not receive a reply.
+
+Overall, accounting for variance, the best algorithm for the $k$-center is \acrshort{pbs} followed by \acrshort{grasp_ps} and the worst performing is the \emph{Gon} algorithm.
