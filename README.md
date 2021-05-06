@@ -1,7 +1,7 @@
 [![codecov](https://codecov.io/gh/timothy-ch-cheung/k-center/branch/master/graph/badge.svg?token=n5JVnL4MUa)](https://codecov.io/gh/timothy-ch-cheung/k-center)
 [![CI](https://github.com/timothy-ch-cheung/k-center/actions/workflows/main.yml/badge.svg)](https://github.com/timothy-ch-cheung/k-center/actions/workflows/main.yml)
 
-# Final Year Project on Fair K-Center Clustering
+# Final Year Project on Colourful K-Center Clustering
 By Timothy Cheung
 
 **There are two methods to run the server:**
