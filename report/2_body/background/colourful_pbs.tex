@@ -18,13 +18,13 @@ As we no longer get the cost of the solution as a by-product of updating the nei
 
 \input{algorithms/colourful_pbs/find_cost}
 \newpage
-The original \emph{find\_pair} function returned the best swap by calculating the cost of removing each center in the current solution. In PBS, the center $w$ services point $v$ with max $D^1_v$, we follow this intuition and redefine $w$ as $F^1_v$ with max $D^1_v$ such that $D^1_v\leq cost$ ($\forall v\in V$). If we were to use \emph{find\_colourful\_cost} to evaluate the best swaps in \emph{find\_pair}, the complexity of \emph{find\_pair} would be $\mathcal{O}(kn^2+n^2log$ $n)$ due recalculating the solution cost at each of the $\mathcal{O}(n)$ iterations.
+The original \emph{find\_pair} function returned the best swap by calculating the cost of removing each center in the current solution. In PBS, the center $w$ services vertex $v$ with max $D^1_v$, we follow this intuition and redefine $w$ as vertex $v$ with max $D^1_v$ such that $D^1_v\leq cost$ ($\forall v\in V$). 
 
-Therefore instead of using the exact cost of removing a center to guide our search, we define a new heuristic based on the coverage of points rather than the cost of the solution. This change is described in \cref{alg:find_pair_colourful} lines 10-11; for each center in the solution, we calculate the number of points which will no longer be covered if that center was removed from the solution. It follows that the best swaps will involve removing the centers that provide the least coverage.
+If we were to use \emph{find\_colourful\_cost} to evaluate the best swaps in \emph{find\_pair}, the complexity of \emph{find\_pair} would be $\mathcal{O}(kn^2+n^2log$ $n)$ due recalculating the solution cost at each of the $\mathcal{O}(n)$ iterations. Therefore instead of using the exact cost of removing a center to guide our search, we define a new heuristic based on the coverage of points rather than the cost of the solution. This change is described in \cref{alg:find_pair_colourful} lines 10-11; for each center in the solution, we calculate the number of points which will no longer be covered if that center was removed from the solution. It follows that the best swaps will involve removing the centers that provide the least coverage.
 
 \input{algorithms/colourful_pbs/find_pair}
 
-In line 6 (\cref{alg:find_pair_colourful}) we define the cost as the last known cost, note we explicitly do not call \emph{find\_colourful\_cost} as that will increase the complexity above our aim of ${O}(kn^2)$. Instead, we call \emph{find\_colourful\_cost} a single time at each iteration of the \gls{local_search}.
+In line 6 (\cref{alg:find_pair_colourful}) we define the cost as the last known cost, note we explicitly do not call \emph{find\_colourful\_cost} as that will increase the complexity above our aim of ${O}(kn^2)$. Instead, we call \emph{find\_colourful\_cost} a single time for each iteration of the \gls{local_search}.
 
 Given these components, we are now ready to define the full \gls{local_search} in \cref{alg:colourful_pbs_local_search}. The time complexity is $\mathcal{O}(kn^3)$ which is the same complexity as the original PBS \gls{local_search}. This procedure is embedded in the original PBS framework.
 
@@ -34,7 +34,7 @@ Given these components, we are now ready to define the full \gls{local_search} i
 In \cref{section:pbs}, we noted PBS uses an non-standard genetic selection method. This may negatively impact the diversity of the population (since the method is somewhat similar to elitism selection), therefore we also tested roulette and tournament selection. Our experiments concluded that the original selection method was the best, our full results are reported in \cref{appendix:genetic_architectures}.
 
 \paragraph{Seeding the initial population}~\\
-In our preliminary experiments, we found instances failing to converge due to the search being stuck in local minima from poor initial starting points. The centers produced by the \emph{Ban} algorithm (\cref{section:constant_colourful_k_center}) produced centers which cover many points, therefore we use this as a subroutine to seed the first individual of the population. The result of this is better performance on our training set shown in \cref{appendix:seed_population}.
+In our preliminary experiments, we found that some instances failed to converge due to the search being stuck in local minima from poor initial starting points. The centers produced by the \emph{Ban} algorithm (\cref{section:constant_colourful_k_center}) produced centers which cover many points, therefore we use this as a subroutine to seed the first individual of the population. This resulted in better performance on our training set shown in \cref{appendix:seed_population}.
 
 \paragraph{The full algorithm}~\\
 Our full algorithm combines the PBS metaheuristic, colourful \gls{local_search} and population seeding. We refer to it as colourful PBS and it is described in \cref{alg:colourful_pbs}.

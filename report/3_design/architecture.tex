@@ -7,7 +7,7 @@
 \end{figure}
 %TC:endignore
 
-\subsubsection{Solver Flow}
+\subsubsection{Solution Visualisation (\texorpdfstring{\acrshort{api}}{API} Request)}
 The solution visualisation flow contains a single request:
 %TC:ignore
 \begin{figure}[H]
@@ -18,7 +18,7 @@ The solution visualisation flow contains a single request:
 \end{figure}
 %TC:endignore
 
-\subsubsection{Stepped Solver Flow}
+\subsubsection{Stepped Visualisation (\texorpdfstring{\acrshort{api}}{API} Request)}
 The stepped solver is a multi request flow; it is initialised through the '/start' endpoint which creates a solver iterator and returns a \acrshort{uuid} token. The solver iterator (response, \cref{fig:stepped_next_inspect_request}) is implemented using a Python generator function which allows us to use lazy evaluation to execute the next step in the algorithm only when needed.
 %TC:ignore
 \begin{figure}[H]
