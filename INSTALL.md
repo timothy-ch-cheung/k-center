@@ -31,10 +31,12 @@ open the webpage at localhost:5000/
 ## Full development
 ### prerequisites
 - Python 3.9
+- nodejs 12+
+- yarn
 - GLPK
     - Windows: https://sourceforge.net/projects/winglpk/
     - Ubuntu: ```sudo apt install glpk-utils``` or https://www.gnu.org/software/glpk/
-- R (optional)
+- R (optional, not required for demo)
     - Windows: https://cran.r-project.org/bin/windows/base/
     - Ubuntu: ```sudo apt install r-base``` or https://cran.r-project.org/
     
@@ -64,6 +66,11 @@ profile memory usage: ```python cli.py profile <FIRST_ALGORITHM> <SECOND_ALGORIT
 e.g. ```python cli.py profile ban col_pbs```
 see ```python cli.py profile --help``` for more info
 
+#### 3: Python unit tests:
+For all tests to pass, you need python 3.9+ (since there was a change in the Random module in that patch)
+
+```python -m pytest tests/```
+
 #### 4: Run Cypress end-to-end tests
 additional installation:
 ```
@@ -71,7 +78,7 @@ cd integration_tests
 yarn install
 ```
 
-Open Cypress:
+Open Cypress (screenshots were taken on a Windows machine, they will be different on another OS):
 ```
 cd integration_tests
 ./node_modules/.bin/cypress open --env type=actual
