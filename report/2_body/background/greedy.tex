@@ -4,7 +4,7 @@ The \emph{Gon} algorithm uses a greedy \gls{heuristic}, at each iteration the cl
 
 \input{algorithms/greedy_2_approx}
 
-In the remainder of this section we describe their proof that the \emph{Gon} algorithm gives a 2-approximation. To understand the proof, we need to define the notion of a clique on a graph; a clique on a graph $G(V, E)$ is a subset $T$ of $V$ such that all any two pairs of vertices in T are adjacent. In other words, $T$ forms a sub graph of $G$ which is complete. \textcite{gonzalez_clustering_1985} extends the definition of a clique to define a weighted clique of a given size. A clique T is a $(k+1)$-clique of weight $h$ if satisfies two conditions:
+In the remainder of this section we describe their proof that the \emph{Gon} algorithm gives a 2-approximation. To understand the proof, we need to define the notion of a clique on a graph; a clique on a graph $G(V, E)$ is a subset $T$ of $V$ such that any two pairs of vertices in T are adjacent. In other words, $T$ forms a sub graph of $G$ which is complete. \textcite{gonzalez_clustering_1985} extends the definition of a clique to define a weighted clique of a given size. A clique T is a $(k+1)$-clique of weight $h$ if satisfies two conditions:
 \begin{enumerate}
     \item The cardinality of $T$ is $k+1$ ($|T|=k+1$)
     \item Every pair of distinct vertices $(x,y)$ in $T$ are at least $h$ distance apart ($\forall _{x\in V}\forall _{y\in V\setminus \{x\}}d(x,y)\geq h$)
@@ -17,7 +17,7 @@ if there exists a clique of size $k+1$ for the set of vertices $V$ of weight $h$
 The proof for lemma \ref{lemma:clique_k+1} is as follows. Suppose that we have a ($k+1$)-clique $T\subseteq V$ with vertices $\{v_1, ...,v_k,v_{k+1}\}$ of weight $h$, we would like to choose $k$ centers from $V$ such that all points are covered. It is not possible to select $k$ centers such that the cost to cover all vertices in $T$ is less than $h$, since by the definition of $T$ all pairwise distinct vertices are at least $h$ distance apart. Hence $OPT(V)\geq h$.
 
 \begin{lemma}\label{lemma:clique_non_increasing}
-The sequence of distances $h$ of new centers added $v_x$ added to the partial solution $C$ is non-increasing ($h_1\geq h_2 ...\geq h_{k-1}$)
+The sequence of distances $h$ of new centers ($v_x$) added to the partial solution $C$ is non-increasing ($h_1\geq h_2 ...\geq h_{k-1}$)
 \end{lemma}
 
 At each $i^{th}$ iteration, the new center $v_x$ added is chosen by the \emph{farthest first} \gls{heuristic} with distance $h_i$, since $v_x$ was never picked as a new center before then every other distance $h_1,...,h_{i-1}$ calculated before must be at least $h_i$.

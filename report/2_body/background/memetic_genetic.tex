@@ -6,7 +6,7 @@ A genetic algorithm (\acrshort{ga}) is a \gls{metaheuristic} inspired by natural
     \item \textbf{Fitness:} a measure of the quality of a phenotype
     \item \textbf{Mutation:} a genetic operator which makes a random alteration to a genotype
     \item \textbf{Crossover:} a genetic operator which mixes typically two parent genotypes and produces one or more child genotypes
-    \item \textbf{Selection:} a process to determine which genotypes to apply genetic operators to create the next generation. Two common methods are roulette wheel selection (random weighted selection with probability proportional to their fitness) and tournament selection (choosing a random subset of the population, then select fittest genotypes)
+    \item \textbf{Selection:} a process to determine which genotypes to apply genetic operators to, for creating the next generation. Two common methods are roulette wheel selection (random weighted selection with probability proportional to their fitness) and tournament selection (choosing a random subset of the population, then select fittest genotypes)
 \end{itemize}
 
 The high-level algorithm for basic GAs described by \textcite{kramer_genetic_2017} is shown in \cref{alg:basic_genetic}. Two common termination conditions for GAs are setting a fixed number of generations or terminating when fitness reaches a target value. Genotype-phenotype mapping is not always necessary, in some problems the genotype itself is the solution which removes the need for the phenotype. For a comprehensive overview of genetic algorithms, we refer the reader to chapter 2 of "Genetic Algorithm Essentials" (\cite{kramer_genetic_2017}).
@@ -31,8 +31,8 @@ PBS uses two mutation operators and two crossover operators, which can all be im
 
 The local search relies on the function \emph{find\_pair} which makes returns the optimal swap between a center and a vertex. To implement \emph{find\_pair} efficiently neighbourhood data structures based on VNS (\cite{mladenovic_solving_2003}) were designed . The data structures and notation are defined as follows:
 \begin{itemize}
-    \item $\mathbf{F^0_v}$ and $\mathbf{F^1_v}$: $\mathbf{F^0_v}$ defines the closest center to vertex $v$ and $F^1_v$ defines the second closest.
-    \item $\mathbf{D^0_v}$ and $\mathbf{D^1_v}$: $D^0_v$ defines the distance from closest center to vertex $v$ and $\mathbf{D^1_v}$ defines the distance to the second closest.
+    \item $\mathbf{F^0_v}$ and $\mathbf{F^1_v}$: $F^0_v$ defines the closest center to vertex $v$ and $F^1_v$ defines the second closest.
+    \item $\mathbf{D^0_v}$ and $\mathbf{D^1_v}$: $D^0_v$ defines the distance from closest center to vertex $v$ and $D^1_v$ defines the distance to the second closest.
     \item $\mathbf{N_{wm}}$: $N_w$ defines the neighbourhood of $n$ vertices around vertex $w$ ordered by distance from $w$ ascending. $m$ is such that the $m^{th}$ value of $N_w$ is the nearest center to $w$. $N_{wm}$ is the first $m$ elements of $N_w$.
 \end{itemize}
 
